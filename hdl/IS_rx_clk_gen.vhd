@@ -50,6 +50,7 @@ begin
 if rising_edge(CLK_RX_Serial) then
    if  to_integer(unsigned (div_clk_DCK)) >=bit_data_imx /4 then
       CLK_RX_Parallel_ch   <= '1';
+   else
       CLK_RX_Parallel_ch   <= '0';
    end if;
 end if;

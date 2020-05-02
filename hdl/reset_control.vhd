@@ -78,9 +78,9 @@ end process;
 ----------------------------------------------------------------------
 lock_pll_all  <=  Lock_PLL_1 and Lock_PLL_2 and Lock_PLL_3 and Lock_PLL_4;   --work when ALL PLL LOCK
 -- reset_1         <=not  Lock_PLL_1 or sync_V_imx;
-reset_1         <= not lock_pll_all_q(31);
-reset_2         <= not lock_pll_all_q(31);
-reset_3         <= not Lock_PLL_3;
+reset_1         <= not lock_pll_all_q(15);
+reset_2         <= not lock_pll_all_q(15);
+reset_3         <= not lock_pll_all_q(31);
 reset_4         <= not Lock_PLL_4;
-Enable_main     <= lock_pll_all_q(31);
+Enable_main     <= lock_pll_all_q(15);
 end ;

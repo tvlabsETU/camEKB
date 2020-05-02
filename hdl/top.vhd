@@ -201,7 +201,8 @@ signal LOCK_PLL_RX_1			: std_logic:='1';
 signal LOCK_PLL_RX_2			: std_logic:='1';
 signal reset_sync_gen		: std_logic:='1';
 signal MAIN_ENABLE			: std_logic:='1';						
-signal MAIN_reset				: std_logic:='1';						
+signal MAIN_reset				: std_logic:='1';		
+signal reset_RX				: std_logic:='1';		
 ----------------------------------------------------------------------
 ---модуль приема сигнала изображения от фотоприеника
 ----------------------------------------------------------------------
@@ -267,7 +268,8 @@ port map (
 				------ out------
 	Enable_main		=>	MAIN_ENABLE,
 	reset_1			=>	reset_sync_gen,
-	reset_2			=>	MAIN_reset
+	reset_2			=>	MAIN_reset,
+	reset_3			=>	reset_RX
 	);	
 ----------------------------------------------------------------------
 ---модуль синхрогенератора
@@ -312,7 +314,7 @@ port map (
 		---------Other------------
 	CLK_sys				=> CLK_1,
 	reset_1				=> MAIN_reset,
-	reset_2				=> MAIN_reset,
+	reset_2				=> reset_RX,
 	MAIN_ENABLE			=> MAIN_ENABLE,
 	Mode_debug			=> x"00",
 	qout_clk_IS			=> qout_clk_IS,

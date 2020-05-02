@@ -44,7 +44,7 @@ IF rising_edge(clk) THEN
   IF reset = '1'  THEN
     cout <= '0';
   ELSIF en = '1' THEN
-    IF qint = modul - conv_std_logic_vector(2, n) THEN
+    IF qint = modul - conv_std_logic_vector(1, n) THEN
       cout <= '1';
     ELSE
       cout <= '0';

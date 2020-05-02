@@ -34,7 +34,7 @@ add wave -position end  sim:/tb_ekb_top/EKB_top_0/IMAGE_SENSOR_SIM_q/CLK_DDR
 add wave -noupdate -divider SMPTE_SERDES
 add wave -position end  sim:/tb_ekb_top/EKB_top_0/image_sensor_RX_LVDS_q/RX_DDR_CH_q0/CLK_RX_Serial
 add wave -position end  sim:/tb_ekb_top/EKB_top_0/image_sensor_RX_LVDS_q/RX_DDR_CH_q0/DATA_RX_Serial
-add wave -position end  sim:/tb_ekb_top/EKB_top_0/image_sensor_RX_LVDS_q/RX_DDR_CH_q0/allign_load
+add wave -position end  sim:/tb_ekb_top/EKB_top_0/image_sensor_RX_LVDS_q/RX_DDR_CH_q0/align_load
 add wave -position end  sim:/tb_ekb_top/EKB_top_0/image_sensor_RX_LVDS_q/RX_DDR_CH_q0/DATA_RX_Parallel
 add wave -position end  sim:/tb_ekb_top/EKB_top_0/image_sensor_RX_LVDS_q/RX_DDR_CH_q0/VIDEO_CH_0_reg
 

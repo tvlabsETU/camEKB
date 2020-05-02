@@ -8,7 +8,7 @@ use work.My_component_pkg.all;
 -- модуль приема DDR данных по 1 каналу
 -- в зависимости от разрядности данных от фотоприемника 
 -- в зависимости от bit_data существует 4/5/6 вариантов для захвата правильность последовательности
--- allign_load - перебираются до тех по пока трубеумы условия для синхронизации не выполнятся
+-- align_load - перебираются до тех по пока трубеумы условия для синхронизации не выполнятся
 ----------------------------------------------------------------------
 entity RX_DDR_CH is
 generic  (bit_data	: integer);
@@ -17,7 +17,7 @@ port (
 	DATA_RX_Serial		: in std_logic;				-- видео данные DDR
 	MAIN_reset			: in std_logic;  										-- reset
 	MAIN_ENABLE			: in std_logic;  										-- ENABLE
-	allign_load			: in std_logic_vector (2 downto 0);				-- сдвиг момент выборки 
+	align_load			: in std_logic_vector (2 downto 0);				-- сдвиг момент выборки 
 	DATA_RX_Parallel	: out std_logic_vector (bit_data-1 downto 0)	-- принятый сигнал							  	 														  		
 		);
 end RX_DDR_CH;
@@ -78,7 +78,7 @@ port map (
 Process(CLK_RX_Serial)
 begin
 if rising_edge (CLK_RX_Serial) then
-	if  load_q(2 downto 0)	=	allign_load then
+	if  load_q(2 downto 0)	=	align_load then
 		pattern_load	<='1';
 	else
 		pattern_load	<='0';

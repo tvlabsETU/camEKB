@@ -53,12 +53,38 @@ port (
 	DATA_RX_Serial		: in std_logic;				-- видео данные DDR
 	MAIN_reset			: in std_logic;  										-- reset
 	MAIN_ENABLE			: in std_logic;  										-- ENABLE
-	allign_load			: in std_logic_vector (2 downto 0);				-- сдвиг момент выборки 
+	align_load			: in std_logic_vector (2 downto 0);				-- сдвиг момент выборки 
 	DATA_RX_Parallel	: out std_logic_vector (bit_data-1 downto 0)	-- принятый сигнал							  	 														  		
 		);
 end component;
-signal allign_load	: std_logic_vector (2 downto 0):=(Others => '0');
+signal align_load	: std_logic_vector (2 downto 0):=(Others => '0');
 signal DATA_RX_ch_0	: std_logic_vector (bit_data_imx-1 downto 0):=(Others => '0');
+signal DATA_RX_ch_1	: std_logic_vector (bit_data_imx-1 downto 0):=(Others => '0');
+signal DATA_RX_ch_2	: std_logic_vector (bit_data_imx-1 downto 0):=(Others => '0');
+signal DATA_RX_ch_3	: std_logic_vector (bit_data_imx-1 downto 0):=(Others => '0');
+----------------------------------------------------------------------
+-- модуль синхронизации данных для 4 каналов
+----------------------------------------------------------------------
+component  sync_word_4ch is
+generic  (bit_data	: integer);
+port (
+   CLK_RX_Parallel	: in std_logic;  										-- CLK Parallel
+   DATA_RX_ch_0		: in STD_LOGIC_VECTOR (bit_data-1 DOWNTO 0);	-- видео данные 
+   DATA_RX_ch_1		: in STD_LOGIC_VECTOR (bit_data-1 DOWNTO 0);	-- видео данные 
+   DATA_RX_ch_2		: in STD_LOGIC_VECTOR (bit_data-1 DOWNTO 0);	-- видео данные 
+   DATA_RX_ch_3		: in STD_LOGIC_VECTOR (bit_data-1 DOWNTO 0);	-- видео данные 
+   MAIN_ENABLE			: in std_logic;  										-- reset
+   MAIN_reset			: in std_logic;  										-- reset
+   align_load_0		: out STD_LOGIC_VECTOR (2 DOWNTO 0); 			-- reset
+   align_load_1		: out STD_LOGIC_VECTOR (2 DOWNTO 0); 			-- reset
+   align_load_2		: out STD_LOGIC_VECTOR (2 DOWNTO 0); 			-- reset
+   align_load_3		: out STD_LOGIC_VECTOR (2 DOWNTO 0)  			-- reset
+      );
+end component;
+signal align_load_0	: std_logic_vector (2 downto 0);
+signal align_load_1	: std_logic_vector (2 downto 0);
+signal align_load_2	: std_logic_vector (2 downto 0);
+signal align_load_3	: std_logic_vector (2 downto 0);
 
 begin
 
@@ -78,7 +104,7 @@ port map (
 );	
 
 ----------------------------------------------------------------------
--- модуль приема DDR данных по 1 каналу
+-- модуль приема DDR данных по 1..4 каналу
 ----------------------------------------------------------------------
 RX_DDR_CH_q0: RX_DDR_CH   
 generic map (bit_data_imx) 
@@ -86,70 +112,72 @@ port map (
 		-- Inputs
 	CLK_RX_Serial			=> CLK_RX_Serial_ch,
 	DATA_RX_Serial			=> IS_CH(0),	
-	MAIN_reset				=> reset_1,	
+	MAIN_reset				=> reset_2,	
 	MAIN_ENABLE				=> MAIN_ENABLE,	
-	allign_load				=> allign_load,	
+	align_load				=> align_load_0,	
 		-- Outputs
 	DATA_RX_Parallel		=> DATA_RX_ch_0
 );	
 
+RX_DDR_CH_q1: RX_DDR_CH   
+generic map (bit_data_imx) 
+port map (
+		-- Inputs
+	CLK_RX_Serial			=> CLK_RX_Serial_ch,
+	DATA_RX_Serial			=> IS_CH(1),	
+	MAIN_reset				=> reset_2,	
+	MAIN_ENABLE				=> MAIN_ENABLE,	
+	align_load				=> align_load_1,	
+		-- Outputs
+	DATA_RX_Parallel		=> DATA_RX_ch_1
+);	
+
+RX_DDR_CH_q2: RX_DDR_CH   
+generic map (bit_data_imx) 
+port map (
+		-- Inputs
+	CLK_RX_Serial			=> CLK_RX_Serial_ch,
+	DATA_RX_Serial			=> IS_CH(2),	
+	MAIN_reset				=> reset_2,	
+	MAIN_ENABLE				=> MAIN_ENABLE,	
+	align_load				=> align_load_2,	
+		-- Outputs
+	DATA_RX_Parallel		=> DATA_RX_ch_2
+);	
+RX_DDR_CH_q3: RX_DDR_CH   
+generic map (bit_data_imx) 
+port map (
+		-- Inputs
+	CLK_RX_Serial			=> CLK_RX_Serial_ch,
+	DATA_RX_Serial			=> IS_CH(3),	
+	MAIN_reset				=> reset_2,	
+	MAIN_ENABLE				=> MAIN_ENABLE,	
+	align_load				=> align_load_3,	
+		-- Outputs
+	DATA_RX_Parallel		=> DATA_RX_ch_3
+);	
+----------------------------------------------------------------------
+-- модуль синхронизации по 4 каналам
+----------------------------------------------------------------------
+sync_word_4ch_q: sync_word_4ch   
+generic map (bit_data_imx) 
+port map (
+		-- Inputs
+   CLK_RX_Parallel	=> CLK_RX_Parallel_ch,
+	DATA_RX_ch_0		=> DATA_RX_ch_0,	
+	DATA_RX_ch_1		=> DATA_RX_ch_1,	
+	DATA_RX_ch_2		=> DATA_RX_ch_2,	
+   DATA_RX_ch_3		=> DATA_RX_ch_3,	
+   MAIN_ENABLE		   => MAIN_ENABLE,	
+   MAIN_reset		   => reset_2,	
+		-- Outputs
+	align_load_0		=> align_load_0,
+   align_load_1     => align_load_1,
+   align_load_2     => align_load_2,
+   align_load_3     => align_load_3
+);	
 
 
 
-
-
-
-
-
-
-
--- Process(CLK_sys)
--- begin
--- if rising_edge(CLK_sys) then
--- 	if  to_integer(unsigned (qout_clk_IS)) = 50 	then
--- 			Sync_flag	<=	'1';
--- 	else	Sync_flag	<=	'0';
--- 	end if;
--- end if;
--- end process;
-
-
--- Control_reciever_q: Control_reciever                   
--- port map (
--- 		-- Inputs
--- 	CLK_RX_Serial		=>CLK_RX_Serial,
--- 	CLK_RX_Parallel		=>CLK_RX_Parallel,	
--- 	DATA_RX_Parallel	=>DATA_RX_Parallel,	
--- 	MAIN_reset			=>MAIN_reset_in,	
--- 	MAIN_reset0			=>MAIN_reset_in,	
--- 	MAIN_ENABLE			=>MAIN_ENABLE,	
--- 	Sync_flag			=>Sync_flag,	
--- 		-- Outputs
--- 	valid_data			=>valid_data_wr,
--- 	Phase_shift			=>Phase_shift,
--- 	allign_byte			=>allign_byte, 
--- 	N_clk				=>N_clk
--- );	
-
-
--- -- data_IMX1	<= DATA_CSI_CH1;
-
--- csi_to_raw_q0 : csi_to_raw
--- port map  (
--- --------------------IN signal---------
--- 		CLK_RX_Parallel		=>	CLK_RX_Parallel,			
--- 		CLK_sys				=>	CLK_sys,		
--- 		ena_clk_x2			=>	ena_clk_x2,		
--- 		ena_clk_x4			=>	ena_clk_x4,		
--- 		ena_clk_x8			=>	ena_clk_x8,		
--- 		MAIN_reset			=>	MAIN_reset_in,			
--- 		MAIN_ENABLE			=>	MAIN_ENABLE,		
--- 		Mode_debug			=>	Mode_debug,		
--- 		DATA_CSI_CH			=>	DATA_RX_Parallel,		
--- 		qout_clk_IS			=>	qout_clk_IS,		
--- 		qout_v				=>	qout_v,		
--- --------------------OUT signal---------
--- 		data_IMX			=>	data_IMX1	
--- 		);	 
 
 end ;
