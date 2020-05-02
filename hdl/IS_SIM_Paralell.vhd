@@ -82,14 +82,10 @@ signal stroka_IS				: std_logic:='0';
 signal kadr_IS					: std_logic:='0';
 signal qout_clk_IS			: std_logic_vector (bit_pix-1 downto 0):=(Others => '0'); 
 signal qout_clk_IS_ch		: std_logic_vector (bit_pix-1 downto 0):=(Others => '0'); 
-
-
-
 signal qout_frame_IS			: std_logic_vector (bit_frame-1 downto 0):=(Others => '0');
 signal qout_V_IS				: std_logic_vector (bit_strok-1 downto 0):=(Others => '0');
 signal ena_clk_x_q_IS		: std_logic_vector (3 downto 0):=(Others => '0');
 -------------------------------------------------------------------------------
-
 signal ena_clk_in				: std_logic;
 signal PixPerLine				: integer range 0 to 2**bit_pix-1;
 signal HsyncShift				: integer range 0 to 2**bit_pix-1;
@@ -100,14 +96,18 @@ signal video_gen_ch_1		: std_logic_vector (bit_data_imx-1 downto 0);
 signal video_gen_ch_2		: std_logic_vector (bit_data_imx-1 downto 0);
 signal video_gen_ch_3		: std_logic_vector (bit_data_imx-1 downto 0);
 signal video_gen_ch_4		: std_logic_vector (bit_data_imx-1 downto 0);
+signal DATA_IS_pix_ch_1_in	: std_logic_vector (bit_data_imx-1 downto 0);
+signal DATA_IS_pix_ch_2_in	: std_logic_vector (bit_data_imx-1 downto 0);
+signal DATA_IS_pix_ch_3_in	: std_logic_vector (bit_data_imx-1 downto 0);
+signal DATA_IS_pix_ch_4_in	: std_logic_vector (bit_data_imx-1 downto 0);
 signal data_imx_anc			: std_logic_vector (bit_data_imx-1 downto 0);
 signal DATA_IMX_in			: std_logic_vector (bit_data_imx-1 downto 0);
 signal mode_sync_gen			: std_logic_vector (7 downto 0);
 
 type pix_byf is array (0 to 7) of std_logic_vector (bit_data_imx-1 downto 0)	;
 signal DATA_q : pix_byf := (others => (others => '0'));
-begin
 
+begin
 ----------------------------------------------------------------------
 ---модуль генерации пикселей/строк/кадров  для интерфейса
 ----------------------------------------------------------------------
@@ -178,7 +178,7 @@ if rising_edge(CLK) then
 		when x"2"	=>	mode_sync_gen	<=x"01";	-- LVDS - 2 линия
 		when x"3"	=>	mode_sync_gen	<=x"02";	-- LVDS - 4 линия
 		WHEN others	=>	mode_sync_gen	<=x"00";	-- CSI - 1 линия		
-		END case;	
+	END case;	
 	end if;
 end process;
 -------------------------------------------------------------------------------------------
@@ -292,12 +292,9 @@ if rising_edge(CLK) then
 	end if;
 end if;
 end process;
- 
-
 ------------------------------------------------------------
 -- выходные сигналы
 ------------------------------------------------------------
-
 Process(CLK)
 begin
 if rising_edge(CLK) then
@@ -306,19 +303,55 @@ if rising_edge(CLK) then
 
 	if ena_clk_in='1'		then
 		if  VALID_DATA='1'	then
-			DATA_IS_pix_ch_1	<=	video_gen_ch_1;
-			DATA_IS_pix_ch_2	<=	video_gen_ch_2;
-			DATA_IS_pix_ch_3	<=	video_gen_ch_3;
-			DATA_IS_pix_ch_4	<=	video_gen_ch_4;
+			DATA_IS_pix_ch_1_in	<=	video_gen_ch_1;
+			DATA_IS_pix_ch_2_in	<=	video_gen_ch_2;
+			DATA_IS_pix_ch_3_in	<=	video_gen_ch_3;
+			DATA_IS_pix_ch_4_in	<=	video_gen_ch_4;
 		else
-			DATA_IS_pix_ch_1	<=	DATA_IMX_in;
-			DATA_IS_pix_ch_2	<=	DATA_IMX_in;
-			DATA_IS_pix_ch_3	<=	DATA_IMX_in;
-			DATA_IS_pix_ch_4	<=	DATA_IMX_in;
+			DATA_IS_pix_ch_1_in	<=	DATA_IMX_in;
+			DATA_IS_pix_ch_2_in	<=	DATA_IMX_in;
+			DATA_IS_pix_ch_3_in	<=	DATA_IMX_in;
+			DATA_IS_pix_ch_4_in	<=	DATA_IMX_in;
 		end if;
 	end if;
 end if;
 end process;
+
+Process(CLK)
+begin
+if rising_edge(CLK) then
+	if ena_clk_in='1'		then
+		case  mode_IMAGE_SENSOR (3 downto 0)	is
+			when x"0"	=>	
+				DATA_IS_pix_ch_1	<=	DATA_IS_pix_ch_1_in;
+				DATA_IS_pix_ch_2	<=	(Others => '1');
+				DATA_IS_pix_ch_3	<=	(Others => '1');
+				DATA_IS_pix_ch_4	<=	(Others => '1');
+			when x"1"	=>	
+				DATA_IS_pix_ch_1	<=	DATA_IS_pix_ch_1_in;
+				DATA_IS_pix_ch_2	<=	(Others => '1');
+				DATA_IS_pix_ch_3	<=	(Others => '1');
+				DATA_IS_pix_ch_4	<=	(Others => '1');
+			when x"2"	=>	
+				DATA_IS_pix_ch_1	<=	DATA_IS_pix_ch_1_in;
+				DATA_IS_pix_ch_2	<=	DATA_IS_pix_ch_2_in;
+				DATA_IS_pix_ch_3	<=	(Others => '1');
+				DATA_IS_pix_ch_4	<=	(Others => '1');
+			when x"3"	=>	
+				DATA_IS_pix_ch_1	<=	DATA_IS_pix_ch_1_in;
+				DATA_IS_pix_ch_2	<=	DATA_IS_pix_ch_2_in;
+				DATA_IS_pix_ch_3	<=	DATA_IS_pix_ch_3_in;
+				DATA_IS_pix_ch_4	<=	DATA_IS_pix_ch_4_in;
+			WHEN others	=>	
+				DATA_IS_pix_ch_1	<=	DATA_IS_pix_ch_1_in;
+				DATA_IS_pix_ch_2	<=	(Others => '1');
+				DATA_IS_pix_ch_3	<=	(Others => '1');
+				DATA_IS_pix_ch_4	<=	(Others => '1');
+			END case;	
+	end if;
+end if;
+end process;
+
 
 
 	

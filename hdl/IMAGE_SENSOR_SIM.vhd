@@ -200,10 +200,6 @@ port map (
 	MAIN_ENABLE			=>	MAIN_ENABLE  ,		
 	mode_generator		=>	mode_generator,
 				------выходные сигналы-----------
-	-- qout_V_out		=>	ena_clk_x2_in,
-	-- qout_clk_out	=>	ena_clk_x4_in,
-	-- XVS_Imx_Sim		=>	ena_clk_x8_in,
-	-- XHS_Imx_Sim		=>	ena_clk_x16_in,
 	DATA_IS_pix_ch_1	=> DATA_IS_pix_ch_1,
 	DATA_IS_pix_ch_2	=> DATA_IS_pix_ch_2,
 	DATA_IS_pix_ch_3	=> DATA_IS_pix_ch_3,
@@ -211,6 +207,7 @@ port map (
 	);	
 ----------------------------------------------------------------------
 -- модуль генерации видеосигнала от фотоприемника после сериализатора
+-- каждый канал передачи обрабатывается независимо
 ----------------------------------------------------------------------
 IS_SIM_serial_DDR_q1: IS_SIM_serial_DDR                   
 generic map (bit_data_imx) 
@@ -252,14 +249,10 @@ port map (
 	CLK_fast				=>	CLK_IS_DDR_0,			
 	MAIN_reset			=>	MAIN_reset ,
 	MAIN_ENABLE			=>	MAIN_ENABLE  ,		
-	DATA_IMX_OUT		=>	DATA_IS_pix_ch_3,
+	DATA_IMX_OUT		=>	DATA_IS_pix_ch_4,
 				------выходные сигналы-----------
 	IMX_DDR_VIDEO		=>	DATA_IS_LVDS_ch_4
 	);	
-
-	
-
-
 
 CLK_DDR	<=	CLK_IS_DDR_2;
 

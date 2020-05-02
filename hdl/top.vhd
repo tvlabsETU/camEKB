@@ -211,24 +211,22 @@ signal MAIN_reset				: std_logic:='1';
 ---------------------------------------------------
 begin
 
-
 ----------------------------------------------------------------------
----модель симцуляции цотоприемника
+---модель симцуляции фотоприемника
 ----------------------------------------------------------------------
 IMAGE_SENSOR_SIM_q: IMAGE_SENSOR_SIM                    
 port map (
 				-----in---------
 	CLK					=>	CLK_in,			
 	mode_generator  	=>	x"00",			
-
 				------ out------
 	XVS_Imx_Sim				=> XVS_Imx_Sim,
 	XHS_Imx_Sim				=> XHS_Imx_Sim,
 	DATA_IS_PAR				=>	DATA_IS_PAR_Sim,
-	-- DATA_IS_LVDS_ch_1		=>	IMX_1_XHS,
-	-- DATA_IS_LVDS_ch_2		=>	IMX_1_XVS,
-	-- DATA_IS_LVDS_ch_3		=>	MAIN_ENABLE,
-	-- DATA_IS_LVDS_ch_4		=>	reset_sync_gen,
+	DATA_IS_LVDS_ch_1		=> DATA_IS_LVDS_ch_1_Sim,
+	DATA_IS_LVDS_ch_2		=> DATA_IS_LVDS_ch_2_Sim,
+	DATA_IS_LVDS_ch_3		=> DATA_IS_LVDS_ch_3_Sim,
+	DATA_IS_LVDS_ch_4		=> DATA_IS_LVDS_ch_4_Sim,
 	-- DATA_IS_CSI				=>	MAIN_reset
 	CLK_DDR					=>	CLK_DDR_Sim	
 	);
@@ -252,9 +250,7 @@ port map (
 	Enable_main		=>	MAIN_ENABLE,
 	reset_1			=>	reset_sync_gen,
 	reset_2			=>	MAIN_reset
-	);
-	
-	
+	);	
 ----------------------------------------------------------------------
 ---модуль синхрогенератора
 ----------------------------------------------------------------------
@@ -271,13 +267,13 @@ port map (
 	CLK_4_out					=> CLK_4,
 	Lock_PLL_1					=> LOCK_PLL_SYNC_GEN_1,
 	Lock_PLL_2					=> LOCK_PLL_SYNC_GEN_2,
-			--синхроиспульсы фотоприемник
+			--синхроимпульсы фотоприемник
 	qout_clk_IS					=> qout_clk_IS,			
 	stroka_IS					=> stroka_IS,			
 	qout_v_IS					=> qout_v_IS,			
 	kadr_IS						=> kadr_IS,				
 	qout_frame_IS				=> qout_frame_IS,		
-			--синхроиспульсы интерфейс
+			--синхроимпульсы интерфейс
 	ena_clk_x_q_Inteface		=> ena_clk_x_q_Inteface,
 	qout_clk_Inteface			=> qout_clk_Inteface,		
 	stroka_Inteface			=> stroka_Inteface,			
@@ -286,6 +282,10 @@ port map (
 	qout_frame_Inteface		=> qout_frame_Inteface	
 	);
 ----------------------------------------------------------------------
+
+
+
+
 
 end rtl;
 

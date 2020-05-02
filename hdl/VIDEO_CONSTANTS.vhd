@@ -10,8 +10,8 @@ constant bit_data_SMPTE		: integer :=10;	--разрядность данных S
 constant bit_frame			: integer :=8;		--бит на счетчик кадров 		
 constant bit_pix				: integer :=13;	--разрядность счетчика пикселей		
 constant bit_strok			: integer :=16;	--разрядность счетчика строк		
-constant N_channel_imx		: integer :=4;		--	количесвтво каналов по LVDS 1 / 2 / 4
 ---------------------------------------------------------------------------------
+constant N_channel_imx		: integer :=4;		--	количесвтво каналов по LVDS 1 / 2 / 4
 constant mode_IMAGE_SENSOR	: std_logic_vector (7 downto 0) :=x"03";		
 -- mode_IMAGE_SENSOR (3 downto 0) = 0 CSI - 1 линия
 -- mode_IMAGE_SENSOR (3 downto 0) = 1 LVDS - 1 линия
