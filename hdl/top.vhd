@@ -115,20 +115,14 @@ port (
 	XVS_Imx_Sim			: out std_logic; 												-- синхронизация
 	XHS_Imx_Sim			: out std_logic; 												-- синхронизация
 	DATA_IS_PAR			: out	std_logic_vector (bit_data_imx-1 downto 0);	-- выходной сигнал
-	DATA_IS_LVDS_ch_1	: out	std_logic; 												-- выходной сигнал в канале 1
-	DATA_IS_LVDS_ch_2	: out	std_logic; 												-- выходной сигнал в канале 2
-	DATA_IS_LVDS_ch_3	: out	std_logic; 												-- выходной сигнал в канале 3
-	DATA_IS_LVDS_ch_4	: out	std_logic; 												-- выходной сигнал в канале 4
+	DATA_IS_LVDS_ch_n	: out	std_logic_vector (3 downto 0);					-- выходной сигнал в канале 1
 	DATA_IS_CSI			: out	std_logic; 												-- выходной сигнал CSI
 	CLK_DDR				: out std_logic		
 		);
 end component;
 signal XVS_Imx_Sim				: std_logic:='0';
 signal XHS_Imx_Sim				: std_logic:='0';
-signal DATA_IS_LVDS_ch_1_Sim	: std_logic:='0';
-signal DATA_IS_LVDS_ch_2_Sim	: std_logic:='0';
-signal DATA_IS_LVDS_ch_3_Sim	: std_logic:='0';
-signal DATA_IS_LVDS_ch_4_Sim	: std_logic:='0';
+signal DATA_IS_LVDS_ch_n_Sim	: std_logic_vector (3 downto 0);
 signal DATA_IS_CSI_Sim			: std_logic:='0';
 signal CLK_DDR_Sim				: std_logic:='0';
 signal DATA_IS_PAR_Sim			: std_logic_vector (bit_data_imx-1 downto 0):=(Others => '0'); 
@@ -208,7 +202,34 @@ signal LOCK_PLL_RX_2			: std_logic:='1';
 signal reset_sync_gen		: std_logic:='1';
 signal MAIN_ENABLE			: std_logic:='1';						
 signal MAIN_reset				: std_logic:='1';						
----------------------------------------------------
+----------------------------------------------------------------------
+---модуль приема сигнала изображения от фотоприеника
+----------------------------------------------------------------------
+component image_sensor_RX_LVDS is
+port (		
+			--image sensor IN--
+	IS_CH				: in STD_LOGIC_VECTOR (3 DOWNTO 0);	-- данные от 1 ФП 
+	DCK_IS			: in std_logic; 							-- CLK от 1 ФП  
+	XVS				: in std_logic; 
+	XHS				: in std_logic; 
+	---------Other------------
+	CLK_sys			: in std_logic;   										-- тактовый 
+	reset_1			: in std_logic;  											-- сигнал сброса
+	reset_2			: in std_logic;  											-- сигнал сброса
+	MAIN_ENABLE		: in std_logic;  											-- разрешение работы
+	Mode_debug		: in std_logic_vector (7 downto 0); 				-- отладка
+	qout_clk_IS		: in std_logic_vector (bit_pix-1 downto 0); 		-- счетчик пикселей
+	qout_v_IS		: in  std_logic_vector (bit_strok-1 downto 0); 	-- счетчик строк
+	sync_H			: out std_logic;   										-- выходные синхроимпульсы по синхрокодам  		
+	sync_V			: out std_logic;    										-- выходные синхроимпульсы по синхрокодам  		
+	data_RAW_RX		: out std_logic_vector (bit_data_imx-1 downto 0)-- выходной RAW сигнал					  	 														  		
+		);
+end component;
+signal sync_H				: std_logic:='1';						
+signal sync_V				: std_logic:='1';						
+signal data_RAW_RX		: std_logic_vector (bit_data_imx-1 downto 0);				
+				
+
 begin
 
 ----------------------------------------------------------------------
@@ -217,16 +238,13 @@ begin
 IMAGE_SENSOR_SIM_q: IMAGE_SENSOR_SIM                    
 port map (
 				-----in---------
-	CLK					=>	CLK_in,			
-	mode_generator  	=>	x"00",			
+	CLK						=>	CLK_in,			
+	mode_generator 		=>	x"00",			
 				------ out------
 	XVS_Imx_Sim				=> XVS_Imx_Sim,
 	XHS_Imx_Sim				=> XHS_Imx_Sim,
 	DATA_IS_PAR				=>	DATA_IS_PAR_Sim,
-	DATA_IS_LVDS_ch_1		=> DATA_IS_LVDS_ch_1_Sim,
-	DATA_IS_LVDS_ch_2		=> DATA_IS_LVDS_ch_2_Sim,
-	DATA_IS_LVDS_ch_3		=> DATA_IS_LVDS_ch_3_Sim,
-	DATA_IS_LVDS_ch_4		=> DATA_IS_LVDS_ch_4_Sim,
+	DATA_IS_LVDS_ch_n		=> DATA_IS_LVDS_ch_n_Sim,
 	-- DATA_IS_CSI				=>	MAIN_reset
 	CLK_DDR					=>	CLK_DDR_Sim	
 	);
@@ -282,9 +300,29 @@ port map (
 	qout_frame_Inteface		=> qout_frame_Inteface	
 	);
 ----------------------------------------------------------------------
-
-
-
+---модуль приема сигнала изображения от фотоприеника
+----------------------------------------------------------------------
+image_sensor_RX_LVDS_q: image_sensor_RX_LVDS                    
+port map (
+				--image sensor IN--
+	IS_CH					=> DATA_IS_LVDS_ch_n_Sim,			
+	DCK_IS				=> CLK_DDR_Sim,			
+	XVS					=> XVS_Imx_Sim,			
+	XHS					=> XHS_Imx_Sim,			
+		---------Other------------
+	CLK_sys				=> CLK_1,
+	reset_1				=> MAIN_reset,
+	reset_2				=> MAIN_reset,
+	MAIN_ENABLE			=> MAIN_ENABLE,
+	Mode_debug			=> x"00",
+	qout_clk_IS			=> qout_clk_IS,
+	qout_v_IS			=> qout_v_IS,			
+		---------out------------
+	sync_H				=> sync_H,
+	sync_V				=> sync_V,		
+	data_RAW_RX			=> data_RAW_RX
+	);
+----------------------------------------------------------------------
 
 
 end rtl;

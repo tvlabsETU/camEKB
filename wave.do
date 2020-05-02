@@ -28,10 +28,15 @@ add wave -position end  sim:/tb_ekb_top/EKB_top_0/IMAGE_SENSOR_SIM_q/IS_SIM_Para
 add wave -position end  sim:/tb_ekb_top/EKB_top_0/IMAGE_SENSOR_SIM_q/IS_SIM_Paralell_q/gen_pix_str_frame_Inteface/qout_v
 add wave -position end  sim:/tb_ekb_top/EKB_top_0/IMAGE_SENSOR_SIM_q/IS_SIM_Paralell_q/qout_clk_IS_ch
 add wave -position end  sim:/tb_ekb_top/EKB_top_0/IMAGE_SENSOR_SIM_q/IS_SIM_Paralell_q/DATA_IS_pix_ch_1
-add wave -position end  sim:/tb_ekb_top/EKB_top_0/IMAGE_SENSOR_SIM_q/DATA_IS_LVDS_ch_1
+add wave -position end  sim:/tb_ekb_top/EKB_top_0/IMAGE_SENSOR_SIM_q/DATA_IS_LVDS_ch_n
 add wave -position end  sim:/tb_ekb_top/EKB_top_0/IMAGE_SENSOR_SIM_q/CLK_DDR
 
 add wave -noupdate -divider SMPTE_SERDES
+add wave -position end  sim:/tb_ekb_top/EKB_top_0/image_sensor_RX_LVDS_q/RX_DDR_CH_q0/CLK_RX_Serial
+add wave -position end  sim:/tb_ekb_top/EKB_top_0/image_sensor_RX_LVDS_q/RX_DDR_CH_q0/DATA_RX_Serial
+add wave -position end  sim:/tb_ekb_top/EKB_top_0/image_sensor_RX_LVDS_q/RX_DDR_CH_q0/allign_load
+add wave -position end  sim:/tb_ekb_top/EKB_top_0/image_sensor_RX_LVDS_q/RX_DDR_CH_q0/DATA_RX_Parallel
+add wave -position end  sim:/tb_ekb_top/EKB_top_0/image_sensor_RX_LVDS_q/RX_DDR_CH_q0/VIDEO_CH_0_reg
 
 
 

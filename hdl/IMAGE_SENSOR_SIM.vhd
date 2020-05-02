@@ -54,10 +54,7 @@ port (
 	XVS_Imx_Sim			: out std_logic; 												-- синхронизация
 	XHS_Imx_Sim			: out std_logic; 												-- синхронизация
 	DATA_IS_PAR			: out	std_logic_vector (bit_data_imx-1 downto 0);	-- выходной сигнал
-	DATA_IS_LVDS_ch_1	: out	std_logic; 												-- выходной сигнал в канале 1
-	DATA_IS_LVDS_ch_2	: out	std_logic; 												-- выходной сигнал в канале 2
-	DATA_IS_LVDS_ch_3	: out	std_logic; 												-- выходной сигнал в канале 3
-	DATA_IS_LVDS_ch_4	: out	std_logic; 												-- выходной сигнал в канале 4
+	DATA_IS_LVDS_ch_n	: out	std_logic_vector (3 downto 0);					-- выходной сигнал в канале 1
 	DATA_IS_CSI			: out	std_logic; 												-- выходной сигнал CSI
 	CLK_DDR				: out std_logic		
 		);
@@ -218,7 +215,7 @@ port map (
 	MAIN_ENABLE			=>	MAIN_ENABLE  ,		
 	DATA_IMX_OUT		=>	DATA_IS_pix_ch_1,
 				------выходные сигналы-----------
-	IMX_DDR_VIDEO		=>	DATA_IS_LVDS_ch_1
+	IMX_DDR_VIDEO		=>	DATA_IS_LVDS_ch_n(0)
 	);	
 IS_SIM_serial_DDR_q2: IS_SIM_serial_DDR                   
 generic map (bit_data_imx) 
@@ -229,7 +226,7 @@ port map (
 	MAIN_ENABLE			=>	MAIN_ENABLE  ,		
 	DATA_IMX_OUT		=>	DATA_IS_pix_ch_2,
 				------выходные сигналы-----------
-	IMX_DDR_VIDEO		=>	DATA_IS_LVDS_ch_2
+	IMX_DDR_VIDEO		=>	DATA_IS_LVDS_ch_n(1)
 	);	
 IS_SIM_serial_DDR_q3: IS_SIM_serial_DDR                   
 generic map (bit_data_imx) 
@@ -240,7 +237,7 @@ port map (
 	MAIN_ENABLE			=>	MAIN_ENABLE  ,		
 	DATA_IMX_OUT		=>	DATA_IS_pix_ch_3,
 				------выходные сигналы-----------
-	IMX_DDR_VIDEO		=>	DATA_IS_LVDS_ch_3
+	IMX_DDR_VIDEO		=>	DATA_IS_LVDS_ch_n(2)
 	);	
 IS_SIM_serial_DDR_q4: IS_SIM_serial_DDR                   
 generic map (bit_data_imx) 
@@ -251,7 +248,7 @@ port map (
 	MAIN_ENABLE			=>	MAIN_ENABLE  ,		
 	DATA_IMX_OUT		=>	DATA_IS_pix_ch_4,
 				------выходные сигналы-----------
-	IMX_DDR_VIDEO		=>	DATA_IS_LVDS_ch_4
+	IMX_DDR_VIDEO		=>	DATA_IS_LVDS_ch_n(3)
 	);	
 
 CLK_DDR	<=	CLK_IS_DDR_2;
