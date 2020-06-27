@@ -22,7 +22,7 @@ use work.My_component_pkg.all;
 entity PATHERN_GENERATOR is
 port (
 	CLK					: in std_logic; 												--	тактовый сигнал данных	
-	MAIN_reset			: in std_logic;  												-- MAIN_reset
+	main_reset			: in std_logic;  												-- main_reset
 	ena_clk				: in std_logic;  												-- разрешение по частоте
 	qout_clk				: in std_logic_vector (bit_pix-1 downto 0); 			--	счетчик пикселей
 	qout_V				: in std_logic_vector (bit_strok-1 downto 0);		--	счетчик строк
@@ -94,7 +94,7 @@ noise_gen_0: noise_gen
 port map (
 	data_in		=>	qout_clk(11 downto 0),			
 	crc_en		=>	'1' ,
-	rst			=>	MAIN_reset,		
+	rst			=>	main_reset,		
 	clk			=>	CLK ,
 	crc_out		=>	noise_gen_q);
 process(CLK)

@@ -12,7 +12,7 @@ port (
 	------------------------------------входные сигналы-----------------------
 	CLK						: in std_logic;  											-- тактовый от гнератора
 	reset						: in std_logic;  											-- сброс
-	MAIN_ENABLE				: in std_logic;  											-- разрешение работы
+	main_enable				: in std_logic;  											-- разрешение работы
 	------------------------------------выходные сигналы----------------------
 	CLK_1_out				: out std_logic; 											-- тактовый с частотой 1
 	CLK_2_out				: out std_logic; 											-- тактовый с частотой 2
@@ -53,7 +53,7 @@ signal CLK_1_1				: std_logic;
 signal CLK_1_2				: std_logic;
 signal CLK_1_3				: std_logic;
 signal locked_pll_1		: std_logic;
-signal MAIN_reset			: std_logic;
+signal main_reset			: std_logic;
 signal PLL_POWERDOWN_N	: std_logic;
 ----------------------------------------------------------------------
 -- PLL_1 entity declaration
@@ -86,7 +86,7 @@ component gen_pix_str_frame is
 	------------------------------------входные сигналы-----------------------
 		CLK				: in std_logic;  											-- тактовый от гнератора
 		reset				: in std_logic;  											-- сброс
-		MAIN_ENABLE		: in std_logic;  											-- разрешение работы
+		main_enable		: in std_logic;  											-- разрешение работы
 		mode_sync_gen	: in std_logic_vector (7 downto 0);             -- режим работы
 		------------------------------------выходные сигналы----------------------
 		ena_clk_x_q		: out	std_logic_vector (3 downto 0); 				-- разрешение частоты /2 /4 /8/ 16
@@ -102,7 +102,7 @@ end component;
 
 begin
 
-MAIN_reset	<= reset;
+main_reset	<= reset;
 
 ----------------------------------------------------------------------
 --PLL с необходимыми чатотами
@@ -123,14 +123,14 @@ PLL_1_q: PLL_1
 port map (
 	-- Inputs
 	POWERDOWN	=> PLL_POWERDOWN_N,
-	CLKA			=> CLK_1_2,	
+	CLKA			=> CLK,	
 	-- Outputs 
 	GLA			=> CLK_2_1,		--29.5 МГц
 	GLB			=> CLK_2_2, 	--29.5 МГц
 	LOCK			=> locked_pll_2
 );	
 
-----------------------------------------------------------------------
+-- ----------------------------------------------------------------------
 
 ----------------------------------------------------------------------
 ---модуль генерации пикселей/строк/кадров  для фотоприемника
@@ -143,8 +143,8 @@ generic map (
 port map (
 			-----in---------
 	CLK				=> CLK_1_1,	
-	reset				=> MAIN_reset ,
-	MAIN_ENABLE		=> MAIN_ENABLE,
+	reset				=> main_reset ,
+	main_enable		=> main_enable,
 	mode_sync_gen 	=> mode_sync_gen_IS,
 			------ out------
 	ena_clk_x_q		=> ena_clk_x_q_IS,
@@ -167,8 +167,8 @@ generic map (
 port map (
 			-----in---------
 	CLK				=> CLK_2_1,	
-	reset				=> MAIN_reset ,
-	MAIN_ENABLE		=> MAIN_ENABLE,
+	reset				=> main_reset ,
+	main_enable		=> main_enable,
 	mode_sync_gen 	=> mode_sync_gen_Inteface,
 			------ out------
 	ena_clk_x_q		=> ena_clk_x_q_Inteface,
@@ -188,6 +188,6 @@ CLK_2_out	<=	CLK_1_2;
 CLK_3_out	<=	CLK_2_1;
 CLK_4_out	<=	CLK_2_2;
 Lock_PLL_1	<=locked_pll_1;
-Lock_PLL_2	<=locked_pll_2;
+Lock_PLL_2	<=locked_pll_1;
 end ;
 

@@ -16,7 +16,7 @@ port (
 ------------------------------------входные сигналы-----------------------
 	CLK				: in std_logic;  											-- тактовый от гнератора
 	reset				: in std_logic;  											-- сброс
-	MAIN_ENABLE		: in std_logic;  											-- разрешение работы
+	main_enable		: in std_logic;  											-- разрешение работы
 	mode_sync_gen	: in std_logic_vector (7 downto 0);             -- режим работы
 	------------------------------------выходные сигналы----------------------
 	ena_clk_x_q		: out	std_logic_vector (3 downto 0); 				-- разрешение частоты /2 /4 /8/ 16
@@ -48,7 +48,7 @@ generic map (8)
 port map (
 	clk		=>	CLK,			
 	reset		=>	reset ,
-	en			=>	MAIN_ENABLE,		
+	en			=>	main_enable,		
 	modul		=>	std_logic_vector(to_unsigned(256,8)) ,
 	qout		=>	div_clk_in);
 			
@@ -102,9 +102,9 @@ end process;
 Process(CLK)
 begin
 if rising_edge(CLK) then
-	ena_kadr_cnt	<=	kadr_in and stroka_in  and MAIN_ENABLE	and ena_clk_in;
-	ena_pix_cnt		<=	MAIN_ENABLE and ena_clk_in;
-	ena_str_cnt 	<=	stroka_in  and MAIN_ENABLE and ena_clk_in;	
+	ena_kadr_cnt	<=	kadr_in and stroka_in  and main_enable	and ena_clk_in;
+	ena_pix_cnt		<=	main_enable and ena_clk_in;
+	ena_str_cnt 	<=	stroka_in  and main_enable and ena_clk_in;	
 end if;
 end process;
 ----------------------------------------------------------------------

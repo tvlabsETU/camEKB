@@ -11,8 +11,8 @@ entity IS_SIM_Paralell is
 port (
 		--входные сигналы--	
 	CLK					: in std_logic;  												-- тактовый 
-	MAIN_reset			: in std_logic;  												-- MAIN_reset
-	MAIN_ENABLE			: in std_logic;  												-- MAIN_ENABLE
+	main_reset			: in std_logic;  												-- main_reset
+	main_enable			: in std_logic;  												-- main_enable
 	mode_generator		: in std_logic_vector (7 downto 0);						--задание режима
 		--выходные сигналы--	
 	qout_V_out			: out std_logic_vector (bit_strok-1 downto 0);		-- 
@@ -43,7 +43,7 @@ signal TRS_SYNC_0			: std_logic_vector (bit_data_imx-1 downto 0);
 component PATHERN_GENERATOR is
 	port (
 		CLK					: in std_logic; 												--	тактовый сигнал данных	
-		MAIN_reset			: in std_logic;  												-- MAIN_reset
+		main_reset			: in std_logic;  												-- main_reset
 		ena_clk				: in std_logic;  												-- разрешение по частоте
 		qout_clk				: in std_logic_vector (bit_pix-1 downto 0); 			--	счетчик пикселей
 		qout_V				: in std_logic_vector (bit_strok-1 downto 0);		--	счетчик строк
@@ -67,7 +67,7 @@ port (
 ------------------------------------входные сигналы-----------------------
 	CLK				: in std_logic;  											-- тактовый от гнератора
 	reset				: in std_logic;  											-- сброс
-	MAIN_ENABLE		: in std_logic;  											-- разрешение работы
+	main_enable		: in std_logic;  											-- разрешение работы
 	mode_sync_gen	: in std_logic_vector (7 downto 0);             -- режим работы
 	------------------------------------выходные сигналы----------------------
 	ena_clk_x_q		: out	std_logic_vector (3 downto 0); 				-- разрешение частоты /2 /4 /8/ 16
@@ -81,7 +81,7 @@ end component;
 signal stroka_IS				: std_logic:='0';
 signal kadr_IS					: std_logic:='0';
 signal qout_clk_IS			: std_logic_vector (bit_pix-1 downto 0):=(Others => '0'); 
-signal qout_clk_IS_ch		: std_logic_vector (bit_pix-1 downto 0):=(Others => '0'); 
+signal qout_clk_is_ch		: std_logic_vector (bit_pix-1 downto 0):=(Others => '0'); 
 signal qout_frame_IS			: std_logic_vector (bit_frame-1 downto 0):=(Others => '0');
 signal qout_V_IS				: std_logic_vector (bit_strok-1 downto 0):=(Others => '0');
 signal ena_clk_x_q_IS		: std_logic_vector (3 downto 0):=(Others => '0');
@@ -119,8 +119,8 @@ generic map (
 port map (
 			-----in---------
 	CLK				=> CLK,	
-	reset				=> MAIN_reset ,
-	MAIN_ENABLE		=> MAIN_ENABLE,
+	reset				=> main_reset ,
+	main_enable		=> main_enable,
 	mode_sync_gen 	=> mode_sync_gen_IS ,
 			------ out------
 	ena_clk_x_q		=> ena_clk_x_q_IS,
@@ -137,8 +137,8 @@ PATHERN_GENERATOR_q: PATHERN_GENERATOR
 port map (
 			--IN
 	CLK				=>	CLK,	
-	MAIN_reset		=>	MAIN_reset ,
-	ena_clk			=>	MAIN_ENABLE,		
+	main_reset		=>	main_reset ,
+	ena_clk			=>	main_enable,		
 	qout_clk			=>	qout_clk_IS,		
 	qout_V			=>	qout_V_IS,
 	mode_generator	=>	mode_generator,
@@ -191,31 +191,31 @@ if rising_edge(CLK) then
 	case  mode_sync_gen (3 downto 0)	is
 		when x"0"	=>			-- 1 линия / количество пикселей и другие параметры по строке не меняются
 			ena_clk_in			<= '1';	
-			qout_clk_IS_ch		<= qout_clk_IS;	
+			qout_clk_is_ch		<= qout_clk_IS;	
 			PixPerLine			<=	EKD_2200_1250p50.PixPerLine;
 			HsyncShift			<=	EKD_2200_1250p50.HsyncShift;
 			ActivePixPerLine	<=	EKD_2200_1250p50.ActivePixPerLine;
 		when x"1"	=>		-- 2 линии / параметры деляется на 2
 			ena_clk_in			<= ena_clk_x_q_IS(0);		
-			qout_clk_IS_ch		<= qout_clk_IS  srl 1;	
+			qout_clk_is_ch		<= qout_clk_IS  srl 1;	
 			PixPerLine			<=	EKD_2200_1250p50.PixPerLine /2;
 			HsyncShift			<=	EKD_2200_1250p50.HsyncShift /2;
 			ActivePixPerLine	<=	EKD_2200_1250p50.ActivePixPerLine /2;			
 		when x"2"	=>		-- 4 линии / параметры деляется на 4		
 			ena_clk_in			<= ena_clk_x_q_IS(1);		
-			qout_clk_IS_ch		<= qout_clk_IS  srl 2;	
+			qout_clk_is_ch		<= qout_clk_IS  srl 2;	
 			PixPerLine			<=	EKD_2200_1250p50.PixPerLine /4;
 			HsyncShift			<=	EKD_2200_1250p50.HsyncShift /4;
 			ActivePixPerLine	<=	EKD_2200_1250p50.ActivePixPerLine /4;
 		when x"3"	=>		-- 8 линии / параметры деляется на 8
 			ena_clk_in			<= ena_clk_x_q_IS(2);		
-			qout_clk_IS_ch		<= qout_clk_IS  srl 3;	
+			qout_clk_is_ch		<= qout_clk_IS  srl 3;	
 			PixPerLine			<=	EKD_2200_1250p50.PixPerLine /8;
 			HsyncShift			<=	EKD_2200_1250p50.HsyncShift /8;
 			ActivePixPerLine	<=	EKD_2200_1250p50.ActivePixPerLine /8;
 		WHEN others	=>			
 			ena_clk_in			<= '1';		
-			qout_clk_IS_ch		<= qout_clk_IS;	
+			qout_clk_is_ch		<= qout_clk_IS;	
 			PixPerLine			<=	EKD_2200_1250p50.PixPerLine;
 			HsyncShift			<=	EKD_2200_1250p50.HsyncShift;
 			ActivePixPerLine	<=	EKD_2200_1250p50.ActivePixPerLine;
@@ -248,26 +248,26 @@ if rising_edge(CLK) then
 		data_imx_anc	<=std_logic_vector(to_unsigned(3,bit_data_imx));
 		data_imx_video	<=data_generator_out(bit_data_imx-1 downto 0);
 		if (to_integer(unsigned (qout_V_IS)) >= EKD_2200_1250p50.VsyncShift)	and (to_integer(unsigned (qout_V_IS)) < EKD_2200_1250p50.VsyncShift + EKD_2200_1250p50.ActiveLine ) then
-			if		to_integer(unsigned (qout_clk_IS_ch))	= HsyncShift - 1																								then	DATA_IMX_in <= TRS_F0_V0_H0;			VALID_DATA<='0';
-			elsif	to_integer(unsigned (qout_clk_IS_ch))	= HsyncShift - 2																								then	DATA_IMX_in <= TRS_SYNC_0;				VALID_DATA<='0';
-			elsif	to_integer(unsigned (qout_clk_IS_ch))	= HsyncShift - 3																								then	DATA_IMX_in <= TRS_SYNC_0;				VALID_DATA<='0';
-			elsif	to_integer(unsigned (qout_clk_IS_ch))	= HsyncShift - 4																								then	DATA_IMX_in <= TRS_SYNC_3FF;			VALID_DATA<='0';
-			elsif	to_integer(unsigned (qout_clk_IS_ch))	= HsyncShift + ActivePixPerLine - 1																		then	DATA_IMX_in <= TRS_SYNC_3FF;			VALID_DATA<='0';
-			elsif	to_integer(unsigned (qout_clk_IS_ch))	= HsyncShift + ActivePixPerLine - 2																		then	DATA_IMX_in <= TRS_SYNC_0;				VALID_DATA<='0';
-			elsif	to_integer(unsigned (qout_clk_IS_ch))	= HsyncShift + ActivePixPerLine - 3																		then	DATA_IMX_in <= TRS_SYNC_0;				VALID_DATA<='0';
-			elsif	to_integer(unsigned (qout_clk_IS_ch))	= HsyncShift + ActivePixPerLine - 4																		then	DATA_IMX_in <= TRS_F0_V0_H1;			VALID_DATA<='0';
-			elsif	to_integer(unsigned (qout_clk_IS_ch))	>= HsyncShift and to_integer(unsigned (qout_clk_IS_ch)) < HsyncShift + ActivePixPerLine	then	DATA_IMX_in <= data_imx_video;		VALID_DATA<='1';
+			if		to_integer(unsigned (qout_clk_is_ch))	= HsyncShift - 1																								then	DATA_IMX_in <= TRS_F0_V0_H0;			VALID_DATA<='0';
+			elsif	to_integer(unsigned (qout_clk_is_ch))	= HsyncShift - 2																								then	DATA_IMX_in <= TRS_SYNC_0;				VALID_DATA<='0';
+			elsif	to_integer(unsigned (qout_clk_is_ch))	= HsyncShift - 3																								then	DATA_IMX_in <= TRS_SYNC_0;				VALID_DATA<='0';
+			elsif	to_integer(unsigned (qout_clk_is_ch))	= HsyncShift - 4																								then	DATA_IMX_in <= TRS_SYNC_3FF;			VALID_DATA<='0';
+			elsif	to_integer(unsigned (qout_clk_is_ch))	= HsyncShift + ActivePixPerLine - 1																		then	DATA_IMX_in <= TRS_SYNC_3FF;			VALID_DATA<='0';
+			elsif	to_integer(unsigned (qout_clk_is_ch))	= HsyncShift + ActivePixPerLine - 2																		then	DATA_IMX_in <= TRS_SYNC_0;				VALID_DATA<='0';
+			elsif	to_integer(unsigned (qout_clk_is_ch))	= HsyncShift + ActivePixPerLine - 3																		then	DATA_IMX_in <= TRS_SYNC_0;				VALID_DATA<='0';
+			elsif	to_integer(unsigned (qout_clk_is_ch))	= HsyncShift + ActivePixPerLine - 4																		then	DATA_IMX_in <= TRS_F0_V0_H1;			VALID_DATA<='0';
+			elsif	to_integer(unsigned (qout_clk_is_ch))	>= HsyncShift and to_integer(unsigned (qout_clk_is_ch)) < HsyncShift + ActivePixPerLine	then	DATA_IMX_in <= data_imx_video;		VALID_DATA<='1';
 			else																																												DATA_IMX_in <= data_imx_anc;			VALID_DATA<='0';
 		end if;
 			else	
-			if 	to_integer(unsigned (qout_clk_IS_ch))	= HsyncShift - 1																								then 	DATA_IMX_in <= TRS_F0_V1_H0;			VALID_DATA<='0';
-			elsif	to_integer(unsigned (qout_clk_IS_ch))	= HsyncShift - 2																								then 	DATA_IMX_in <= TRS_SYNC_0;				VALID_DATA<='0';
-			elsif	to_integer(unsigned (qout_clk_IS_ch))	= HsyncShift - 3																								then 	DATA_IMX_in <= TRS_SYNC_0;				VALID_DATA<='0';
-			elsif	to_integer(unsigned (qout_clk_IS_ch))	= HsyncShift - 4																								then 	DATA_IMX_in <= TRS_SYNC_3FF;			VALID_DATA<='0';
-			elsif	to_integer(unsigned (qout_clk_IS_ch))	= HsyncShift + ActivePixPerLine - 1																		then 	DATA_IMX_in <= TRS_SYNC_3FF;			VALID_DATA<='0';
-			elsif	to_integer(unsigned (qout_clk_IS_ch))	= HsyncShift + ActivePixPerLine - 2																		then 	DATA_IMX_in <= TRS_SYNC_0;				VALID_DATA<='0';
-			elsif	to_integer(unsigned (qout_clk_IS_ch))	= HsyncShift + ActivePixPerLine - 3																		then 	DATA_IMX_in <= TRS_SYNC_0;				VALID_DATA<='0';
-			elsif	to_integer(unsigned (qout_clk_IS_ch))	= HsyncShift + ActivePixPerLine - 4																		then 	DATA_IMX_in <= TRS_F0_V1_H1;			VALID_DATA<='0';
+			if 	to_integer(unsigned (qout_clk_is_ch))	= HsyncShift - 1																								then 	DATA_IMX_in <= TRS_F0_V1_H0;			VALID_DATA<='0';
+			elsif	to_integer(unsigned (qout_clk_is_ch))	= HsyncShift - 2																								then 	DATA_IMX_in <= TRS_SYNC_0;				VALID_DATA<='0';
+			elsif	to_integer(unsigned (qout_clk_is_ch))	= HsyncShift - 3																								then 	DATA_IMX_in <= TRS_SYNC_0;				VALID_DATA<='0';
+			elsif	to_integer(unsigned (qout_clk_is_ch))	= HsyncShift - 4																								then 	DATA_IMX_in <= TRS_SYNC_3FF;			VALID_DATA<='0';
+			elsif	to_integer(unsigned (qout_clk_is_ch))	= HsyncShift + ActivePixPerLine - 1																		then 	DATA_IMX_in <= TRS_SYNC_3FF;			VALID_DATA<='0';
+			elsif	to_integer(unsigned (qout_clk_is_ch))	= HsyncShift + ActivePixPerLine - 2																		then 	DATA_IMX_in <= TRS_SYNC_0;				VALID_DATA<='0';
+			elsif	to_integer(unsigned (qout_clk_is_ch))	= HsyncShift + ActivePixPerLine - 3																		then 	DATA_IMX_in <= TRS_SYNC_0;				VALID_DATA<='0';
+			elsif	to_integer(unsigned (qout_clk_is_ch))	= HsyncShift + ActivePixPerLine - 4																		then 	DATA_IMX_in <= TRS_F0_V1_H1;			VALID_DATA<='0';
 			else																																	 											DATA_IMX_in <= data_imx_anc;			VALID_DATA<='0';
 			end if;
 		end if;
@@ -285,7 +285,7 @@ if rising_edge(CLK) then
 			then	XVS_Imx_Sim	<='0';
 			else	XVS_Imx_Sim	<='1';
 		end if;
-		if 		(to_integer(unsigned (qout_clk_IS_ch))	<=	EKD_2200_1250p50.HsyncWidth)
+		if 		(to_integer(unsigned (qout_clk_is_ch))	<=	EKD_2200_1250p50.HsyncWidth)
 			then	XHS_Imx_Sim	<='0';
 			else	XHS_Imx_Sim	<='1';
 		end if;
@@ -299,7 +299,7 @@ Process(CLK)
 begin
 if rising_edge(CLK) then
 	qout_V_out	 		<= qout_V_IS;
-	qout_clk_out		<= qout_clk_IS_ch;
+	qout_clk_out		<= qout_clk_is_ch;
 
 	if ena_clk_in='1'		then
 		if  VALID_DATA='1'	then

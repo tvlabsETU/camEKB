@@ -13,17 +13,20 @@ use work.My_component_pkg.all;
 entity  sync_word_4ch is
 generic  (bit_data	: integer);
 port (
-	CLK_RX_Parallel	: in std_logic;  										-- CLK Parallel
-	DATA_RX_ch_0		: in STD_LOGIC_VECTOR (bit_data-1 DOWNTO 0);	-- видео данные 
-	DATA_RX_ch_1		: in STD_LOGIC_VECTOR (bit_data-1 DOWNTO 0);	-- видео данные 
-	DATA_RX_ch_2		: in STD_LOGIC_VECTOR (bit_data-1 DOWNTO 0);	-- видео данные 
-	DATA_RX_ch_3		: in STD_LOGIC_VECTOR (bit_data-1 DOWNTO 0);	-- видео данные 
-	MAIN_ENABLE			: in std_logic;  										-- reset
-	MAIN_reset			: in std_logic;  										-- reset
-	align_load_0		: out STD_LOGIC_VECTOR (2 DOWNTO 0); 			-- reset
-	align_load_1 		: out STD_LOGIC_VECTOR (2 DOWNTO 0); 			-- reset
-	align_load_2 		: out STD_LOGIC_VECTOR (2 DOWNTO 0); 			-- reset
-	align_load_3 		: out STD_LOGIC_VECTOR (2 DOWNTO 0)  			-- reset
+	clk_rx_Parallel	: in std_logic;  										-- CLK Parallel
+	data_rx_ch_0		: in std_logic_vector (bit_data-1 DOWNTO 0);	-- видео данные 
+	data_rx_ch_1		: in std_logic_vector (bit_data-1 DOWNTO 0);	-- видео данные 
+	data_rx_ch_2		: in std_logic_vector (bit_data-1 DOWNTO 0);	-- видео данные 
+	data_rx_ch_3		: in std_logic_vector (bit_data-1 DOWNTO 0);	-- видео данные 
+	main_enable			: in std_logic;  										-- reset
+	main_reset			: in std_logic;  										-- reset
+	
+	cnt_imx_word_rx	: out std_logic_vector (bit_pix-1 DOWNTO 0);	-- reset
+	valid_data_rx		: out std_logic;										-- reset
+	align_load_0		: out std_logic_vector (2 DOWNTO 0); 			-- reset
+	align_load_1 		: out std_logic_vector (2 DOWNTO 0); 			-- reset
+	align_load_2 		: out std_logic_vector (2 DOWNTO 0); 			-- reset
+	align_load_3 		: out std_logic_vector (2 DOWNTO 0)  			-- reset
 		);
 end sync_word_4ch;
 
@@ -33,10 +36,10 @@ architecture beh of sync_word_4ch is
 type  stp_type is ( st00, st00_1, st0_1, st0_2, st1_1, st1_2, st2_1, st2_2, st3_1, st3_2 );
 signal stp          : stp_type;
 type ram_byf is array (0 to 3) of std_logic_vector (bit_data-1 downto 0)	;
-signal DATA_RX_ch_0_q 			: ram_byf := (others => (others => '0'));
-signal DATA_RX_ch_1_q 			: ram_byf := (others => (others => '0'));
-signal DATA_RX_ch_2_q 			: ram_byf := (others => (others => '0'));
-signal DATA_RX_ch_3_q 			: ram_byf := (others => (others => '0'));
+signal data_rx_ch_0_q 			: ram_byf := (others => (others => '0'));
+signal data_rx_ch_1_q 			: ram_byf := (others => (others => '0'));
+signal data_rx_ch_2_q 			: ram_byf := (others => (others => '0'));
+signal data_rx_ch_3_q 			: ram_byf := (others => (others => '0'));
 signal word_align_SAV_valid	: std_logic_vector (bit_data*4-1 downto 0);
 signal word_align_EAV_valid	: std_logic_vector (bit_data*4-1 downto 0);
 signal word_align_SAV_invalid	: std_logic_vector (bit_data*4-1 downto 0);
@@ -55,7 +58,7 @@ signal TRS_F0_V1_H0				: std_logic_vector (bit_data-1 downto 0);
 signal TRS_F0_V1_H1				: std_logic_vector (bit_data-1 downto 0);
 signal TRS_SYNC_3FF				: std_logic_vector (bit_data-1 downto 0);
 signal TRS_SYNC_0					: std_logic_vector (bit_data-1 downto 0);
-signal cnt_imx_word_rx			: std_logic_vector (bit_pix-1 downto 0);
+-- signal cnt_imx_word_rx			: std_logic_vector (bit_pix-1 downto 0);
 signal Sync_flag					: std_logic:='0';
 signal align_done					: std_logic:='0';
 
@@ -64,9 +67,9 @@ begin
 cnt_imx_word0: count_n_modul                    
 generic map (bit_pix) 
 port map (
-	clk			=>	CLK_RX_Parallel,			
-	reset			=>	MAIN_reset ,
-	en				=>	MAIN_ENABLE,		
+	clk			=>	clk_rx_Parallel,			
+	reset			=>	main_reset ,
+	en				=>	main_enable,		
 	modul			=>	std_logic_vector(to_unsigned(EKD_2200_1250p50.PixPerLine / N_channel_imx, bit_pix)),
 	qout			=>	cnt_imx_word_rx,
 	cout			=>	Sync_flag
@@ -77,7 +80,7 @@ port map (
 TRS_gen_q: TRS_gen                    
 generic map (bit_data) 
 port map (
-	CLK				=>	CLK_RX_Parallel,		
+	CLK				=>	clk_rx_Parallel,		
    TRS_SYNC_3FF   => TRS_SYNC_3FF,
    TRS_SYNC_0     => TRS_SYNC_0  ,
    TRS_F0_V0_H0   => TRS_F0_V0_H0,
@@ -93,34 +96,34 @@ word_align_EAV_invalid	<=TRS_F0_V1_H1 & TRS_SYNC_0 & TRS_SYNC_0 & TRS_SYNC_3FF;	
 ---------------------------------------------------
 -- формирование слова из 4 пикселей для каждого из 4-х каналов
 ---------------------------------------------------
-process (CLK_RX_Parallel)
+process (clk_rx_Parallel)
 begin
-if rising_edge(CLK_RX_Parallel) then
-	DATA_RX_ch_0_q(0)	<=	DATA_RX_ch_0;
+if rising_edge(clk_rx_Parallel) then
+	data_rx_ch_0_q(0)	<=	data_rx_ch_0;
 	for ii in 0 to 2 loop
-		DATA_RX_ch_0_q(ii+1) <= DATA_RX_ch_0_q(ii);
+		data_rx_ch_0_q(ii+1) <= data_rx_ch_0_q(ii);
 	end loop;  
-	DATA_RX_ch_1_q(0)	<=	DATA_RX_ch_1;
+	data_rx_ch_1_q(0)	<=	data_rx_ch_1;
 	for ii in 0 to 2 loop
-		DATA_RX_ch_1_q(ii+1) <= DATA_RX_ch_1_q(ii);
+		data_rx_ch_1_q(ii+1) <= data_rx_ch_1_q(ii);
 	end loop;  
-	DATA_RX_ch_2_q(0)	<=	DATA_RX_ch_2;
+	data_rx_ch_2_q(0)	<=	data_rx_ch_2;
 	for ii in 0 to 2 loop
-		DATA_RX_ch_2_q(ii+1) <= DATA_RX_ch_2_q(ii);
+		data_rx_ch_2_q(ii+1) <= data_rx_ch_2_q(ii);
 	end loop;  
-	DATA_RX_ch_3_q(0)	<=	DATA_RX_ch_3;
+	data_rx_ch_3_q(0)	<=	data_rx_ch_3;
 	for ii in 0 to 2 loop
-		DATA_RX_ch_3_q(ii+1) <= DATA_RX_ch_3_q(ii);
+		data_rx_ch_3_q(ii+1) <= data_rx_ch_3_q(ii);
 	end loop;  
 end if;
 end process;
-process (CLK_RX_Parallel)
+process (clk_rx_Parallel)
 begin
-if rising_edge(CLK_RX_Parallel) then
-	word_ch_1 <= DATA_RX_ch_0_q(0) &	DATA_RX_ch_0_q(1) & DATA_RX_ch_0_q(2) & DATA_RX_ch_0_q(3);
-	word_ch_2 <= DATA_RX_ch_1_q(0) &	DATA_RX_ch_1_q(1) & DATA_RX_ch_1_q(2) & DATA_RX_ch_1_q(3);
-	word_ch_3 <= DATA_RX_ch_2_q(0) &	DATA_RX_ch_2_q(1) & DATA_RX_ch_2_q(2) & DATA_RX_ch_2_q(3);
-	word_ch_4 <= DATA_RX_ch_3_q(0) &	DATA_RX_ch_3_q(1) & DATA_RX_ch_3_q(2) & DATA_RX_ch_3_q(3);
+if rising_edge(clk_rx_Parallel) then
+	word_ch_1 <= data_rx_ch_0_q(0) &	data_rx_ch_0_q(1) & data_rx_ch_0_q(2) & data_rx_ch_0_q(3);
+	word_ch_2 <= data_rx_ch_1_q(0) &	data_rx_ch_1_q(1) & data_rx_ch_1_q(2) & data_rx_ch_1_q(3);
+	word_ch_3 <= data_rx_ch_2_q(0) &	data_rx_ch_2_q(1) & data_rx_ch_2_q(2) & data_rx_ch_2_q(3);
+	word_ch_4 <= data_rx_ch_3_q(0) &	data_rx_ch_3_q(1) & data_rx_ch_3_q(2) & data_rx_ch_3_q(3);
 end if;
 end process;
 ---------------------------------------------------
@@ -129,10 +132,10 @@ end process;
 ---------------------------------------------------
 -- проверка на ключевое слово
 ---------------------------------------------------
-process (CLK_RX_Parallel,MAIN_reset)
+process (clk_rx_Parallel,main_reset)
 begin
-if	rising_edge(CLK_RX_Parallel) then
-	if MAIN_reset='1'	then
+if	rising_edge(clk_rx_Parallel) then
+	if main_reset='1'	then
 		catch_align	<=x"0";		
 	else
 		if Sync_flag='1' 	then	
@@ -158,10 +161,10 @@ end process;
 ---------------------------------------------------
 -- конечный автома управления 
 ---------------------------------------------------
-Process(CLK_RX_Parallel,MAIN_reset)
+Process(clk_rx_Parallel,main_reset)
 begin
-if	rising_edge (CLK_RX_Parallel) then
-	if MAIN_reset='1'	then
+if	rising_edge (clk_rx_Parallel) then
+	if main_reset='1'	then
 		align_load_0		<=	"000";
 		align_load_1		<=	"000";
 		align_load_2		<=	"000";
@@ -222,5 +225,11 @@ if	rising_edge (CLK_RX_Parallel) then
 end if;
 end process;
 -----------------------------------
+
+
+valid_data_rx
+
+
+
 
 end ;

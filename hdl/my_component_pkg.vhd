@@ -24,7 +24,7 @@ port(
 	dir        : in STD_LOGIC;
 	ena        : in STD_LOGIC;
 	clk        : in STD_LOGIC;
-	data       : in STD_LOGIC_VECTOR(bit_data-1 downto 0);
+	data       : in std_logic_vector(bit_data-1 downto 0);
 	load       : in STD_LOGIC;
 	shiftout   : out STD_LOGIC
 	);
@@ -53,5 +53,6 @@ port (
 	TRS_F1_V1_H1   : out std_logic_vector (bit_data-1 downto 0)
 	);
 end component;
+
 
 end package ;

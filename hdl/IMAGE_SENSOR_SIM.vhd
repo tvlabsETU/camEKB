@@ -92,8 +92,8 @@ signal CLK_IS_DDR_1		: std_logic;
 signal CLK_IS_DDR_2		: std_logic;			
 signal locked_pll_0		: std_logic;
 signal locked_pll_1		: std_logic;
-signal MAIN_ENABLE		: std_logic;
-signal MAIN_reset			: std_logic;
+signal main_enable		: std_logic;
+signal main_reset			: std_logic;
 signal locked_pll_q		: std_logic_vector(31 downto 0);
 	
 ----------------------------------------------------------------------
@@ -105,8 +105,8 @@ component IS_SIM_Paralell is
 port (
 		--входные сигналы--	
 	CLK					: in std_logic;  												-- тактовый 
-	MAIN_reset			: in std_logic;  												-- MAIN_reset
-	MAIN_ENABLE			: in std_logic;  												-- MAIN_ENABLE
+	main_reset			: in std_logic;  												-- main_reset
+	main_enable			: in std_logic;  												-- main_enable
 	mode_generator		: in std_logic_vector (7 downto 0);						--задание режима
 		--выходные сигналы--	
 	qout_V_out			: out std_logic_vector (bit_strok-1 downto 0);		-- 
@@ -137,8 +137,8 @@ generic  (bit_data	: integer);
 port (
 		--входные сигналы--	
 	CLK_fast				: in std_logic;  												-- тактовый 
-	MAIN_reset			: in std_logic;  												-- MAIN_reset
-	MAIN_ENABLE			: in std_logic;  												-- MAIN_ENABLE
+	main_reset			: in std_logic;  												-- main_reset
+	main_enable			: in std_logic;  												-- main_enable
 	DATA_IMX_OUT		: in std_logic_vector (bit_data_imx-1 downto 0);	-- входной сигнал
 		--выходные сигналы--	
 	IMX_DDR_VIDEO		: out std_logic												-- выходной сигнал
@@ -181,8 +181,8 @@ if  rising_edge(CLK) then
 	for i in 0 to 30 loop
 		locked_pll_q(i+1) <= locked_pll_q(i);
 	end loop;
-	MAIN_reset	<=	not 	locked_pll_q(31);
-	MAIN_ENABLE	<=	locked_pll_q(31);
+	main_reset	<=	not 	locked_pll_q(31);
+	main_enable	<=	locked_pll_q(31);
 end if;
 end process;
 
@@ -193,8 +193,8 @@ IS_SIM_Paralell_q: IS_SIM_Paralell
 port map (
 				------входные сигналы-----------
 	CLK					=>	CLK_IS_pix,			
-	MAIN_reset			=>	MAIN_reset ,
-	MAIN_ENABLE			=>	MAIN_ENABLE  ,		
+	main_reset			=>	main_reset ,
+	main_enable			=>	main_enable  ,		
 	mode_generator		=>	mode_generator,
 				------выходные сигналы-----------
 	DATA_IS_pix_ch_1	=> DATA_IS_pix_ch_1,
@@ -211,8 +211,8 @@ generic map (bit_data_imx)
 port map (
 				------входные сигналы-----------
 	CLK_fast				=>	CLK_IS_DDR_0,			
-	MAIN_reset			=>	MAIN_reset ,
-	MAIN_ENABLE			=>	MAIN_ENABLE  ,		
+	main_reset			=>	main_reset ,
+	main_enable			=>	main_enable  ,		
 	DATA_IMX_OUT		=>	DATA_IS_pix_ch_1,
 				------выходные сигналы-----------
 	IMX_DDR_VIDEO		=>	DATA_IS_LVDS_ch_n(0)
@@ -222,8 +222,8 @@ generic map (bit_data_imx)
 port map (
 				------входные сигналы-----------
 	CLK_fast				=>	CLK_IS_DDR_0,			
-	MAIN_reset			=>	MAIN_reset ,
-	MAIN_ENABLE			=>	MAIN_ENABLE  ,		
+	main_reset			=>	main_reset ,
+	main_enable			=>	main_enable  ,		
 	DATA_IMX_OUT		=>	DATA_IS_pix_ch_2,
 				------выходные сигналы-----------
 	IMX_DDR_VIDEO		=>	DATA_IS_LVDS_ch_n(1)
@@ -233,8 +233,8 @@ generic map (bit_data_imx)
 port map (
 				------входные сигналы-----------
 	CLK_fast				=>	CLK_IS_DDR_0,			
-	MAIN_reset			=>	MAIN_reset ,
-	MAIN_ENABLE			=>	MAIN_ENABLE  ,		
+	main_reset			=>	main_reset ,
+	main_enable			=>	main_enable  ,		
 	DATA_IMX_OUT		=>	DATA_IS_pix_ch_3,
 				------выходные сигналы-----------
 	IMX_DDR_VIDEO		=>	DATA_IS_LVDS_ch_n(2)
@@ -244,8 +244,8 @@ generic map (bit_data_imx)
 port map (
 				------входные сигналы-----------
 	CLK_fast				=>	CLK_IS_DDR_0,			
-	MAIN_reset			=>	MAIN_reset ,
-	MAIN_ENABLE			=>	MAIN_ENABLE  ,		
+	main_reset			=>	main_reset ,
+	main_enable			=>	main_enable  ,		
 	DATA_IMX_OUT		=>	DATA_IS_pix_ch_4,
 				------выходные сигналы-----------
 	IMX_DDR_VIDEO		=>	DATA_IS_LVDS_ch_n(3)

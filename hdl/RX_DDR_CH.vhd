@@ -13,12 +13,12 @@ use work.My_component_pkg.all;
 entity RX_DDR_CH is
 generic  (bit_data	: integer);
 port (
-	CLK_RX_Serial		: in std_logic;  										-- CLK Serial
-	DATA_RX_Serial		: in std_logic;				-- видео данные DDR
-	MAIN_reset			: in std_logic;  										-- reset
-	MAIN_ENABLE			: in std_logic;  										-- ENABLE
+	clk_rx_Serial		: in std_logic;  										-- CLK Serial
+	data_rx_Serial		: in std_logic;				-- видео данные DDR
+	main_reset			: in std_logic;  										-- reset
+	main_enable			: in std_logic;  										-- ENABLE
 	align_load			: in std_logic_vector (2 downto 0);				-- сдвиг момент выборки 
-	DATA_RX_Parallel	: out std_logic_vector (bit_data-1 downto 0)	-- принятый сигнал							  	 														  		
+	data_rx_Parallel	: out std_logic_vector (bit_data-1 downto 0)	-- принятый сигнал							  	 														  		
 		);
 end RX_DDR_CH;
 
@@ -35,27 +35,27 @@ begin
 ----------------------------------------------------------------------
 ---прием DDR сигнала
 ----------------------------------------------------------------------
-Process(CLK_RX_Serial)
+Process(clk_rx_Serial)
 begin
-if rising_edge (CLK_RX_Serial) then
-	CH_0_QR	<=	DATA_RX_Serial;
+if rising_edge (clk_rx_Serial) then
+	CH_0_QR	<=	data_rx_Serial;
 	end if;
 end process;
-Process(CLK_RX_Serial)
+Process(clk_rx_Serial)
 begin
-if falling_edge (CLK_RX_Serial) then
-	CH_0_QF_i	<=	DATA_RX_Serial;
+if falling_edge (clk_rx_Serial) then
+	CH_0_QF_i	<=	data_rx_Serial;
 	end if;
 end process;
-Process(CLK_RX_Serial)
+Process(clk_rx_Serial)
 begin
-if CLK_RX_Serial='1' then
+if clk_rx_Serial='1' then
 	CH_0_QF	<=	CH_0_QF_i;
 	end if;
 end process;
-Process(CLK_RX_Serial)
+Process(clk_rx_Serial)
 begin
-if rising_edge (CLK_RX_Serial) then
+if rising_edge (clk_rx_Serial) then
 	CH_0_QR_reg			<=	CH_0_QR;
 	VIDEO_CH_0_reg		<=	CH_0_QF 		& CH_0_QR_reg  &  VIDEO_CH_0_reg(bit_data-1 downto 2) ;
 end if;
@@ -66,18 +66,18 @@ end process;
 load_q0: count_n_modul                    
 generic map (3) 
 port map (
-			clk		=>	CLK_RX_Serial,			
-			reset		=>	MAIN_reset ,
-			en			=>	MAIN_ENABLE,		
+			clk		=>	clk_rx_Serial,			
+			reset		=>	main_reset ,
+			en			=>	main_enable,		
 			modul		=> std_logic_vector(to_unsigned(bit_data /2,3)),
 			qout		=>	load_q
 			);
 ----------------------------------------------------------------------
 ---захват параллельного слова на основе 
 ----------------------------------------------------------------------
-Process(CLK_RX_Serial)
+Process(clk_rx_Serial)
 begin
-if rising_edge (CLK_RX_Serial) then
+if rising_edge (clk_rx_Serial) then
 	if  load_q(2 downto 0)	=	align_load then
 		pattern_load	<='1';
 	else
@@ -85,7 +85,7 @@ if rising_edge (CLK_RX_Serial) then
 	end if;
 	
 	if pattern_load='1' then
-		DATA_RX_Parallel	<=	VIDEO_CH_0_reg;
+		data_rx_Parallel	<=	VIDEO_CH_0_reg;
 	end if;
 end if;
 end process;

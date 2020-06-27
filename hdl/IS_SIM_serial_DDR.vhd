@@ -12,8 +12,8 @@ generic  (bit_data	: integer);
 port (
 		--входные сигналы--	
 	CLK_fast				: in std_logic;  												-- тактовый 
-	MAIN_reset			: in std_logic;  												-- MAIN_reset
-	MAIN_ENABLE			: in std_logic;  												-- MAIN_ENABLE
+	main_reset			: in std_logic;  												-- main_reset
+	main_enable			: in std_logic;  												-- main_enable
 	DATA_IMX_OUT		: in std_logic_vector (bit_data_imx-1 downto 0);	-- входной сигнал
 		--выходные сигналы--	
 	IMX_DDR_VIDEO		: out std_logic												-- выходной сигнал
@@ -71,7 +71,7 @@ load_ddr_video_imx_q0: count_n_modul
 generic map (4) 
 port map (
 	clk		=>	CLK_fast,	
-	reset		=>	MAIN_reset ,
+	reset		=>	main_reset ,
 	en			=>	ena_CLK_fast,
 	modul		=>	std_logic_vector(to_unsigned(bit_data /2 , 4)) ,
 	cout		=>	load_ddr_video_imx);	

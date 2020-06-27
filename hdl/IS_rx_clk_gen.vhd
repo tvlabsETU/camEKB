@@ -14,44 +14,44 @@ use work.My_component_pkg.all;
 ----------------------------------------------------------------------
 entity IS_rx_clk_gen is
 port (
-	DCK_IS					: in std_logic;  	-- CLK from IS
+	dck_is					: in std_logic;  	-- CLK from IS
 	CLK						: in std_logic;  	-- CLK from generator
-	MAIN_reset				: in std_logic;  	-- reset
-	MAIN_ENABLE				: in std_logic;  	-- ENABLE
-	CLK_RX_Serial_ch		: out std_logic;	-- CLK ser for LVDS
-	CLK_RX_Parallel_ch	: out std_logic	-- CLK pix per channel					  	 														  		
+	main_reset				: in std_logic;  	-- reset
+	main_enable				: in std_logic;  	-- ENABLE
+	clk_rx_Serial_ch		: out std_logic;	-- CLK ser for LVDS
+	clk_rx_Parallel_ch	: out std_logic	-- CLK pix per channel					  	 														  		
 		);
 end IS_rx_clk_gen;
 
 architecture beh of IS_rx_clk_gen is 
 
 signal div_clk_DCK      : std_logic_vector (2 downto 0):=(Others => '0');
-signal CLK_RX_Serial		: std_logic:='0';
+signal clk_rx_Serial		: std_logic:='0';
 begin
 --------------------------------------------------------------------
 -- блок генерации тактовых частот без использования PLL
 -- данный блок только  для ProAsic
 -- !! требует описания constrain !!
 --------------------------------------------------------------------
-CLK_RX_Serial_ch		<= DCK_IS;
-CLK_RX_Serial		   <= DCK_IS;
+clk_rx_Serial_ch		<= dck_is;
+clk_rx_Serial		   <= dck_is;
 
 div_clk_q0: count_n_modul                    
 generic map (3) 
 port map (
-   clk      =>	CLK_RX_Serial,			
-   reset		=>	MAIN_reset ,
-   en			=>	MAIN_ENABLE,		
+   clk      =>	clk_rx_Serial,			
+   reset		=>	main_reset ,
+   en			=>	main_enable,		
    modul		=> std_logic_vector(to_unsigned(bit_data_imx /2, 3)),
    qout		=>	div_clk_DCK);
 
-Process(CLK_RX_Serial)
+Process(clk_rx_Serial)
 begin
-if rising_edge(CLK_RX_Serial) then
+if rising_edge(clk_rx_Serial) then
    if  to_integer(unsigned (div_clk_DCK)) >=bit_data_imx /4 then
-      CLK_RX_Parallel_ch   <= '1';
+      clk_rx_Parallel_ch   <= '1';
    else
-      CLK_RX_Parallel_ch   <= '0';
+      clk_rx_Parallel_ch   <= '0';
    end if;
 end if;
 end process;

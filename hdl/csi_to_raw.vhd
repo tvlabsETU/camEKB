@@ -8,13 +8,13 @@ entity csi_to_raw is
 
 ------------------------------------модуль приема данных IMX-----------------------------------------------------
 port (
-	CLK_RX_Parallel		: in std_logic;  									-- CLK Serial
+	clk_rx_Parallel		: in std_logic;  									-- CLK Serial
 	CLK_sys				: in std_logic;   
 	ena_clk_x2			: in std_logic; 									-- разрешение частоты /2
 	ena_clk_x4			: in std_logic; 									-- разрешение частоты /4
 	ena_clk_x8			: in std_logic; 									-- разрешение частоты /8
-	MAIN_reset			: in std_logic;  									-- reset
-	MAIN_ENABLE			: in std_logic;  									-- ENABLE
+	main_reset			: in std_logic;  									-- reset
+	main_enable			: in std_logic;  									-- ENABLE
 	DATA_CSI_CH			: in std_logic_vector (bit_data_CSI-1 downto 0); 	-- отладка
 	-- cnt_imx_word		: in std_logic_vector (bit_pix-1 downto 0); 	-- счетчик пикселей
 	Mode_debug			: in std_logic_vector (7 downto 0); 				-- отладка
@@ -79,24 +79,24 @@ begin
 cnt_imx_word0: count_n_modul                    
 generic map (bit_pix) 
 port map (
-			clk			=>	CLK_RX_Parallel,			
-			reset		=>	MAIN_reset ,
-			en			=>	MAIN_ENABLE,		
+			clk			=>	clk_rx_Parallel,			
+			reset		=>	main_reset ,
+			en			=>	main_enable,		
 			modul		=> 	std_logic_vector(to_unsigned(CEA_1920_1080p30.PixPerLine,bit_pix)),
 			qout		=>	cnt_imx_word);
 
-reset_cnt_pix_8bit	<=	MAIN_reset;
-Process(CLK_RX_Parallel)
+reset_cnt_pix_8bit	<=	main_reset;
+Process(clk_rx_Parallel)
   begin
-    if  rising_edge(CLK_RX_Parallel) then 	
+    if  rising_edge(clk_rx_Parallel) then 	
 		remain	<=	to_integer(unsigned(cnt_imx_word))	rem 5;
 	end if;
 end process;
 
 
-p_Shift_0 : process (CLK_RX_Parallel)
+p_Shift_0 : process (clk_rx_Parallel)
 begin
-if rising_edge(CLK_RX_Parallel) then
+if rising_edge(clk_rx_Parallel) then
 	-- word_align	<=x"FF301c2bb8";
 	word_align	<=x"00071c2bb8";
 	DATA_CSI_CH_q(0)	<=	DATA_CSI_CH;
@@ -116,9 +116,9 @@ end process;
 
 
 
-process(CLK_RX_Parallel)
+process(clk_rx_Parallel)
 begin
-	if rising_edge(CLK_RX_Parallel) then
+	if rising_edge(clk_rx_Parallel) then
 		DATA_CSI_CH1_in<=DATA_CSI_CH;
 		DATA_CSI_CH1_in<=DATA_CSI_CH;
 		if word_catch_40_bit='1' then
@@ -255,7 +255,7 @@ end process;
 
 
 
-RESET_fifo	<= not MAIN_reset;
+RESET_fifo	<= not main_reset;
 fifo_40_bit_q: fifo_40_bit                    
 port map (
 		-- Inputs
@@ -263,7 +263,7 @@ port map (
 	RCLOCK		=>	CLK_sys ,
 	RE			=>	rdreq_40_bit,		
 	RESET		=>	RESET_fifo,		
-	WCLOCK		=> 	CLK_RX_Parallel,
+	WCLOCK		=> 	clk_rx_Parallel,
 	WE			=>	wrreq_40_bit,
 		-- Outputs
 	DVLD		=>	DVLD, 
@@ -299,7 +299,7 @@ end process;
 -- wraddress_ram_q: count_n_modul                    
 -- generic map (10) 
 -- port map (
--- 			clk			=>	CLK_RX_Parallel,			
+-- 			clk			=>	clk_rx_Parallel,			
 -- 			reset		=>	reset_cnt_pix_8bit ,
 -- 			en			=>	wrreq_40_bit,		
 -- 			modul		=> 	std_logic_vector(to_unsigned(550,10)),
@@ -339,9 +339,9 @@ end process;
 -- 			modul		=> 	std_logic_vector(to_unsigned(550,10)),
 -- 			qout		=>	rdaddress_ram1);
 			
--- process(CLK_RX_Parallel)
+-- process(clk_rx_Parallel)
 -- begin
--- 	if rising_edge(CLK_RX_Parallel) then
+-- 	if rising_edge(clk_rx_Parallel) then
 -- 		wren_ram1	<=	qout_v(0)		and wrreq_40_bit;
 -- 		wren_ram2	<=	not qout_v(0)	and wrreq_40_bit;
 -- 	end if;
@@ -355,7 +355,7 @@ end process;
 -- 	REN		=>	'1' ,	
 -- 	RCLK	=>	CLK_sys ,	
 -- 	WADDR	=>	wraddress_ram1,
--- 	WCLK	=>	CLK_RX_Parallel,
+-- 	WCLK	=>	clk_rx_Parallel,
 -- 	WEN		=>	wren_ram1,
 -- --------------------OUT signal---------
 -- 	RD		=>	data_ram1_rd
@@ -369,7 +369,7 @@ end process;
 -- 	REN		=>	'1' ,	
 -- 	RCLK	=>	CLK_sys ,	
 -- 	WADDR	=>	wraddress_ram1,
--- 	WCLK	=>	CLK_RX_Parallel,
+-- 	WCLK	=>	clk_rx_Parallel,
 -- 	WEN		=>	wren_ram2,
 -- --------------------OUT signal---------
 -- 	RD		=>	data_ram2_rd
