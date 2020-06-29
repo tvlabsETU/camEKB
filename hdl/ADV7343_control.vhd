@@ -21,6 +21,7 @@ port (
    DAC_PHSYNC		:out std_logic;
    DAC_PVSYNC		:out std_logic;
    DAC_PBLK			:out std_logic;
+   Get_m			   :out std_logic;
    DAC_LF1			:out std_logic;
    DAC_LF2			:out std_logic;
    DAC_SDA			:out std_logic;
@@ -97,7 +98,8 @@ constant content: ROM_array := (
 0  =>   X"17"	& 	X"02",   -- Software reset.
 1  =>   X"00"	& 	X"1C",   -- All DACs enabled. PLL enabled (4×).
 2  =>   X"01"	& 	X"10",   -- HD-SDR input mode..
-3  =>   X"30"	& 	X"28",   -- 720p at 60 Hz/59.94 Hz. HSYNC/VSYNC synchronization. EIA-770.3 output levels..
+-- 3  =>   X"30"	& 	X"28",   -- 720p at 60 Hz/59.94 Hz. HSYNC/VSYNC synchronization. EIA-770.3 output levels..
+3  =>   X"30"	& 	X"80",   -- 720p at 60 Hz/59.94 Hz. HSYNC/VSYNC synchronization. EIA-770.3 output levels..
 4  =>   X"31"	& 	X"01",   -- Pixel data valid. 4× oversampling.
 -- 5  =>   X"17"	& 	X"02",   -- Software reset.
 -- 6  =>   X"17"	& 	X"02",   -- Software reset.
@@ -112,19 +114,21 @@ Process(CLK)
 begin
 if rising_edge(CLK) then
 
-   -- if to_integer(unsigned(qout_V)) >=EKD_ADV7343_1080p25.VsyncShift 
-   --    and to_integer(unsigned(qout_V)) < EKD_ADV7343_1080p25.VsyncShift + EKD_ADV7343_1080p25.VsyncWidth then
-   --       dac_pvsync  <= '0';
-   --    else
-   --       dac_pvsync  <= '1';
-   -- end if;
+   if to_integer(unsigned(qout_V)) >=EKD_ADV7343_1080p25.VsyncShift 
+      and to_integer(unsigned(qout_V)) < EKD_ADV7343_1080p25.VsyncShift + EKD_ADV7343_1080p25.VsyncWidth then
+         dac_pvsync  <= '0';
+      else
+         dac_pvsync  <= '1';
+   end if;
 
-   -- if to_integer(unsigned(qout_clk)) >=EKD_ADV7343_1080p25.HsyncShift 
-   --    and to_integer(unsigned(qout_clk)) < EKD_ADV7343_1080p25.HsyncShift + EKD_ADV7343_1080p25.HsyncWidth then
-   --       dac_phsync  <= '0';
-   --    else
-   --       dac_phsync  <= '1';
-   -- end if;
+   if to_integer(unsigned(qout_clk)) >=EKD_ADV7343_1080p25.HsyncShift 
+      and to_integer(unsigned(qout_clk)) < EKD_ADV7343_1080p25.HsyncShift + EKD_ADV7343_1080p25.HsyncWidth then
+         dac_phsync  <= '0';
+         Get_m       <= '1';
+      else
+         dac_phsync  <= '1';
+         Get_m       <= '0';
+         end if;
 
    if to_integer(unsigned(qout_V)) >=EKD_ADV7343_1080p25.VsyncShift + EKD_ADV7343_1080p25.InActiveLine -  EKD_ADV7343_1080p25.VsyncWidth
       and to_integer(unsigned(qout_V)) < EKD_ADV7343_1080p25.VsyncShift + EKD_ADV7343_1080p25.InActiveLine -  EKD_ADV7343_1080p25.VsyncWidth + EKD_ADV7343_1080p25.ActiveLine  then
@@ -141,11 +145,11 @@ if rising_edge(CLK) then
    end if;
 end if;
 end process;
--- DAC_PBLK <= dac_pblk_v and dac_pblk_h;
-DAC_PBLK    <= CLK;
+DAC_PBLK <= dac_pblk_v and dac_pblk_h;
+-- DAC_PBLK    <= CLK;
 DAC_CLK     <= CLK;
-dac_phsync  <= CLK;
-dac_pvsync  <= CLK;
+-- dac_phsync  <= CLK;
+-- dac_pvsync  <= CLK;
 
 DAC_Y       <= qout_clk(7 downto 0);
 ----------------------------------------------------------------------
@@ -236,8 +240,15 @@ else
    end if;
 	--???????? ??????? ????????? --
    WHEN st0 =>
-      if  qout_v(0) = '1'	 then
-         ena_i2c  <= '1';
+      if  qout_v(2 downto 0) = "000"	 then
+         if cnt_reg  < 6   then           
+            ena_i2c  <= '1';
+         else
+            state       <= st2;
+            ena_i2c     <= '0';
+            reset_n_i2c <= '0';
+         end if;
+
       end if;
       data_wr_i2c  <= content(cnt_reg)(15 downto 8);
       if busy_i2c ='1' then 
@@ -247,17 +258,22 @@ else
 
    WHEN st1 =>
       data_wr_i2c  <= content(cnt_reg)(7 downto 0);
-      if cnt_reg  < 6   then
+
          if busy_i2c ='1' then 
             state          <= st0;
+            ena_i2c        <= '0';
+
             cnt_reg        <= cnt_reg+1;
             data_wr_i2c    <= content(cnt_reg)(15 downto 8);
          end if;
-      else
-         state       <= st_wait;
-         ena_i2c     <= '0';
-         reset_n_i2c <= '0';
-      end if;
+      -- else
+      --    state       <= st_wait;
+      --    ena_i2c     <= '0';
+      --    reset_n_i2c <= '0';
+      -- end if;
+   WHEN st2 =>
+      ena_i2c     <= '0';
+      reset_n_i2c <= '0';
 
    when others =>  null;
    end case;

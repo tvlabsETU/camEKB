@@ -78,7 +78,7 @@ entity EKB_top is
 	-- CEn_Mem_1		:out std_logic;
 	-- OE_Mem_1			:out std_logic;
 	-- 	--Other--	
-	-- Get_m				:out std_logic;
+	Get_m				:out std_logic;
 	-- Sync				:out std_logic;
 	-- CMD1				:out std_logic;
 	-- CMD2				:out std_logic;
@@ -273,6 +273,7 @@ component ADV7343_control is
 		DAC_PHSYNC		:out std_logic;
 		DAC_PVSYNC		:out std_logic;
 		DAC_PBLK			:out std_logic;
+		Get_m			   :out std_logic;
 		DAC_LF1			:out std_logic;
 		DAC_LF2			:out std_logic;
 		DAC_SDA			:out std_logic;
@@ -462,6 +463,7 @@ port map (
 	DAC_PHSYNC		=>	DAC_PHSYNC,	
 	DAC_PVSYNC		=>	DAC_PVSYNC,	
 	DAC_PBLK			=>	DAC_PBLK,		
+	Get_m				=>	Get_m,		
 	DAC_LF1			=>	DAC_LF1,		
 	DAC_LF2			=>	DAC_LF2,		
 	DAC_SDA			=>	DAC_SDA,		

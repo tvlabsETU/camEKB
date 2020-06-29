@@ -179,8 +179,8 @@ port map (
 ----------------------------------------------------------------------
 gen_pix_str_frame_Inteface: gen_pix_str_frame    	             
 generic map (
-	EKD_ADV7343_PAL.PixPerLine,
-	EKD_ADV7343_PAL.LinePerFrame
+	EKD_ADV7343_1080p25.PixPerLine,
+	EKD_ADV7343_1080p25.LinePerFrame
 	) 
 port map (
 			-----in---------
