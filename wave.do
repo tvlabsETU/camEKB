@@ -14,30 +14,28 @@ quietly WaveActivateNextPane {} 0
 
 add wave -noupdate -divider SYNC_GEN
 
-add wave -position end sim:/tb_ekb_top/EKB_top_0/sync_gen_pix_str_frame_q/qout_clk_IS
-add wave -position end sim:/tb_ekb_top/EKB_top_0/sync_gen_pix_str_frame_q/qout_v_IS
-add wave -position end sim:/tb_ekb_top/EKB_top_0/sync_gen_pix_str_frame_q/qout_frame_IS
-add wave -position end  sim:/tb_ekb_top/EKB_top_0/sync_gen_pix_str_frame_q/stroka_IS
-add wave -position end sim:/tb_ekb_top/EKB_top_0/sync_gen_pix_str_frame_q/kadr_IS
+add wave -position 1  sim:/tb_adv/EKB_top_0/ADV7343_control_q0/qout_clk
+add wave -position 2  sim:/tb_adv/EKB_top_0/ADV7343_control_q0/qout_v
+add wave -position 3  sim:/tb_adv/EKB_top_0/ADV7343_control_q0/ena_clk_x_q
 
 add wave -noupdate -divider Image_SEnsor
-add wave -position end  sim:/tb_ekb_top/EKB_top_0/IMAGE_SENSOR_SIM_q/IS_SIM_Paralell_q/XVS_Imx_Sim
-add wave -position end  sim:/tb_ekb_top/EKB_top_0/IMAGE_SENSOR_SIM_q/IS_SIM_Paralell_q/XHS_Imx_Sim
-add wave -position end  sim:/tb_ekb_top/EKB_top_0/IMAGE_SENSOR_SIM_q/IS_SIM_Paralell_q/VALID_DATA
-add wave -position end  sim:/tb_ekb_top/EKB_top_0/IMAGE_SENSOR_SIM_q/IS_SIM_Paralell_q/gen_pix_str_frame_Inteface/qout_clk
-add wave -position end  sim:/tb_ekb_top/EKB_top_0/IMAGE_SENSOR_SIM_q/IS_SIM_Paralell_q/gen_pix_str_frame_Inteface/qout_v
-add wave -position end  sim:/tb_ekb_top/EKB_top_0/IMAGE_SENSOR_SIM_q/IS_SIM_Paralell_q/qout_clk_IS_ch
-add wave -position end  sim:/tb_ekb_top/EKB_top_0/IMAGE_SENSOR_SIM_q/IS_SIM_Paralell_q/DATA_IS_pix_ch_1
-add wave -position end  sim:/tb_ekb_top/EKB_top_0/IMAGE_SENSOR_SIM_q/DATA_IS_LVDS_ch_n
-add wave -position end  sim:/tb_ekb_top/EKB_top_0/IMAGE_SENSOR_SIM_q/CLK_DDR
+
 
 add wave -noupdate -divider SMPTE_SERDES
-add wave -position end  sim:/tb_ekb_top/EKB_top_0/image_sensor_RX_LVDS_q/RX_DDR_CH_q0/CLK_RX_Serial
-add wave -position end  sim:/tb_ekb_top/EKB_top_0/image_sensor_RX_LVDS_q/RX_DDR_CH_q0/DATA_RX_Serial
-add wave -position end  sim:/tb_ekb_top/EKB_top_0/image_sensor_RX_LVDS_q/RX_DDR_CH_q0/align_load
-add wave -position end  sim:/tb_ekb_top/EKB_top_0/image_sensor_RX_LVDS_q/RX_DDR_CH_q0/DATA_RX_Parallel
-add wave -position end  sim:/tb_ekb_top/EKB_top_0/image_sensor_RX_LVDS_q/RX_DDR_CH_q0/VIDEO_CH_0_reg
 
+
+
+add wave -position 5  sim:/tb_adv/EKB_top_0/ADV7343_control_q0/cnt_reg
+add wave -position 6  sim:/tb_adv/EKB_top_0/ADV7343_control_q0/reset_n_i2c
+add wave -position 7  sim:/tb_adv/EKB_top_0/ADV7343_control_q0/ena_i2c
+add wave -position 8  sim:/tb_adv/EKB_top_0/ADV7343_control_q0/addr_i2c
+add wave -position 9  sim:/tb_adv/EKB_top_0/ADV7343_control_q0/rw_i2c
+add wave -position 10  sim:/tb_adv/EKB_top_0/ADV7343_control_q0/data_wr_i2c
+add wave -position 11  sim:/tb_adv/EKB_top_0/ADV7343_control_q0/busy_i2c
+add wave -position 12  sim:/tb_adv/EKB_top_0/ADV7343_control_q0/data_rd_i2c
+add wave -position 13  sim:/tb_adv/EKB_top_0/ADV7343_control_q0/ack_error_i2c
+add wave -position 14  sim:/tb_adv/EKB_top_0/ADV7343_control_q0/sda_i2c
+add wave -position 15  sim:/tb_adv/EKB_top_0/ADV7343_control_q0/scl_i2c
 
 
 add wave -noupdate -divider HSI

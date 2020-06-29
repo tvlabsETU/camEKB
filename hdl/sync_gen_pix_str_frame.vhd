@@ -100,6 +100,16 @@ end component;
 
 ----------------------------------------------------------------------
 
+signal CLK_in		: std_logic;
+
+component CLKBUF is
+	port (
+	PAD	: in std_logic;  											-- тактовый от гнератора
+	Y		: out std_logic 	 										-- переполенени счетчика по строке	
+		);
+end component;
+
+
 begin
 
 main_reset	<= reset;
@@ -107,6 +117,14 @@ main_reset	<= reset;
 ----------------------------------------------------------------------
 --PLL с необходимыми чатотами
 ----------------------------------------------------------------------
+-- CLKBUF_q: CLKBUF
+-- port map(
+-- 	PAD	=>CLK,
+-- 	Y		=>CLK_in
+-- );
+
+
+
 PLL_POWERDOWN_N	<=	'1';
 PLL_0_q: PLL_0                   
 port map (
@@ -119,16 +137,16 @@ port map (
 	LOCK			=> locked_pll_1
 );	
 
-PLL_1_q: PLL_1                   
-port map (
-	-- Inputs
-	POWERDOWN	=> PLL_POWERDOWN_N,
-	CLKA			=> CLK,	
-	-- Outputs 
-	GLA			=> CLK_2_1,		--29.5 МГц
-	GLB			=> CLK_2_2, 	--29.5 МГц
-	LOCK			=> locked_pll_2
-);	
+-- PLL_1_q: PLL_1                   
+-- port map (
+-- 	-- Inputs
+-- 	POWERDOWN	=> PLL_POWERDOWN_N,
+-- 	CLKA			=> CLK,	
+-- 	-- Outputs 
+-- 	GLA			=> CLK_2_1,		--29.5 МГц
+-- 	GLB			=> CLK_2_2, 	--29.5 МГц
+-- 	LOCK			=> locked_pll_2
+-- );	
 
 -- ----------------------------------------------------------------------
 
@@ -142,7 +160,7 @@ generic map (
 	) 
 port map (
 			-----in---------
-	CLK				=> CLK_1_1,	
+	CLK				=> CLK_1_2,	
 	reset				=> main_reset ,
 	main_enable		=> main_enable,
 	mode_sync_gen 	=> mode_sync_gen_IS,
@@ -166,7 +184,7 @@ generic map (
 	) 
 port map (
 			-----in---------
-	CLK				=> CLK_2_1,	
+	CLK				=> CLK_1_2,	
 	reset				=> main_reset ,
 	main_enable		=> main_enable,
 	mode_sync_gen 	=> mode_sync_gen_Inteface,

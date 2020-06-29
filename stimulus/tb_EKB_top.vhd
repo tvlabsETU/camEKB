@@ -48,7 +48,7 @@ architecture behavioral of tb_EKB_top is
         IMX_1_XCLR		:out std_logic;  
         IMX_1_SCK		:out std_logic;  
         IMX_1_SDI		:out std_logic;  
-        IMX_1_SDO		:out std_logic;  
+        IMX_1_SDO		:in std_logic;  
         IMX_1_XCE		:out std_logic;  
         IMX_1_INCK		:out std_logic;  
         IMX_1_XTRIG		:out std_logic;  
@@ -68,7 +68,7 @@ architecture behavioral of tb_EKB_top is
         IMX_2_XCLR		:out std_logic;  
         IMX_2_SCK		:out std_logic;  
         IMX_2_SDI		:out std_logic;  
-        IMX_2_SDO		:out std_logic;  
+        IMX_2_SDO		:in std_logic;  
         IMX_2_XCE		:out std_logic;  
         IMX_2_INCK		:out std_logic;  
         IMX_2_XTRIG		:out std_logic;  
@@ -151,7 +151,7 @@ EKB_top_0 : EKB_top
     IMX_1_XCLR		=>  open,
     IMX_1_SCK		=>  open,
     IMX_1_SDI		=>  open,
-    IMX_1_SDO		=>  open,
+    IMX_1_SDO		=>  '0',
     IMX_1_XCE		=>  open,
     IMX_1_INCK		=>  open,
     IMX_1_XTRIG		=>  open,
@@ -171,7 +171,7 @@ EKB_top_0 : EKB_top
     IMX_2_XCLR		=>  open, 
     IMX_2_SCK		=>  open, 
     IMX_2_SDI		=>  open, 
-    IMX_2_SDO		=>  open, 
+    IMX_2_SDO		=>  '0',
     IMX_2_XCE		=>  open, 
     IMX_2_INCK		=>  open, 
     IMX_2_XTRIG		=>  open, 

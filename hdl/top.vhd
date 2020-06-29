@@ -284,6 +284,15 @@ end component;
 
 signal data_Inteface	: std_logic_vector (7 downto 0);				
 
+component INBUF is
+	port (
+		PAD   : in std_logic;
+		Y 		: out std_logic	
+	);
+end component;
+signal CLK_in_1	: std_logic:='1';						
+
+
 
 begin
 
@@ -304,16 +313,22 @@ begin
 -- 	CLK_DDR					=>	CLK_DDR_Sim	
 -- 	);
 
+inpuf_q: INBUF
+port map (
+	PAD	=>	CLK_in,
+	Y		=>	CLK_in_1
+);
+
 ----------------------------------------------------------------------
 ---модуль сброса
 ----------------------------------------------------------------------
 reset_control_q: reset_control                    
 port map (
 				-----in---------
-	CLK_in  			=>	CLK_in,			
+	CLK_in  			=>	CLK_in_1,			
 	Reset_main  	=>	Reset_main,			
 	Lock_PLL_1  	=>	LOCK_PLL_SYNC_GEN_1,
-	Lock_PLL_2  	=>	LOCK_PLL_SYNC_GEN_2,
+	Lock_PLL_2  	=>	'1',
 	Lock_PLL_3  	=>	'1',
 	Lock_PLL_4  	=>	'1',
 	Sync_x      	=>	'1',
@@ -331,7 +346,7 @@ port map (
 sync_gen_pix_str_frame_q: sync_gen_pix_str_frame                    
 port map (
 				--IN--
-	CLK							=> CLK_in,			
+	CLK							=> CLK_in_1,			
 	reset							=> reset_sync_gen,			
 	main_enable					=> main_enable,			
 				--OUT--
@@ -358,48 +373,48 @@ port map (
 	);
 
 
--- ----------------------------------------------------------------------
--- --модуль управления ФП
--- ----------------------------------------------------------------------
--- imx_control_q1: imx_control                    
--- port map (
--- 				--IN--
--- 	CLK						=> CLK_1,				
--- 	ena_clk					=> ena_clk_x_q_IS(3),			
--- 	MAIN_reset				=> main_reset,		
--- 	qout_v					=> qout_v_IS,			
--- 	AGC_VGA					=> AGC_VGA,			
--- 	AGC_str					=> AGC_str,			
--- 	DEBUG						=> DEBUG_0,			
--- 				--OUT--
--- 	reset_imx				=> IMX_1_XCLR,		
--- 	SDI_imx					=> IMX_1_SDI,			
--- 	XCE_imx					=> IMX_1_XCE,			
--- 	SCK_imx					=> IMX_1_SCK			
--- 	);
--- 	IMX_1_INCK		<=	CLK_2;
--- 	IMX_1_XTRIG		<=	'1';
 ----------------------------------------------------------------------
 --модуль управления ФП
 ----------------------------------------------------------------------
--- imx_control_q2: imx_control                    
--- port map (
--- 				--IN--
--- 	CLK						=> CLK_1,				
--- 	ena_clk					=> ena_clk_x_q_IS(3),			
--- 	MAIN_reset				=> main_reset,		
--- 	qout_v					=> qout_v_IS,			
--- 	AGC_VGA					=> AGC_VGA,			
--- 	AGC_str					=> AGC_str,			
--- 	DEBUG						=> DEBUG_0,			
--- 				--OUT--
--- 	reset_imx				=> IMX_2_XCLR,		
--- 	SDI_imx					=> IMX_2_SDI,			
--- 	XCE_imx					=> IMX_2_XCE,			
--- 	SCK_imx					=> IMX_2_SCK			
--- 	);
--- 	IMX_2_INCK		<=	CLK_2;
--- 	IMX_2_XTRIG		<=	'1';
+imx_control_q1: imx_control                    
+port map (
+				--IN--
+	CLK						=> CLK_1,				
+	ena_clk					=> ena_clk_x_q_IS(3),			
+	MAIN_reset				=> main_reset,		
+	qout_v					=> qout_v_IS,			
+	AGC_VGA					=> AGC_VGA,			
+	AGC_str					=> AGC_str,			
+	DEBUG						=> DEBUG_0,			
+				--OUT--
+	reset_imx				=> IMX_1_XCLR,		
+	SDI_imx					=> IMX_1_SDI,			
+	XCE_imx					=> IMX_1_XCE,			
+	SCK_imx					=> IMX_1_SCK			
+	);
+	IMX_1_INCK		<=	CLK_2;
+	IMX_1_XTRIG		<=	'1';
+--------------------------------------------------------------------
+-- модуль управления ФП
+--------------------------------------------------------------------
+imx_control_q2: imx_control                    
+port map (
+				--IN--
+	CLK						=> CLK_1,				
+	ena_clk					=> ena_clk_x_q_IS(3),			
+	MAIN_reset				=> main_reset,		
+	qout_v					=> qout_v_IS,			
+	AGC_VGA					=> AGC_VGA,			
+	AGC_str					=> AGC_str,			
+	DEBUG						=> DEBUG_0,			
+				--OUT--
+	reset_imx				=> IMX_2_XCLR,		
+	SDI_imx					=> IMX_2_SDI,			
+	XCE_imx					=> IMX_2_XCE,			
+	SCK_imx					=> IMX_2_SCK			
+	);
+	IMX_2_INCK		<=	CLK_2;
+	IMX_2_XTRIG		<=	'1';
 
 
 -- ----------------------------------------------------------------------

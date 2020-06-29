@@ -63,6 +63,21 @@ end process;
 -- для организации правльного синхронного сброса FLASH FPGA 
 -- задержка на 32 такта сигнала LOCK от всех PLL
 ----------------------------------------------------------------------
+-- process (CLK_in, lock_pll_all)
+-- begin
+-- if lock_pll_all='0' then
+--     lock_pll_all_q<=(others => '0');
+-- else
+--     if rising_edge(CLK_in) then
+--         lock_pll_all_q(0) <= lock_pll_all;
+--         for i in 0 to 30 loop
+--             lock_pll_all_q(i+1) <= lock_pll_all_q(i);
+--         end loop;
+--     end if;
+-- end if;
+
+-- end process;
+
 process (CLK_in)
 begin
 if  rising_edge(CLK_in) then
@@ -72,6 +87,8 @@ if  rising_edge(CLK_in) then
     end loop;
 end if;
 end process;
+
+
 
 ----------------------------------------------------------------------
 --выходные сигналы

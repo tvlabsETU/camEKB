@@ -107,6 +107,12 @@ architecture DEF_ARCH of PLL_0 is
         );
   end component;
 
+  component PLLINT
+    port( A : in    std_logic := 'U';
+          Y : out   std_logic
+        );
+  end component;
+
   component GND
     port(Y : out std_logic); 
   end component;
@@ -115,7 +121,7 @@ architecture DEF_ARCH of PLL_0 is
     port(Y : out std_logic); 
   end component;
 
-    signal \VCC\, \GND\ : std_logic;
+    signal CLKAP, \VCC\, \GND\ : std_logic;
     signal GND_power_net1 : std_logic;
     signal VCC_power_net1 : std_logic;
 
@@ -125,9 +131,9 @@ begin
     \VCC\ <= VCC_power_net1;
 
     Core : PLL
-      generic map(VCOFREQUENCY => 137.500)
+      generic map(VCOFREQUENCY => 74.250)
 
-      port map(CLKA => CLKA, EXTFB => \GND\, POWERDOWN => 
+      port map(CLKA => CLKAP, EXTFB => \GND\, POWERDOWN => 
         POWERDOWN, GLA => GLA, LOCK => LOCK, GLB => GLB, YB => 
         OPEN, GLC => OPEN, YC => OPEN, OADIV0 => \GND\, OADIV1
          => \GND\, OADIV2 => \GND\, OADIV3 => \GND\, OADIV4 => 
@@ -145,14 +151,17 @@ begin
         \GND\, DLYYC1 => \GND\, DLYYC2 => \GND\, DLYYC3 => \GND\, 
         DLYYC4 => \GND\, DLYGLC0 => \GND\, DLYGLC1 => \GND\, 
         DLYGLC2 => \GND\, DLYGLC3 => \GND\, DLYGLC4 => \GND\, 
-        FINDIV0 => \GND\, FINDIV1 => \VCC\, FINDIV2 => \GND\, 
-        FINDIV3 => \VCC\, FINDIV4 => \VCC\, FINDIV5 => \GND\, 
+        FINDIV0 => \VCC\, FINDIV1 => \GND\, FINDIV2 => \VCC\, 
+        FINDIV3 => \VCC\, FINDIV4 => \GND\, FINDIV5 => \GND\, 
         FINDIV6 => \GND\, FBDIV0 => \VCC\, FBDIV1 => \GND\, 
-        FBDIV2 => \GND\, FBDIV3 => \GND\, FBDIV4 => \VCC\, FBDIV5
-         => \VCC\, FBDIV6 => \GND\, FBDLY0 => \GND\, FBDLY1 => 
+        FBDIV2 => \VCC\, FBDIV3 => \VCC\, FBDIV4 => \GND\, FBDIV5
+         => \GND\, FBDIV6 => \GND\, FBDLY0 => \GND\, FBDLY1 => 
         \GND\, FBDLY2 => \GND\, FBDLY3 => \GND\, FBDLY4 => \GND\, 
         FBSEL0 => \VCC\, FBSEL1 => \GND\, XDLYSEL => \GND\, 
-        VCOSEL0 => \VCC\, VCOSEL1 => \VCC\, VCOSEL2 => \VCC\);
+        VCOSEL0 => \VCC\, VCOSEL1 => \GND\, VCOSEL2 => \VCC\);
+    
+    pllint1 : PLLINT
+      port map(A => CLKA, Y => CLKAP);
     
     GND_power_inst1 : GND
       port map( Y => GND_power_net1);
@@ -181,21 +190,21 @@ end DEF_ARCH;
 -- GEN_BHV_VERILOG_VAL:F
 -- MGNTIMER:F
 -- MGNCMPL:T
--- DESDIR:G:/ACTELL/EKB/EKB/EKB/smartgen\PLL_0
+-- DESDIR:G:/ACTELL/EKB/EKB/Libero/smartgen\PLL_0
 -- GEN_BEHV_MODULE:F
 -- SMARTGEN_DIE:IT14X14M4LDP
 -- SMARTGEN_PACKAGE:fg484
 -- AGENIII_IS_SUBPROJECT_LIBERO:T
 -- FIN:74.250000
--- CLKASRC:0
+-- CLKASRC:2
 -- FBDLY:1
 -- FBMUX:1
 -- XDLYSEL:0
--- PRIMFREQ:137.500000
+-- PRIMFREQ:74.250000
 -- PPHASESHIFT:0
 -- DLYAVAL:1
 -- OAMUX:4
--- SEC1FREQ:137.500000
+-- SEC1FREQ:74.250000
 -- UGLB:1
 -- UYB:0
 -- GLBDLYVAL:1
