@@ -1,19 +1,19 @@
  ** Message System Log
  ** Database: 
- ** Date:   Mon Jun 29 22:49:25 2020
+ ** Date:   Wed Jul 01 00:34:48 2020
 
 
 ****************
 Macro Parameters
 ****************
 
-Name                            : PLL_SIM_IS_1
+Name                            : pll_imx_dck
 Family                          : PA3LDP
 Output Format                   : VHDL
 Type                            : Static PLL
 PowerDown                       : Active Low
 Lock                            : Active High
-Input Freq(Mhz)                 : 74.250000
+Input Freq(Mhz)                 : 111.375000
 CLKA Source                     : Core Logic
 Feedback Delay Value Index      : 1
 Feedback Mux Select             : 1
@@ -22,31 +22,31 @@ Primary Freq(Mhz)               : 111.375000
 Primary PhaseShift              : 0
 Primary Delay Value Index       : 1
 Primary Mux Select              : 4
-Secondary1 Freq(Mhz)            : 111.375000
-Use GLB                         : YES
+Secondary1 Freq(Mhz)            : 0.000000
+Use GLB                         : NO
 Use YB                          : NO
-GLB Delay Value Index           : 1
-YB Delay Value Index            : 1
-Secondary1 PhaseShift           : 180
-Secondary1 Mux Select           : 4
-Secondary2 Freq(Mhz)            : 111.375000
-Use GLC                         : YES
+GLB Delay Value Index           : 32
+YB Delay Value Index            : 32
+Secondary1 PhaseShift           : 0
+Secondary1 Mux Select           : 0
+Secondary2 Freq(Mhz)            : 0.000000
+Use GLC                         : NO
 Use YC                          : NO
-GLC Delay Value Index           : 1
-YC Delay Value Index            : 1
-Secondary2 PhaseShift           : 90
-Secondary2 Mux Select           : 4
+GLC Delay Value Index           : 32
+YC Delay Value Index            : 32
+Secondary2 PhaseShift           : 0
+Secondary2 Mux Select           : 0
 Lock Control                    : No
 
 Configuration Bits:
-FINDIV[6:0]     0001101
+FINDIV[6:0]     0010100
 FBDIV[6:0]      0010100
 OADIV[4:0]      00000
 OBDIV[4:0]      00000
 OCDIV[4:0]      00000
 OAMUX[2:0]      100
-OBMUX[2:0]      110
-OCMUX[2:0]      111
+OBMUX[2:0]      000
+OCMUX[2:0]      000
 FBSEL[1:0]      01
 FBDLY[4:0]      00000
 XDLYSEL         0
@@ -61,14 +61,6 @@ Primary Clock Frequency 111.375
 Primary Clock Phase Shift 0.000
 Primary Clock Output Delay from CLKA 2.200
 
-Secondary1 Clock Frequency 111.375
-Secondary1 Clock Phase Shift 180.000
-Secondary1 Clock Global Output Delay from CLKA 6.689
-
-Secondary2 Clock Frequency 111.375
-Secondary2 Clock Phase Shift 90.000
-Secondary2 Clock Global Output Delay from CLKA 4.445
-
 
 **************
 Compile Report
@@ -81,14 +73,14 @@ Netlist Resource Report
     CORE                       Used:      0  Total:  75264   (0.00%)
     IO (W/ clocks)             Used:      0  Total:    341   (0.00%)
     Differential IO            Used:      0  Total:    168   (0.00%)
-    GLOBAL (Chip+Quadrant)     Used:      3  Total:     18   (16.67%)
+    GLOBAL (Chip+Quadrant)     Used:      1  Total:     18   (5.56%)
     PLL                        Used:      1  Total:      6   (16.67%)
     RAM/FIFO                   Used:      0  Total:    112   (0.00%)
     Low Static ICC             Used:      0  Total:      1   (0.00%)
     FlashROM                   Used:      0  Total:      1   (0.00%)
     User JTAG                  Used:      0  Total:      1   (0.00%)
 
-Wrote VHDL netlist to G:/ACTELL/EKB/EKB/Libero/smartgen\PLL_SIM_IS_1\PLL_SIM_IS_1.vhd.
+Wrote VHDL netlist to G:/ACTELL/EKB/EKB/Libero/smartgen\pll_imx_dck\pll_imx_dck.vhd.
 
- ** Log Ended:   Mon Jun 29 22:49:26 2020
+ ** Log Ended:   Wed Jul 01 00:34:48 2020
 

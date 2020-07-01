@@ -5,7 +5,7 @@ use ieee.std_logic_1164.all;
 library proasic3l;
 use proasic3l.all;
 
-entity PLL_SIM_IS is
+entity pll_imx_dck is
 
     port( POWERDOWN : in    std_logic;
           CLKA      : in    std_logic;
@@ -13,9 +13,9 @@ entity PLL_SIM_IS is
           GLA       : out   std_logic
         );
 
-end PLL_SIM_IS;
+end pll_imx_dck;
 
-architecture DEF_ARCH of PLL_SIM_IS is 
+architecture DEF_ARCH of pll_imx_dck is 
 
   component PLL
     generic (VCOFREQUENCY:real := 0.0);
@@ -130,7 +130,7 @@ begin
     \VCC\ <= VCC_power_net1;
 
     Core : PLL
-      generic map(VCOFREQUENCY => 74.250)
+      generic map(VCOFREQUENCY => 111.375)
 
       port map(CLKA => CLKAP, EXTFB => \GND\, POWERDOWN => 
         POWERDOWN, GLA => GLA, LOCK => LOCK, GLB => OPEN, YB => 
@@ -150,10 +150,10 @@ begin
         \GND\, DLYYC1 => \GND\, DLYYC2 => \GND\, DLYYC3 => \GND\, 
         DLYYC4 => \GND\, DLYGLC0 => \GND\, DLYGLC1 => \GND\, 
         DLYGLC2 => \GND\, DLYGLC3 => \GND\, DLYGLC4 => \GND\, 
-        FINDIV0 => \VCC\, FINDIV1 => \GND\, FINDIV2 => \VCC\, 
-        FINDIV3 => \VCC\, FINDIV4 => \GND\, FINDIV5 => \GND\, 
-        FINDIV6 => \GND\, FBDIV0 => \VCC\, FBDIV1 => \GND\, 
-        FBDIV2 => \VCC\, FBDIV3 => \VCC\, FBDIV4 => \GND\, FBDIV5
+        FINDIV0 => \GND\, FINDIV1 => \GND\, FINDIV2 => \VCC\, 
+        FINDIV3 => \GND\, FINDIV4 => \VCC\, FINDIV5 => \GND\, 
+        FINDIV6 => \GND\, FBDIV0 => \GND\, FBDIV1 => \GND\, 
+        FBDIV2 => \VCC\, FBDIV3 => \GND\, FBDIV4 => \VCC\, FBDIV5
          => \GND\, FBDIV6 => \GND\, FBDLY0 => \GND\, FBDLY1 => 
         \GND\, FBDLY2 => \GND\, FBDLY3 => \GND\, FBDLY4 => \GND\, 
         FBSEL0 => \VCC\, FBSEL1 => \GND\, XDLYSEL => \GND\, 
@@ -189,17 +189,17 @@ end DEF_ARCH;
 -- GEN_BHV_VERILOG_VAL:F
 -- MGNTIMER:F
 -- MGNCMPL:T
--- DESDIR:G:/ACTELL/EKB/EKB/Libero/smartgen\PLL_SIM_IS
+-- DESDIR:G:/ACTELL/EKB/EKB/Libero/smartgen\pll_imx_dck
 -- GEN_BEHV_MODULE:F
 -- SMARTGEN_DIE:IT14X14M4LDP
 -- SMARTGEN_PACKAGE:fg484
 -- AGENIII_IS_SUBPROJECT_LIBERO:T
--- FIN:74.250000
+-- FIN:111.375000
 -- CLKASRC:2
 -- FBDLY:1
 -- FBMUX:1
 -- XDLYSEL:0
--- PRIMFREQ:74.250000
+-- PRIMFREQ:111.375000
 -- PPHASESHIFT:0
 -- DLYAVAL:1
 -- OAMUX:4

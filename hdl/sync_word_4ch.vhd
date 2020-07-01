@@ -11,22 +11,24 @@ use work.My_component_pkg.all;
 -- меняется фаза клова для каждого канала Cyclone/Igloo2  !! нужно дописать при необходимости
 --------------------------------------------------------
 entity  sync_word_4ch is
-generic  (bit_data	: integer);
+generic  (
+		bit_data		: integer;
+		PixPerLine	: integer
+		);
 port (
 	clk_rx_Parallel	: in std_logic;  										-- CLK Parallel
 	data_rx_ch_0		: in std_logic_vector (bit_data-1 DOWNTO 0);	-- видео данные 
 	data_rx_ch_1		: in std_logic_vector (bit_data-1 DOWNTO 0);	-- видео данные 
 	data_rx_ch_2		: in std_logic_vector (bit_data-1 DOWNTO 0);	-- видео данные 
 	data_rx_ch_3		: in std_logic_vector (bit_data-1 DOWNTO 0);	-- видео данные 
-	main_enable			: in std_logic;  										-- reset
+	main_enable			: in std_logic;  										-- enable
 	main_reset			: in std_logic;  										-- reset
-	
-	cnt_imx_word_rx	: out std_logic_vector (bit_pix-1 DOWNTO 0);	-- reset
-	valid_data_rx		: out std_logic;										-- reset
-	align_load_0		: out std_logic_vector (2 DOWNTO 0); 			-- reset
-	align_load_1 		: out std_logic_vector (2 DOWNTO 0); 			-- reset
-	align_load_2 		: out std_logic_vector (2 DOWNTO 0); 			-- reset
-	align_load_3 		: out std_logic_vector (2 DOWNTO 0)  			-- reset
+	cnt_imx_word_rx	: out std_logic_vector (bit_pix-1 DOWNTO 0);	-- счетчик слов от IMX по 1 каналу
+	valid_data_rx		: out std_logic;										-- валидные данные по 1 каналу
+	align_load_0		: out std_logic_vector (2 DOWNTO 0); 			-- сдвиг в 1 канале
+	align_load_1 		: out std_logic_vector (2 DOWNTO 0); 			-- сдвиг в 2 канале
+	align_load_2 		: out std_logic_vector (2 DOWNTO 0); 			-- сдвиг в 3 канале
+	align_load_3 		: out std_logic_vector (2 DOWNTO 0)  			-- сдвиг в 4 канале
 		);
 end sync_word_4ch;
 
@@ -70,7 +72,7 @@ port map (
 	clk			=>	clk_rx_Parallel,			
 	reset			=>	main_reset ,
 	en				=>	main_enable,		
-	modul			=>	std_logic_vector(to_unsigned(EKD_2200_1250p50.PixPerLine / N_channel_imx, bit_pix)),
+	modul			=>	std_logic_vector(to_unsigned(PixPerLine / N_channel_imx, bit_pix)),
 	qout			=>	cnt_imx_word_rx,
 	cout			=>	Sync_flag
 	);
@@ -227,9 +229,17 @@ end process;
 -----------------------------------
 
 
-valid_data_rx
-
-
-
+process (clk_rx_Parallel)
+begin
+if rising_edge(clk_rx_Parallel) then
+	IF main_reset='1'	then
+		valid_data_rx	<='0';
+	else
+		if	 	word_ch_1 = word_align_SAV_valid 	then	valid_data_rx	<='1';
+		elsif	word_ch_1 = word_align_EAV_valid 	then	valid_data_rx	<='0';
+		end if;
+	end if;
+end if;
+end process;
 
 end ;

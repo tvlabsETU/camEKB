@@ -27,14 +27,34 @@ architecture beh of IS_rx_clk_gen is
 
 signal div_clk_DCK      : std_logic_vector (2 downto 0):=(Others => '0');
 signal clk_rx_Serial		: std_logic:='0';
+
+Component pll_imx_dck is
+port( POWERDOWN : in    std_logic;
+      CLKA      : in    std_logic;
+      LOCK      : out   std_logic;
+      GLA       : out   std_logic
+      );
+
+end Component;
+
 begin
 --------------------------------------------------------------------
 -- блок генерации тактовых частот без использования PLL
 -- данный блок только  для ProAsic
 -- !! требует описания constrain !!
 --------------------------------------------------------------------
-clk_rx_Serial_ch		<= dck_is;
-clk_rx_Serial		   <= dck_is;
+-- clk_rx_Serial_ch		<= dck_is;
+-- clk_rx_Serial		   <= dck_is;
+
+pll_imx_dck_q0: pll_imx_dck                    
+port map (
+   POWERDOWN   =>	'1',			
+   CLKA		   =>	dck_is ,
+   -- LOCK        =>	main_enable,		
+   GLA		   => clk_rx_Serial);
+clk_rx_Serial_ch		<= clk_rx_Serial;
+
+
 
 div_clk_q0: count_n_modul                    
 generic map (3) 

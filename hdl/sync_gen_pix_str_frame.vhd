@@ -97,18 +97,7 @@ component gen_pix_str_frame is
 		qout_frame		: out	std_logic_vector (bit_frame-1 downto 0) 	-- счетчик кадров
 			);
 end component;
-
 ----------------------------------------------------------------------
-
-signal CLK_in		: std_logic;
-
-component CLKBUF is
-	port (
-	PAD	: in std_logic;  											-- тактовый от гнератора
-	Y		: out std_logic 	 										-- переполенени счетчика по строке	
-		);
-end component;
-
 
 begin
 
@@ -117,14 +106,6 @@ main_reset	<= reset;
 ----------------------------------------------------------------------
 --PLL с необходимыми чатотами
 ----------------------------------------------------------------------
--- CLKBUF_q: CLKBUF
--- port map(
--- 	PAD	=>CLK,
--- 	Y		=>CLK_in
--- );
-
-
-
 PLL_POWERDOWN_N	<=	'1';
 PLL_0_q: PLL_0                   
 port map (
@@ -155,8 +136,8 @@ port map (
 ----------------------------------------------------------------------
 gen_pix_str_frame_IS: gen_pix_str_frame    	             
 generic map (
-	EKD_2200_1250p50.PixPerLine,
-	EKD_2200_1250p50.LinePerFrame
+	EKD_ADV7343_1080p25.PixPerLine,
+	EKD_ADV7343_1080p25.LinePerFrame
 	) 
 port map (
 			-----in---------

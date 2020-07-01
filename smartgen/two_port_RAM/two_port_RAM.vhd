@@ -7,7 +7,8 @@ use proasic3l.all;
 
 entity two_port_RAM is
 
-    port( WD    : in    std_logic_vector(11 downto 0);
+    port( 
+          WD    : in    std_logic_vector(11 downto 0);
           RD    : out   std_logic_vector(11 downto 0);
           WEN   : in    std_logic;
           REN   : in    std_logic;

@@ -9,8 +9,10 @@ use work.My_component_pkg.all;
 entity image_sensor_RX_LVDS is
 port (		
 			--image sensor IN--
-	is_ch				: in std_logic_vector (3 DOWNTO 0);	-- данные от 1 ФП 
-	dck_is			: in std_logic; 							-- CLK от 1 ФП  
+	IMX_CH_P			:in std_logic_vector(3 downto 0);	-- channel DDR IMX 1
+	IMX_CH_N			:in std_logic_vector(3 downto 0);	-- channel DDR IMX 1
+	IMX_CLK_P		:in std_logic;						-- channel DDR IMX CLK 
+	IMX_CLK_N		:in std_logic;						-- channel DDR IMX CLK 	
 	XVS				: in std_logic; 
 	XHS				: in std_logic; 
 	---------Other------------
@@ -58,7 +60,7 @@ port (
 	data_rx_Parallel	: out std_logic_vector (bit_data-1 downto 0)	-- принятый сигнал							  	 														  		
 		);
 end component;
-signal align_load	: std_logic_vector (2 downto 0):=(Others => '0');
+signal align_load		: std_logic_vector (2 downto 0):=(Others => '0');
 signal data_rx_ch_0	: std_logic_vector (bit_data_imx-1 downto 0):=(Others => '0');
 signal data_rx_ch_1	: std_logic_vector (bit_data_imx-1 downto 0):=(Others => '0');
 signal data_rx_ch_2	: std_logic_vector (bit_data_imx-1 downto 0):=(Others => '0');
@@ -67,36 +69,50 @@ signal data_rx_ch_3	: std_logic_vector (bit_data_imx-1 downto 0):=(Others => '0'
 -- модуль синхронизации данных для 4 каналов
 ----------------------------------------------------------------------
 component  sync_word_4ch is
-generic  (bit_data	: integer);
+generic  (
+	bit_data		: integer;
+	PixPerLine	: integer
+	);
 port (
-   clk_rx_Parallel	: in std_logic;  										-- CLK Parallel
-   data_rx_ch_0		: in std_logic_vector (bit_data-1 DOWNTO 0);	-- видео данные 
-   data_rx_ch_1		: in std_logic_vector (bit_data-1 DOWNTO 0);	-- видео данные 
-   data_rx_ch_2		: in std_logic_vector (bit_data-1 DOWNTO 0);	-- видео данные 
-   data_rx_ch_3		: in std_logic_vector (bit_data-1 DOWNTO 0);	-- видео данные 
-   main_enable			: in std_logic;  										-- reset
-   main_reset			: in std_logic;  										-- reset
-   align_load_0		: out std_logic_vector (2 DOWNTO 0); 			-- reset
-   align_load_1		: out std_logic_vector (2 DOWNTO 0); 			-- reset
-   align_load_2		: out std_logic_vector (2 DOWNTO 0); 			-- reset
-   align_load_3		: out std_logic_vector (2 DOWNTO 0)  			-- reset
+	clk_rx_Parallel	: in std_logic;  										-- CLK Parallel
+	data_rx_ch_0		: in std_logic_vector (bit_data-1 DOWNTO 0);	-- видео данные 
+	data_rx_ch_1		: in std_logic_vector (bit_data-1 DOWNTO 0);	-- видео данные 
+	data_rx_ch_2		: in std_logic_vector (bit_data-1 DOWNTO 0);	-- видео данные 
+	data_rx_ch_3		: in std_logic_vector (bit_data-1 DOWNTO 0);	-- видео данные 
+	main_enable			: in std_logic;  										-- enable
+	main_reset			: in std_logic;  										-- reset
+	cnt_imx_word_rx	: out std_logic_vector (bit_pix-1 DOWNTO 0);	-- счетчик слов от IMX по 1 каналу
+	valid_data_rx		: out std_logic;										-- валидные данные по 1 каналу
+	align_load_0		: out std_logic_vector (2 DOWNTO 0); 			-- сдвиг в 1 канале
+	align_load_1 		: out std_logic_vector (2 DOWNTO 0); 			-- сдвиг в 2 канале
+	align_load_2 		: out std_logic_vector (2 DOWNTO 0); 			-- сдвиг в 3 канале
+	align_load_3 		: out std_logic_vector (2 DOWNTO 0)  			-- сдвиг в 4 канале
       );
 end component;
-signal align_load_0	: std_logic_vector (2 downto 0);
-signal align_load_1	: std_logic_vector (2 downto 0);
-signal align_load_2	: std_logic_vector (2 downto 0);
-signal align_load_3	: std_logic_vector (2 downto 0);
+signal align_load_0		: std_logic_vector (2 downto 0);
+signal align_load_1		: std_logic_vector (2 downto 0);
+signal align_load_2		: std_logic_vector (2 downto 0);
+signal align_load_3		: std_logic_vector (2 downto 0);
+signal valid_data_rx		: std_logic:='0';
+signal cnt_imx_word_rx	: std_logic_vector (bit_pix-1 DOWNTO 0);
 ----------------------------------------------------------------------
 -- модуль мультиплексирования 1/2/4 каналов от фотоприемнка в RAW
 ----------------------------------------------------------------------
-component rx_ch_n_to_raw is
+component rx_ch_to_raw is
+generic  (
+	PixPerLine			: integer;
+	HsyncShift			: integer;
+	ActivePixPerLine	: integer
+	);
 port (
-	main_reset			: in std_logic;  										-- reset
-	main_enable			: in std_logic;  										-- ENABLE
-	CLK_sys			   : in std_logic;   										-- тактовый 
-	ena_clk_x_q_IS		: in std_logic_vector (3 downto 0); 				-- разрешение частоты /2 /4 /8/ 16
-	qout_clk_IS		   : in std_logic_vector (bit_pix-1 downto 0); 		-- счетчик пикселей
-	clk_rx_Parallel	: in std_logic;  										-- CLK Parallel
+	main_reset			: in std_logic;  												-- reset
+	main_enable			: in std_logic;  												-- ENABLE
+	CLK_sys			   : in std_logic;   											-- тактовый 
+	ena_clk_x_q_IS		: in std_logic_vector (3 downto 0); 					-- разрешение частоты /2 /4 /8/ 16
+	qout_clk_IS		   : in std_logic_vector (bit_pix-1 downto 0);			-- счетчик пикселей
+	clk_rx_Parallel	: in std_logic;  												-- CLK Parallel
+	cnt_imx_word_rx	: in std_logic_vector (bit_pix-1 DOWNTO 0);			-- счетчик слов от IMX по 1 каналу
+	valid_data_rx		: in std_logic;												-- валидные данные по 1 каналу
 	data_rx_ch_0		: in std_logic_vector (bit_data_imx-1 DOWNTO 0);	-- видео данные 
 	data_rx_ch_1		: in std_logic_vector (bit_data_imx-1 DOWNTO 0);	-- видео данные 
 	data_rx_ch_2		: in std_logic_vector (bit_data_imx-1 DOWNTO 0);	-- видео данные 
@@ -105,8 +121,43 @@ port (
 		);
 end component;
 signal data_rx_raw	: std_logic_vector (bit_data_imx-1 downto 0);
+----------------------------------------------------------------------
+-- lvds преобразователь
+----------------------------------------------------------------------
+component ddr_data_imx is
+port( PADP : in    std_logic_vector(3 downto 0);
+		PADN : in    std_logic_vector(3 downto 0);
+		Y    : out   std_logic_vector(3 downto 0)
+	);
+end component;
+signal is_ch	: std_logic_vector (3 downto 0);
+
+component INBUF_LVDS is
+port( PADP : in    std_logic;
+		PADN : in    std_logic;
+		Y    : out   std_logic
+	);
+end component;
+signal dck_is	: std_logic;
+----------------------------------------------------------------------
 
 begin
+
+----------------------------------------------------------------------
+-- lvds преобразователь
+----------------------------------------------------------------------
+ddr_data_imx_q: ddr_data_imx                   
+port map (
+		PADP	=> IMX_CH_P,
+		PADN	=> IMX_CH_N,
+		Y		=> is_ch
+);	
+INBUF_LVDS_q: INBUF_LVDS                   
+port map (
+		PADP	=> IMX_CLK_P,
+		PADN	=> IMX_CLK_N,
+		Y		=> dck_is
+);	
 
 ----------------------------------------------------------------------
 -- модуль генерации тактовых частот  
@@ -126,6 +177,13 @@ port map (
 ----------------------------------------------------------------------
 -- модуль приема DDR данных по 1..4 каналу
 ----------------------------------------------------------------------
+
+-- align_load_0	<=	qout_v_IS(9 downto 7) 	;
+
+		
+
+
+
 RX_DDR_CH_q0: RX_DDR_CH   
 generic map (bit_data_imx) 
 port map (
@@ -180,7 +238,10 @@ port map (
 -- модуль синхронизации по 4 каналам
 ----------------------------------------------------------------------
 sync_word_4ch_q: sync_word_4ch   
-generic map (bit_data_imx) 
+generic map (
+		bit_data_imx,
+		EKD_ADV7343_1080p25.PixPerLine
+		) 
 port map (
 		-- Inputs
    clk_rx_Parallel	=> clk_rx_Parallel_ch,
@@ -191,16 +252,25 @@ port map (
    main_enable		   => main_enable,	
    main_reset		   => reset_2,	
 		-- Outputs
+	cnt_imx_word_rx	=> cnt_imx_word_rx,
+	valid_data_rx		=> valid_data_rx,
 	align_load_0		=> align_load_0,
    align_load_1     	=> align_load_1,
    align_load_2     	=> align_load_2,
    align_load_3     	=> align_load_3
 );	
-
 ----------------------------------------------------------------------
 -- модуль мультиплексирования 1/2/4 каналов от фотоприемнка в RAW
 ----------------------------------------------------------------------
-rx_ch_n_to_raw_q: rx_ch_n_to_raw   
+
+data_RAW_RX	<=	data_rx_ch_0;
+
+rx_ch_n_to_raw_q: rx_ch_to_raw   
+generic map (
+	EKD_ADV7343_1080p25.PixPerLine,
+	EKD_ADV7343_1080p25.HsyncShift,
+	EKD_ADV7343_1080p25.ActivePixPerLine
+		) 
 port map (
 		-- Inputs
    main_reset			=> reset_2,
@@ -208,13 +278,17 @@ port map (
 	CLK_sys				=> CLK_sys,	
 	ena_clk_x_q_IS		=> ena_clk_x_q_IS,	
    qout_clk_IS			=> qout_clk_IS,	
-   clk_rx_Parallel  	=> clk_rx_Parallel_ch,	
-   data_rx_ch_0	  	=> data_rx_ch_0,	
+	clk_rx_Parallel  	=> clk_rx_Parallel_ch,
+	cnt_imx_word_rx	=> cnt_imx_word_rx,
+	valid_data_rx		=> valid_data_rx,
+	data_rx_ch_0	  	=> data_rx_ch_0,	
    data_rx_ch_1	  	=> data_rx_ch_1,	
    data_rx_ch_2	  	=> data_rx_ch_2,	
-   data_rx_ch_3	  	=> data_rx_ch_3,	
+   data_rx_ch_3	  	=> data_rx_ch_3	
 		-- Outputs
-	data_rx_raw			=> data_rx_raw
+	-- data_rx_raw			=> data_RAW_RX
 );	
+sync_H	<=dck_is;
+sync_V	<=is_ch(0);
 
 end ;

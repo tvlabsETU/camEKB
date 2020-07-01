@@ -15,6 +15,10 @@ use work.My_component_pkg.all;
 -- два фотоприемника для широкого и узкого угла
 -- ПЛИС A3PE3000L-FG484
 
+-- гамма 0.7
+-- автоматика до 100к
+-- синхронизация 
+-- hrd - 
 
 entity EKB_top is
 
@@ -30,16 +34,11 @@ entity EKB_top is
 	IMX_1_XCE		:out std_logic;  
 	IMX_1_INCK		:out std_logic;  
 	IMX_1_XTRIG		:out std_logic;  
-	-- IMX_1_CH_0_P	:in std_logic_vector(0 to 0);	-- channel 0 DDR IMX 1
-	-- IMX_1_CH_0_N	:in std_logic_vector(0 to 0);	-- channel 0 DDR IMX 1
-	-- IMX_1_CH_1_P	:in std_logic_vector(0 to 0);	-- channel 1 DDR IMX 1
-	-- IMX_1_CH_1_N	:in std_logic_vector(0 to 0);	-- channel 1 DDR IMX 1
-	-- IMX_1_CH_2_P	:in std_logic_vector(0 to 0);	-- channel 2 DDR IMX 1
-	-- IMX_1_CH_2_N	:in std_logic_vector(0 to 0);	-- channel 2 DDR IMX 1
-	-- IMX_1_CH_3_P	:in std_logic_vector(0 to 0);	-- channel 3 DDR IMX 1
-	-- IMX_1_CH_3_N	:in std_logic_vector(0 to 0);	-- channel 4 DDR IMX 1
-	-- IMX_1_CLK_P		:in std_logic_vector(0 to 0);	-- channel 0 DDR IMX CLK 
-	-- IMX_1_CLK_N		:in std_logic_vector(0 to 0);	-- channel 0 DDR IMX CLK 
+
+	IMX_1_CH_P		:in std_logic_vector(3 downto 0);	-- channel DDR IMX 1
+	IMX_1_CH_N		:in std_logic_vector(3 downto 0);	-- channel DDR IMX 1
+	IMX_1_CLK_P		:in std_logic;						-- channel DDR IMX CLK 
+	IMX_1_CLK_N		:in std_logic;						-- channel DDR IMX CLK 
 		--IMX_252_second--	
 	IMX_2_XHS		:in std_logic;  
 	IMX_2_XVS		:in std_logic;  
@@ -50,16 +49,10 @@ entity EKB_top is
 	IMX_2_XCE		:out std_logic;  
 	IMX_2_INCK		:out std_logic;  
 	IMX_2_XTRIG		:out std_logic;  
-	-- IMX_2_CH_0_P	:in std_logic_vector(0 to 0);	-- channel 0 DDR IMX 2
-	-- IMX_2_CH_0_N	:in std_logic_vector(0 to 0);	-- channel 0 DDR IMX 2
-	-- IMX_2_CH_1_P	:in std_logic_vector(0 to 0);	-- channel 1 DDR IMX 2
-	-- IMX_2_CH_1_N	:in std_logic_vector(0 to 0);	-- channel 1 DDR IMX 2
-	-- IMX_2_CH_2_P	:in std_logic_vector(0 to 0);	-- channel 2 DDR IMX 2
-	-- IMX_2_CH_2_N	:in std_logic_vector(0 to 0);	-- channel 2 DDR IMX 2
-	-- IMX_2_CH_3_P	:in std_logic_vector(0 to 0);	-- channel 3 DDR IMX 2
-	-- IMX_2_CH_3_N	:in std_logic_vector(0 to 0);	-- channel 3 DDR IMX 2
-	-- IMX_2_CLK_P		:in std_logic_vector(0 to 0);	-- channel 0 DDR IMX CLK 
-	-- IMX_2_CLK_N		:in std_logic_vector(0 to 0);	-- channel 0 DDR IMX CLK 
+	IMX_2_CH_P		:in std_logic_vector(3 downto 0);	-- channel DDR IMX 1
+	IMX_2_CH_N		:in std_logic_vector(3 downto 0);	-- channel DDR IMX 1
+	IMX_2_CLK_P		:in std_logic_vector(0 downto 0);	-- channel DDR IMX CLK 
+	IMX_2_CLK_N		:in std_logic_vector(0 downto 0);	-- channel DDR IMX CLK 
 		--ADV7343--	
 	DAC_Y				:out std_logic_vector(7 downto 0);
 	DAC_PHSYNC		:out std_logic;
@@ -82,18 +75,18 @@ entity EKB_top is
 	-- Sync				:out std_logic;
 	-- CMD1				:out std_logic;
 	-- CMD2				:out std_logic;
-	-- Wide_Narrow		:out std_logic;
-	-- GPIO0				:out std_logic;
-	-- GPIO1				:out std_logic;
-	-- GPIO2				:out std_logic;
-	-- GPIO3				:out std_logic;
-	-- GPIO4				:out std_logic;
-	-- GPIO5				:out std_logic;
-	-- GPIO6				:out std_logic;
-	-- GPIO7				:out std_logic;
-	-- GPIO8				:out std_logic;
-	-- GPIO9				:out std_logic;
-	-- GPIO10			:out std_logic;
+	Wide_Narrow		:out std_logic;
+	GPIO0				:out std_logic;
+	GPIO1				:out std_logic;
+	GPIO2				:out std_logic;
+	GPIO3				:out std_logic;
+	GPIO4				:out std_logic;
+	GPIO5				:out std_logic;
+	GPIO6				:out std_logic;
+	GPIO7				:out std_logic;
+	GPIO8				:out std_logic;
+	GPIO9				:out std_logic;
+	GPIO10			:out std_logic;
 
 	CLK_in			:in std_logic;
 	Reset_main		:in std_logic
@@ -203,14 +196,17 @@ signal reset_sync_gen		: std_logic:='1';
 signal main_enable			: std_logic:='1';						
 signal main_reset				: std_logic:='1';		
 signal reset_RX				: std_logic:='1';		
+signal CLK_in_1				: std_logic:='1';			
 ----------------------------------------------------------------------
 ---модуль приема сигнала изображения от фотоприеника
 ----------------------------------------------------------------------
 component image_sensor_RX_LVDS is
 port (		
 			--image sensor IN--
-	is_ch				: in std_logic_vector (3 DOWNTO 0);	-- данные от 1 ФП 
-	dck_is			: in std_logic; 							-- CLK от 1 ФП  
+	IMX_CH_P			:in std_logic_vector(3 to 0);	-- channel DDR IMX 1
+	IMX_CH_N			:in std_logic_vector(3 to 0);	-- channel DDR IMX 1
+	IMX_CLK_P		:in std_logic;						-- channel DDR IMX CLK 
+	IMX_CLK_N		:in std_logic;						-- channel DDR IMX CLK 	
 	XVS				: in std_logic; 
 	XHS				: in std_logic; 
 	---------Other------------
@@ -258,7 +254,7 @@ signal reset_imx	: std_logic:='1';
 ----------------------------------------------------------------------
 ---модуль интерфейса ADV7343
 ----------------------------------------------------------------------
-component ADV7343_control is
+component ADV7343_cntrl is
 	port (
 	------------------------------------входные сигналы-----------------------
 		CLK				: in std_logic;  											-- тактовый от гнератора
@@ -282,28 +278,17 @@ component ADV7343_control is
 		DAC_SFL			:out std_logic
 			);
 end component;
-
 signal data_Inteface	: std_logic_vector (7 downto 0);				
-
-component INBUF is
-	port (
-		PAD   : in std_logic;
-		Y 		: out std_logic	
-	);
-end component;
-signal CLK_in_1	: std_logic:='1';						
-
-
 
 begin
 
-----------------------------------------------------------------------
----модель симцуляции фотоприемника
-----------------------------------------------------------------------
+-- --------------------------------------------------------------------
+-- -- --модель симцуляции фотоприемника
+-- --------------------------------------------------------------------
 -- IMAGE_SENSOR_SIM_q: IMAGE_SENSOR_SIM                    
 -- port map (
 -- 				-----in---------
--- 	CLK						=>	CLK_in,			
+-- 	CLK						=>	CLK_in_1,			
 -- 	mode_generator 		=>	x"00",			
 -- 				------ out------
 -- 	XVS_Imx_Sim				=> XVS_Imx_Sim,
@@ -314,15 +299,17 @@ begin
 -- 	CLK_DDR					=>	CLK_DDR_Sim	
 -- 	);
 
+
+
+----------------------------------------------------------------------
+---модуль сброса
+----------------------------------------------------------------------
 inpuf_q: INBUF
 port map (
 	PAD	=>	CLK_in,
 	Y		=>	CLK_in_1
 );
 
-----------------------------------------------------------------------
----модуль сброса
-----------------------------------------------------------------------
 reset_control_q: reset_control                    
 port map (
 				-----in---------
@@ -418,37 +405,39 @@ port map (
 	IMX_2_XTRIG		<=	'1';
 
 
--- ----------------------------------------------------------------------
--- ---модуль приема сигнала изображения от фотоприеника
--- ----------------------------------------------------------------------
--- image_sensor_RX_LVDS_q: image_sensor_RX_LVDS                    
--- port map (
--- 				--image sensor IN--
--- 	is_ch					=> DATA_IS_LVDS_ch_n_Sim,			
--- 	dck_is				=> CLK_DDR_Sim,			
--- 	XVS					=> XVS_Imx_Sim,			
--- 	XHS					=> XHS_Imx_Sim,			
--- 		---------Other------------
--- 	CLK_sys				=> CLK_1,
--- 	reset_1				=> main_reset,
--- 	reset_2				=> reset_RX,
--- 	main_enable			=> main_enable,
--- 	Mode_debug			=> x"00",
--- 	ena_clk_x_q_IS		=> ena_clk_x_q_IS,
--- 	qout_clk_IS			=> qout_clk_IS,
--- 	qout_v_IS			=> qout_v_IS,			
--- 		---------out------------
--- 	sync_H				=> sync_H,
--- 	sync_V				=> sync_V,		
--- 	data_RAW_RX			=> data_RAW_RX
--- 	);
--- ----------------------------------------------------------------------
+----------------------------------------------------------------------
+---модуль приема сигнала изображения от фотоприеника
+----------------------------------------------------------------------
+image_sensor_RX_LVDS_q: image_sensor_RX_LVDS                    
+port map (
+				--image sensor IN--
+	IMX_CH_P				=> IMX_1_CH_P,			
+	IMX_CH_N				=> IMX_1_CH_N,			
+	IMX_CLK_P			=> IMX_1_CLK_P,			
+	IMX_CLK_N			=> IMX_1_CLK_N,			
+	XVS					=> XVS_Imx_Sim,			
+	XHS					=> XHS_Imx_Sim,			
+		---------Other------------
+	CLK_sys				=> CLK_1,
+	reset_1				=> main_reset,
+	reset_2				=> reset_RX,
+	main_enable			=> main_enable,
+	Mode_debug			=> x"00",
+	ena_clk_x_q_IS		=> ena_clk_x_q_IS,
+	qout_clk_IS			=> qout_clk_IS,
+	qout_v_IS			=> qout_v_IS,			
+		---------out------------
+	sync_H				=> sync_H,
+	sync_V				=> sync_V,		
+	data_RAW_RX			=> data_RAW_RX
+	);
+----------------------------------------------------------------------
 
 
 ----------------------------------------------------------------------
 ---модуль интерфейса ADV7343
 ----------------------------------------------------------------------
-ADV7343_control_q0: ADV7343_control                    
+ADV7343_control_q0: ADV7343_cntrl                    
 port map (
 				--IN--
 	CLK				=>	CLK_1,
@@ -457,7 +446,7 @@ port map (
 	qout_clk	    	=> qout_clk_Inteface,
 	qout_v			=> qout_v_Inteface,
 	ena_clk_x_q		=> ena_clk_x_q_Inteface,
-	data_in     	=> data_Inteface,
+	data_in     	=> data_RAW_RX(11 downto 4),
 				--OUT--
 	DAC_Y				=>	DAC_Y,			
 	DAC_PHSYNC		=>	DAC_PHSYNC,	
@@ -471,6 +460,19 @@ port map (
 	DAC_CLK			=>	DAC_CLK,		
 	DAC_SFL			=>	DAC_SFL		
 	);
+	
+-----------------------------------------------------------------------
+GPIO0		<=	data_RAW_RX(4);
+GPIO1		<=	data_RAW_RX(5);
+GPIO2		<=	data_RAW_RX(6);
+GPIO3		<=	data_RAW_RX(7);
+GPIO4		<=	data_RAW_RX(8);
+GPIO5		<=	data_RAW_RX(9);
+GPIO6		<=	data_RAW_RX(10);
+GPIO7		<=	data_RAW_RX(11);
+GPIO8		<=	IMX_1_XHS;
+GPIO9		<=	sync_H;
+GPIO10	<=	sync_V;
 end rtl;
 
 

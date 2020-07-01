@@ -85,7 +85,23 @@ if rising_edge (clk_rx_Serial) then
 	end if;
 	
 	if pattern_load='1' then
-		data_rx_Parallel	<=	VIDEO_CH_0_reg;
+		-- data_rx_Parallel	<=	VIDEO_CH_0_reg;
+		data_rx_Parallel(0)	<=	VIDEO_CH_0_reg(11);
+		data_rx_Parallel(1)	<=	VIDEO_CH_0_reg(10);
+		data_rx_Parallel(2)	<=	VIDEO_CH_0_reg(9);
+		data_rx_Parallel(3)	<=	VIDEO_CH_0_reg(8);
+		data_rx_Parallel(4)	<=	VIDEO_CH_0_reg(7);
+		data_rx_Parallel(5)	<=	VIDEO_CH_0_reg(6);
+		data_rx_Parallel(6)	<=	VIDEO_CH_0_reg(5);
+		data_rx_Parallel(7)	<=	VIDEO_CH_0_reg(4);
+		data_rx_Parallel(8)	<=	VIDEO_CH_0_reg(3);
+		data_rx_Parallel(9)	<=	VIDEO_CH_0_reg(2);
+		data_rx_Parallel(10)	<=	VIDEO_CH_0_reg(1);
+		data_rx_Parallel(11)	<=	VIDEO_CH_0_reg(0);
+
+
+
+
 	end if;
 end if;
 end process;

@@ -4,6 +4,16 @@ use ieee.std_logic_unsigned.all;
 
 package   My_component_pkg	is
 
+----------------------------------------------------------------------------------
+---ProAsic3E
+----------------------------------------------------------------------------------
+component INBUF is
+port (
+	PAD   : in std_logic;
+	Y 		: out std_logic	
+);
+end component;
+
 component count_n_modul
 generic (n		: integer);
 port (

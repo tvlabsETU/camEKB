@@ -4,19 +4,19 @@ use ieee.numeric_std.all;
 use work.VIDEO_CONSTANTS.all;
 use work.My_component_pkg.all;
 ----------------------------------------------------------------------
----?????? ?????????? ADV7343
+---модуль интерфейса ADV7343
 ----------------------------------------------------------------------
-entity ADV7343_control is
+entity ADV7343_cntrl is
 port (
-------------------------------------??????? ???????-----------------------
-   CLK				: in std_logic;  											-- ???????? ?? ?????????
-   reset				: in std_logic;  											-- ?????
-   main_enable		: in std_logic;  											-- ?????????? ??????
-   qout_clk	    	: in	std_logic_vector (bit_pix-1 downto 0); 	-- ??????? ????????
-   qout_v			: in	std_logic_vector (bit_strok-1 downto 0); 	-- ??????? ?????
-   ena_clk_x_q		: in	std_logic_vector (3 downto 0); 				-- ?????????? ??????? /2 /4 /8/ 16
-   data_in     	: in std_logic_vector (7 downto 0);             -- ????? ??????
-   ------------------------------------???????? ???????----------------------
+	------------------------------------входные сигналы-----------------------
+   CLK				: in std_logic;  											-- тактовый от гнератора
+   reset				: in std_logic;  											-- сброс
+   main_enable		: in std_logic;  											-- разрешение работы
+   qout_clk	    	: in	std_logic_vector (bit_pix-1 downto 0); 	-- счетчик пикселей
+   qout_v			: in	std_logic_vector (bit_strok-1 downto 0); 	-- счетчик строк
+   ena_clk_x_q		: in	std_logic_vector (3 downto 0); 				-- разрешение частоты /2 /4 /8/ 16
+   data_in     	: in std_logic_vector (7 downto 0);             -- режим работы
+   ------------------------------------выходные сигналы----------------------
    DAC_Y				:out std_logic_vector(7 downto 0);
    DAC_PHSYNC		:out std_logic;
    DAC_PVSYNC		:out std_logic;
@@ -29,9 +29,9 @@ port (
    DAC_CLK			:out std_logic;
    DAC_SFL			:out std_logic
       );
-end ADV7343_control;
+end ADV7343_cntrl;
 
-architecture beh of ADV7343_control is 
+architecture beh of ADV7343_cntrl is 
 
 
 type state_type is (st0, st1, st2, st_wait);    -- Register to hold the current state
@@ -93,22 +93,51 @@ port (
 end component;
 
 type ROM_array is array (0 to 31) of std_logic_vector (15 downto 0);
-signal reg_adv7343   : ROM_array ;  --???????? ??? adv7343 
+signal reg_adv7343   : ROM_array ;  --регистры adv7343 
+
+-- --1080p25--
 constant content: ROM_array := (
 0  =>   X"17"	& 	X"02",   -- Software reset.
-1  =>   X"00"	& 	X"1C",   -- All DACs enabled. PLL enabled (4�).
+1  =>   X"00"	& 	X"1C",   -- All DACs enabled. PLL enabled (4×).
 2  =>   X"01"	& 	X"10",   -- HD-SDR input mode..
--- 3  =>   X"30"	& 	X"28",   -- 720p at 60 Hz/59.94 Hz. HSYNC/VSYNC synchronization. EIA-770.3 output levels..
-3  =>   X"30"	& 	X"80",   -- 720p at 60 Hz/59.94 Hz. HSYNC/VSYNC synchronization. EIA-770.3 output levels..
-4  =>   X"31"	& 	X"01",   -- Pixel data valid. 4� oversampling.
--- 5  =>   X"17"	& 	X"02",   -- Software reset.
--- 6  =>   X"17"	& 	X"02",   -- Software reset.
+3  =>   X"30"	& 	X"80",   -- SMPTE 274M-9 1080p at 25 Hz
+4  =>   X"31"	& 	X"01",   -- Pixel data valid. 4× oversampling.
 others => X"00_1C"); 
+
+-- -- 8-Bit PAL Square Pixel YCrCb In (EAV/SAV), CVBS/Y-C Out--
+-- constant content: ROM_array := (
+-- 0  =>   X"17"	& 	X"02",   -- Software reset.
+-- 1  =>   X"00"	& 	X"1C",   -- All DACs enabled. PLL enabled (16×).
+-- 2  =>   X"01"	& 	X"00",   -- SD input mode.
+-- 3  =>   X"80"	& 	X"11",   -- PAL standard. SSAF luma filter enabled. 1.3 MHz chroma filter enabled.
+-- 4  =>   X"82"	& 	X"D3",   -- Pixel data valid. CVBS/Y-C (S-Video) out. SSAF PrPb filter enabled. Active video edge control enabled. Square pixel mode enabled.
+-- 5  =>   X"8C"	& 	X"0C",   -- Subcarrier frequency register values for CVBS and/or S-Video (Y-C) output in PAL square pixel mode (29.5 MHz input clock).
+-- 6  =>   X"8D"	& 	X"8C",   -- -//-
+-- 7  =>   X"8E"	& 	X"79",   -- -//-
+-- 8  =>   X"8F"	& 	X"26",   -- -//-
+-- others => X"00_1C"); 
+
+-- -- 16-Bit PAL Square Pixel RGB In, CVBS/Y-C Out--
+-- constant content: ROM_array := (
+-- 0  =>   X"17"	& 	X"02",   -- Software reset.
+-- 1  =>   X"00"	& 	X"1C",   -- All DACs enabled. PLL enabled (16×).
+-- 2  =>   X"01"	& 	X"00",   -- SD input mode.
+-- 3  =>   X"80"	& 	X"11",   -- PAL standard. SSAF luma filter enabled. 1.3 MHz chroma filter enabled.
+-- 4  =>   X"82"	& 	X"D3",   -- Pixel data valid. CVBS/Y-C (S-Video) out. SSAF PrPb filter enabled. Active video edge control enabled. Square pixel mode enabled.
+
+-- 5  =>   X"87"	& 	X"80",   -- RGB input enabled.
+-- 6  =>   X"88"	& 	X"10",   -- 16-bit RGB input enabled.
+
+-- 7  =>   X"8C"	& 	X"0C",   -- Subcarrier frequency register values for CVBS and/or S-Video (Y-C) output in PAL square pixel mode (29.5 MHz input clock).
+-- 8  =>   X"8D"	& 	X"8C",   -- -//-
+-- 9 =>   X"8E"	& 	X"79",   -- -//-
+-- 10  =>   X"8F"	& 	X"26",   -- -//-
+-- others => X"00_1C"); 
 
 begin
 
 ----------------------------------------------------------------------
--- ???????????? ???????????????
+-- синхросизналы
 ----------------------------------------------------------------------
 Process(CLK)
 begin
@@ -146,42 +175,9 @@ if rising_edge(CLK) then
 end if;
 end process;
 DAC_PBLK <= dac_pblk_v and dac_pblk_h;
--- DAC_PBLK    <= CLK;
 DAC_CLK     <= CLK;
--- dac_phsync  <= CLK;
--- dac_pvsync  <= CLK;
-
-DAC_Y       <= qout_clk(7 downto 0);
+DAC_Y       <= data_in(7 downto 0);
 ----------------------------------------------------------------------
--- -- PADDR_i2c   <="010101010";
--- PENABLE_i2c <= '0';
--- PRESETN_i2c <= '0';
--- PSEL_i2c    <= '0';
--- -- PWDATA_i2c  <= x"12";
--- PWRITE_i2c  <= '0';
--- SCLI_i2c    <= "0";
--- SDAI_i2c    <= "0";
--- ----------------------------------------------------------------------
--- adv7343_i2c_q: adv7343_i2c                   
--- port map (
--- 	-- Inputs
---    BCLK    => CLK,
---    PADDR   => "000000000",
---    PCLK    => CLK,
---    PENABLE => PENABLE_i2c ,
---    PRESETN => PRESETN_i2c ,
---    PSEL    => PSEL_i2c,    
---    PWDATA  => x"12",  
---    PWRITE  => PWRITE_i2c, 
---    SCLI    => SCLI_i2c,    
---    SDAI    => SDAI_i2c   
---    -- Outputs 
---    -- INT     => INT_i2c,   
---    -- PRDATA  => PRDATA_i2c,
---    -- SCLO    => SCLO_i2c,  
---    -- SDAO    => SDAO_i2c  
-
--- );	
 
 ----------------------------------------------------------------------
 
@@ -207,9 +203,6 @@ port map (
 );	
 
 -----------------------------------------------------------------------------------
--- enable_clk_spi <=	ena_clk_x_q(3);
--- reset_n_i2c    <= not reset;
-
 Process(CLK)
 begin
 if reset='1'   then	
@@ -219,16 +212,11 @@ if reset='1'   then
    data_wr_i2c <= x"00";
    state       <= st_wait;
    reset_n_i2c <= '0';
-
 else 
    if rising_edge(CLK) then
-      --c????--
-	-- if 
 
-	-- end if;
-	
 	CASE state IS
-      --????????  ?????????? ?????? ????????--
+      --ожидание начала загрузки регистров.--
 	WHEN st_wait =>
 	if  to_integer(unsigned(qout_v)) = 2	 
       then	
@@ -238,7 +226,7 @@ else
 			cnt_reg        <= 0;
 			data_wr_i2c    <= content(cnt_reg)(15 downto 8);
    end if;
-	--???????? ??????? ????????? --
+	--прогрузка регистров синхронно с каждой 8 строкой --
    WHEN st0 =>
       if  qout_v(2 downto 0) = "000"	 then
          if cnt_reg  < 6   then           
@@ -282,27 +270,8 @@ end if;
 
 end process;
 
-
 DAC_SDA	<= sda_i2c;
 DAC_SCL  <= scl_i2c;
-
-
-
-
--- I2C_minion_q: I2C_minion   
--- generic map ( "0101011", true,4) 
--- port map (
--- 	-- Inputs
---    scl               => scl_i2c,
---    sda               => sda_i2c,
---    clk               => CLK,
---    rst               => reset ,
---       -- User interface
---    -- read_req          => scl_i2c ,
---    data_to_master    => x"32" 
---    -- data_valid        => scl_i2c ,
---    -- data_from_master  => scl_i2c 
--- );	
 
 
 end ;

@@ -7,8 +7,10 @@ package   VIDEO_CONSTANTS	is
 constant bit_data_CSI		: integer :=8;		--разрядность данных CSI	
 constant bit_data_imx		: integer :=12;	--разрядность данных IMX	
 constant bit_data_SMPTE		: integer :=10;	--разрядность данных SMPTE	
+
 constant bit_frame			: integer :=8;		--бит на счетчик кадров 		
 constant bit_pix				: integer :=13;	--разрядность счетчика пикселей		
+constant bit_RAM_1_str		: integer :=9;		--разрядность шины адреса RAM на 1 строку при приеме данных от IMX 	
 constant bit_strok			: integer :=16;	--разрядность счетчика строк		
 ---------------------------------------------------------------------------------
 constant N_channel_imx		: integer :=4;		--	количесвтво каналов по LVDS 1 / 2 / 4
@@ -272,7 +274,7 @@ constant EKD_ADV7343_1080p25 :	VideoStandartType:=	(	PixPerLine				=>	2640,
 																			HsyncWidth				=>	45,	
 																			HsyncWidthGapLeft		=>	88,	
 																			HsyncWidthGapRight	=>	632,	
-																			HsyncShift				=>	5,
+																			HsyncShift				=>	25,
 																			LinePerFrame			=>	1125,
 																			ActiveLine				=>	1080,
 																			InActiveLine			=>	45,
