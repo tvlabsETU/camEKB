@@ -7,6 +7,7 @@ package   VIDEO_CONSTANTS	is
 constant bit_data_CSI		: integer :=8;		--разрядность данных CSI	
 constant bit_data_imx		: integer :=12;	--разрядность данных IMX	
 constant bit_data_SMPTE		: integer :=10;	--разрядность данных SMPTE	
+constant bit_data_ADV7343	: integer :=8;		--разрядность данных ADV7343	
 
 constant bit_frame			: integer :=8;		--бит на счетчик кадров 		
 constant bit_pix				: integer :=13;	--разрядность счетчика пикселей		
@@ -216,18 +217,18 @@ constant BION_960_960p30 :	VideoStandartType:=	(	PixPerLine			=>	1000,
 -- 													VsyncWidth			=>	1,	
 -- 													VsyncShift			=>	0);	
 
-constant EKD_ADV7343_PAL :	VideoStandartType:=	(	PixPerLine			=>	1888,
-													ActivePixPerLine	=>	1536,	
-													InActivePixPerLine	=>	352,	
-													HsyncWidth			=>	10,	
-													HsyncWidthGapLeft	=>	15,	
-													HsyncWidthGapRight	=>	15,	
-													HsyncShift			=>	5,
-													LinePerFrame		=>	625,
-													ActiveLine			=>	575,
-													InActiveLine		=>	50,
-													VsyncWidth			=>	5,	
-													VsyncShift			=>	5);	
+constant EKD_ADV7343_PAL :	VideoStandartType:=	(	PixPerLine				=>	1888,
+																	ActivePixPerLine		=>	1536,	
+																	InActivePixPerLine	=>	352,	
+																	HsyncWidth				=>	10,	
+																	HsyncWidthGapLeft		=>	15,	
+																	HsyncWidthGapRight	=>	15,	
+																	HsyncShift				=>	5,
+																	LinePerFrame			=>	625,
+																	ActiveLine				=>	575,
+																	InActiveLine			=>	50,
+																	VsyncWidth				=>	5,	
+																	VsyncShift				=>	5);	
 
 constant EKD_2200_1250p50 :	VideoStandartType:=	(	PixPerLine			=>	2200,
 													ActivePixPerLine	=>	1536,	

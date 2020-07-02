@@ -1,6 +1,6 @@
  ** Message System Log
  ** Database: 
- ** Date:   Mon Jun 29 01:30:41 2020
+ ** Date:   Wed Jul 01 17:26:52 2020
 
 
 ****************
@@ -18,11 +18,11 @@ CLKA Source                     : Core Logic
 Feedback Delay Value Index      : 1
 Feedback Mux Select             : 1
 XDLY Mux Select                 : No
-Primary Freq(Mhz)               : 74.250000
+Primary Freq(Mhz)               : 137.500000
 Primary PhaseShift              : 0
 Primary Delay Value Index       : 1
 Primary Mux Select              : 4
-Secondary1 Freq(Mhz)            : 74.250000
+Secondary1 Freq(Mhz)            : 137.500000
 Use GLB                         : YES
 Use YB                          : NO
 GLB Delay Value Index           : 1
@@ -39,8 +39,8 @@ Secondary2 Mux Select           : 0
 Lock Control                    : Yes
 
 Configuration Bits:
-FINDIV[6:0]     0001101
-FBDIV[6:0]      0001101
+FINDIV[6:0]     0011010
+FBDIV[6:0]      0110001
 OADIV[4:0]      00000
 OBDIV[4:0]      00000
 OCDIV[4:0]      00000
@@ -55,13 +55,13 @@ DLYGLB[4:0]     00000
 DLYGLC[4:0]     00000
 DLYYB[4:0]      00000
 DLYYC[4:0]      00000
-VCOSEL[2:0]     101
+VCOSEL[2:0]     111
 
-Primary Clock Frequency 74.250
+Primary Clock Frequency 137.500
 Primary Clock Phase Shift 0.000
 Primary Clock Output Delay from CLKA 2.200
 
-Secondary1 Clock Frequency 74.250
+Secondary1 Clock Frequency 137.500
 Secondary1 Clock Phase Shift 0.000
 Secondary1 Clock Global Output Delay from CLKA 3.450
 
@@ -86,5 +86,5 @@ Netlist Resource Report
 
 Wrote VHDL netlist to G:/ACTELL/EKB/EKB/Libero/smartgen\PLL_0\PLL_0.vhd.
 
- ** Log Ended:   Mon Jun 29 01:30:42 2020
+ ** Log Ended:   Wed Jul 01 17:26:53 2020
 

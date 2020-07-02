@@ -118,16 +118,16 @@ port map (
 	LOCK			=> locked_pll_1
 );	
 
--- PLL_1_q: PLL_1                   
--- port map (
--- 	-- Inputs
--- 	POWERDOWN	=> PLL_POWERDOWN_N,
--- 	CLKA			=> CLK,	
--- 	-- Outputs 
--- 	GLA			=> CLK_2_1,		--29.5 МГц
--- 	GLB			=> CLK_2_2, 	--29.5 МГц
--- 	LOCK			=> locked_pll_2
--- );	
+PLL_1_q: PLL_1                   
+port map (
+	-- Inputs
+	POWERDOWN	=> PLL_POWERDOWN_N,
+	CLKA			=> CLK_1_2,	
+	-- Outputs 
+	GLA			=> CLK_2_1,		--29.5 МГц
+	GLB			=> CLK_2_2, 	--29.5 МГц
+	LOCK			=> locked_pll_2
+);	
 
 -- ----------------------------------------------------------------------
 
@@ -160,12 +160,12 @@ port map (
 ----------------------------------------------------------------------
 gen_pix_str_frame_Inteface: gen_pix_str_frame    	             
 generic map (
-	EKD_ADV7343_1080p25.PixPerLine,
-	EKD_ADV7343_1080p25.LinePerFrame
+	EKD_ADV7343_PAL.PixPerLine,
+	EKD_ADV7343_PAL.LinePerFrame
 	) 
 port map (
 			-----in---------
-	CLK				=> CLK_1_2,	
+	CLK				=> CLK_2_1,	
 	reset				=> main_reset ,
 	main_enable		=> main_enable,
 	mode_sync_gen 	=> mode_sync_gen_Inteface,
@@ -187,6 +187,6 @@ CLK_2_out	<=	CLK_1_2;
 CLK_3_out	<=	CLK_2_1;
 CLK_4_out	<=	CLK_2_2;
 Lock_PLL_1	<=locked_pll_1;
-Lock_PLL_2	<=locked_pll_1;
+Lock_PLL_2	<=locked_pll_2;
 end ;
 

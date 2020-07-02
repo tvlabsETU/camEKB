@@ -1,6 +1,6 @@
  ** Message System Log
  ** Database: 
- ** Date:   Sat Jun 27 13:31:09 2020
+ ** Date:   Wed Jul 01 17:27:14 2020
 
 
 ****************
@@ -13,16 +13,16 @@ Output Format                   : VHDL
 Type                            : Static PLL
 PowerDown                       : Active Low
 Lock                            : Active High
-Input Freq(Mhz)                 : 74.250000
+Input Freq(Mhz)                 : 137.500000
 CLKA Source                     : Core Logic
 Feedback Delay Value Index      : 1
 Feedback Mux Select             : 1
 XDLY Mux Select                 : No
-Primary Freq(Mhz)               : 74.250000
+Primary Freq(Mhz)               : 29.500000
 Primary PhaseShift              : 0
 Primary Delay Value Index       : 1
 Primary Mux Select              : 4
-Secondary1 Freq(Mhz)            : 74.250000
+Secondary1 Freq(Mhz)            : 29.500000
 Use GLB                         : YES
 Use YB                          : NO
 GLB Delay Value Index           : 1
@@ -39,10 +39,10 @@ Secondary2 Mux Select           : 0
 Lock Control                    : No
 
 Configuration Bits:
-FINDIV[6:0]     0001101
-FBDIV[6:0]      0001101
-OADIV[4:0]      00000
-OBDIV[4:0]      00000
+FINDIV[6:0]     0110110
+FBDIV[6:0]      0111010
+OADIV[4:0]      00100
+OBDIV[4:0]      00100
 OCDIV[4:0]      00000
 OAMUX[2:0]      100
 OBMUX[2:0]      010
@@ -55,13 +55,13 @@ DLYGLB[4:0]     00000
 DLYGLC[4:0]     00000
 DLYYB[4:0]      00000
 DLYYC[4:0]      00000
-VCOSEL[2:0]     100
+VCOSEL[2:0]     110
 
-Primary Clock Frequency 74.250
+Primary Clock Frequency 29.500
 Primary Clock Phase Shift 0.000
 Primary Clock Output Delay from CLKA 2.200
 
-Secondary1 Clock Frequency 74.250
+Secondary1 Clock Frequency 29.500
 Secondary1 Clock Phase Shift 0.000
 Secondary1 Clock Global Output Delay from CLKA 3.450
 
@@ -86,5 +86,5 @@ Netlist Resource Report
 
 Wrote VHDL netlist to G:/ACTELL/EKB/EKB/Libero/smartgen\PLL_1\PLL_1.vhd.
 
- ** Log Ended:   Sat Jun 27 13:31:10 2020
+ ** Log Ended:   Wed Jul 01 17:27:15 2020
 

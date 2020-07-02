@@ -131,7 +131,7 @@ begin
     \VCC\ <= VCC_power_net1;
 
     Core : PLL
-      generic map(VCOFREQUENCY => 74.250)
+      generic map(VCOFREQUENCY => 137.500)
 
       port map(CLKA => CLKAP, EXTFB => \GND\, POWERDOWN => 
         POWERDOWN, GLA => GLA, LOCK => LOCK, GLB => GLB, YB => 
@@ -151,14 +151,14 @@ begin
         \GND\, DLYYC1 => \GND\, DLYYC2 => \GND\, DLYYC3 => \GND\, 
         DLYYC4 => \GND\, DLYGLC0 => \GND\, DLYGLC1 => \GND\, 
         DLYGLC2 => \GND\, DLYGLC3 => \GND\, DLYGLC4 => \GND\, 
-        FINDIV0 => \VCC\, FINDIV1 => \GND\, FINDIV2 => \VCC\, 
-        FINDIV3 => \VCC\, FINDIV4 => \GND\, FINDIV5 => \GND\, 
+        FINDIV0 => \GND\, FINDIV1 => \VCC\, FINDIV2 => \GND\, 
+        FINDIV3 => \VCC\, FINDIV4 => \VCC\, FINDIV5 => \GND\, 
         FINDIV6 => \GND\, FBDIV0 => \VCC\, FBDIV1 => \GND\, 
-        FBDIV2 => \VCC\, FBDIV3 => \VCC\, FBDIV4 => \GND\, FBDIV5
-         => \GND\, FBDIV6 => \GND\, FBDLY0 => \GND\, FBDLY1 => 
+        FBDIV2 => \GND\, FBDIV3 => \GND\, FBDIV4 => \VCC\, FBDIV5
+         => \VCC\, FBDIV6 => \GND\, FBDLY0 => \GND\, FBDLY1 => 
         \GND\, FBDLY2 => \GND\, FBDLY3 => \GND\, FBDLY4 => \GND\, 
         FBSEL0 => \VCC\, FBSEL1 => \GND\, XDLYSEL => \GND\, 
-        VCOSEL0 => \VCC\, VCOSEL1 => \GND\, VCOSEL2 => \VCC\);
+        VCOSEL0 => \VCC\, VCOSEL1 => \VCC\, VCOSEL2 => \VCC\);
     
     pllint1 : PLLINT
       port map(A => CLKA, Y => CLKAP);
@@ -200,11 +200,11 @@ end DEF_ARCH;
 -- FBDLY:1
 -- FBMUX:1
 -- XDLYSEL:0
--- PRIMFREQ:74.250000
+-- PRIMFREQ:137.500000
 -- PPHASESHIFT:0
 -- DLYAVAL:1
 -- OAMUX:4
--- SEC1FREQ:74.250000
+-- SEC1FREQ:137.500000
 -- UGLB:1
 -- UYB:0
 -- GLBDLYVAL:1

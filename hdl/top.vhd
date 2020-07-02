@@ -316,7 +316,7 @@ port map (
 	CLK_in  			=>	CLK_in_1,			
 	Reset_main  	=>	Reset_main,			
 	Lock_PLL_1  	=>	LOCK_PLL_SYNC_GEN_1,
-	Lock_PLL_2  	=>	'1',
+	Lock_PLL_2  	=>	LOCK_PLL_SYNC_GEN_2,
 	Lock_PLL_3  	=>	'1',
 	Lock_PLL_4  	=>	'1',
 	Sync_x      	=>	'1',
@@ -361,77 +361,77 @@ port map (
 	);
 
 
-----------------------------------------------------------------------
---модуль управления ФП
-----------------------------------------------------------------------
-imx_control_q1: imx_control                    
-port map (
-				--IN--
-	CLK						=> CLK_1,				
-	ena_clk					=> ena_clk_x_q_IS(3),			
-	MAIN_reset				=> main_reset,		
-	qout_v					=> qout_v_IS,			
-	AGC_VGA					=> AGC_VGA,			
-	AGC_str					=> AGC_str,			
-	DEBUG						=> DEBUG_0,			
-				--OUT--
-	reset_imx				=> IMX_1_XCLR,		
-	SDI_imx					=> IMX_1_SDI,			
-	XCE_imx					=> IMX_1_XCE,			
-	SCK_imx					=> IMX_1_SCK			
-	);
-	IMX_1_INCK		<=	CLK_2;
-	IMX_1_XTRIG		<=	'1';
---------------------------------------------------------------------
--- модуль управления ФП
---------------------------------------------------------------------
-imx_control_q2: imx_control                    
-port map (
-				--IN--
-	CLK						=> CLK_1,				
-	ena_clk					=> ena_clk_x_q_IS(3),			
-	MAIN_reset				=> main_reset,		
-	qout_v					=> qout_v_IS,			
-	AGC_VGA					=> AGC_VGA,			
-	AGC_str					=> AGC_str,			
-	DEBUG						=> DEBUG_0,			
-				--OUT--
-	reset_imx				=> IMX_2_XCLR,		
-	SDI_imx					=> IMX_2_SDI,			
-	XCE_imx					=> IMX_2_XCE,			
-	SCK_imx					=> IMX_2_SCK			
-	);
-	IMX_2_INCK		<=	CLK_2;
-	IMX_2_XTRIG		<=	'1';
+-- ----------------------------------------------------------------------
+-- --модуль управления ФП
+-- ----------------------------------------------------------------------
+-- imx_control_q1: imx_control                    
+-- port map (
+-- 				--IN--
+-- 	CLK						=> CLK_1,				
+-- 	ena_clk					=> ena_clk_x_q_IS(3),			
+-- 	MAIN_reset				=> main_reset,		
+-- 	qout_v					=> qout_v_IS,			
+-- 	AGC_VGA					=> AGC_VGA,			
+-- 	AGC_str					=> AGC_str,			
+-- 	DEBUG						=> DEBUG_0,			
+-- 				--OUT--
+-- 	reset_imx				=> IMX_1_XCLR,		
+-- 	SDI_imx					=> IMX_1_SDI,			
+-- 	XCE_imx					=> IMX_1_XCE,			
+-- 	SCK_imx					=> IMX_1_SCK			
+-- 	);
+-- 	IMX_1_INCK		<=	CLK_2;
+-- 	IMX_1_XTRIG		<=	'1';
+-- --------------------------------------------------------------------
+-- -- модуль управления ФП
+-- --------------------------------------------------------------------
+-- imx_control_q2: imx_control                    
+-- port map (
+-- 				--IN--
+-- 	CLK						=> CLK_1,				
+-- 	ena_clk					=> ena_clk_x_q_IS(3),			
+-- 	MAIN_reset				=> main_reset,		
+-- 	qout_v					=> qout_v_IS,			
+-- 	AGC_VGA					=> AGC_VGA,			
+-- 	AGC_str					=> AGC_str,			
+-- 	DEBUG						=> DEBUG_0,			
+-- 				--OUT--
+-- 	reset_imx				=> IMX_2_XCLR,		
+-- 	SDI_imx					=> IMX_2_SDI,			
+-- 	XCE_imx					=> IMX_2_XCE,			
+-- 	SCK_imx					=> IMX_2_SCK			
+-- 	);
+-- 	IMX_2_INCK		<=	CLK_2;
+-- 	IMX_2_XTRIG		<=	'1';
 
 
-----------------------------------------------------------------------
----модуль приема сигнала изображения от фотоприеника
-----------------------------------------------------------------------
-image_sensor_RX_LVDS_q: image_sensor_RX_LVDS                    
-port map (
-				--image sensor IN--
-	IMX_CH_P				=> IMX_1_CH_P,			
-	IMX_CH_N				=> IMX_1_CH_N,			
-	IMX_CLK_P			=> IMX_1_CLK_P,			
-	IMX_CLK_N			=> IMX_1_CLK_N,			
-	XVS					=> XVS_Imx_Sim,			
-	XHS					=> XHS_Imx_Sim,			
-		---------Other------------
-	CLK_sys				=> CLK_1,
-	reset_1				=> main_reset,
-	reset_2				=> reset_RX,
-	main_enable			=> main_enable,
-	Mode_debug			=> x"00",
-	ena_clk_x_q_IS		=> ena_clk_x_q_IS,
-	qout_clk_IS			=> qout_clk_IS,
-	qout_v_IS			=> qout_v_IS,			
-		---------out------------
-	sync_H				=> sync_H,
-	sync_V				=> sync_V,		
-	data_RAW_RX			=> data_RAW_RX
-	);
-----------------------------------------------------------------------
+-- ----------------------------------------------------------------------
+-- ---модуль приема сигнала изображения от фотоприеника
+-- ----------------------------------------------------------------------
+-- image_sensor_RX_LVDS_q: image_sensor_RX_LVDS                    
+-- port map (
+-- 				--image sensor IN--
+-- 	IMX_CH_P				=> IMX_1_CH_P,			
+-- 	IMX_CH_N				=> IMX_1_CH_N,			
+-- 	IMX_CLK_P			=> IMX_1_CLK_P,			
+-- 	IMX_CLK_N			=> IMX_1_CLK_N,			
+-- 	XVS					=> XVS_Imx_Sim,			
+-- 	XHS					=> XHS_Imx_Sim,			
+-- 		---------Other------------
+-- 	CLK_sys				=> CLK_1,
+-- 	reset_1				=> main_reset,
+-- 	reset_2				=> reset_RX,
+-- 	main_enable			=> main_enable,
+-- 	Mode_debug			=> x"00",
+-- 	ena_clk_x_q_IS		=> ena_clk_x_q_IS,
+-- 	qout_clk_IS			=> qout_clk_IS,
+-- 	qout_v_IS			=> qout_v_IS,			
+-- 		---------out------------
+-- 	sync_H				=> sync_H,
+-- 	sync_V				=> sync_V,		
+-- 	data_RAW_RX			=> data_RAW_RX
+-- 	);
+-- ----------------------------------------------------------------------
 
 
 ----------------------------------------------------------------------
@@ -440,15 +440,16 @@ port map (
 ADV7343_control_q0: ADV7343_cntrl                    
 port map (
 				--IN--
-	CLK				=>	CLK_1,
+	CLK				=>	CLK_3,
 	reset				=>	main_reset,
 	main_enable		=> main_enable,
 	qout_clk	    	=> qout_clk_Inteface,
 	qout_v			=> qout_v_Inteface,
 	ena_clk_x_q		=> ena_clk_x_q_Inteface,
-	data_in     	=> data_RAW_RX(11 downto 4),
+	data_in     	=> x"80",
+	-- data_in     	=> qout_clk_Inteface(7 downto 0),
 				--OUT--
-	DAC_Y				=>	DAC_Y,			
+	DAC_Y				=>	data_Inteface,			
 	DAC_PHSYNC		=>	DAC_PHSYNC,	
 	DAC_PVSYNC		=>	DAC_PVSYNC,	
 	DAC_PBLK			=>	DAC_PBLK,		
@@ -461,15 +462,17 @@ port map (
 	DAC_SFL			=>	DAC_SFL		
 	);
 	
+	DAC_Y	<=data_Inteface;
+	
 -----------------------------------------------------------------------
-GPIO0		<=	data_RAW_RX(4);
-GPIO1		<=	data_RAW_RX(5);
-GPIO2		<=	data_RAW_RX(6);
-GPIO3		<=	data_RAW_RX(7);
-GPIO4		<=	data_RAW_RX(8);
-GPIO5		<=	data_RAW_RX(9);
-GPIO6		<=	data_RAW_RX(10);
-GPIO7		<=	data_RAW_RX(11);
+GPIO0		<=	data_Inteface(0);
+GPIO1		<=	data_Inteface(1);
+GPIO2		<=	data_Inteface(2);
+GPIO3		<=	data_Inteface(3);
+GPIO4		<=	data_Inteface(4);
+GPIO5		<=	data_Inteface(5);
+GPIO6		<=	data_Inteface(6);
+GPIO7		<=	data_Inteface(7);
 GPIO8		<=	IMX_1_XHS;
 GPIO9		<=	sync_H;
 GPIO10	<=	sync_V;

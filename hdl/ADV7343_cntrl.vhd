@@ -32,7 +32,29 @@ port (
 end ADV7343_cntrl;
 
 architecture beh of ADV7343_cntrl is 
-
+----------------------------------------------------------------------
+---модуль вставки TRS кодовв видеопоток
+----------------------------------------------------------------------
+component SAV_EAV_insert is
+generic  (
+   HsyncShift		   : integer;
+   ActivePixPerLine  : integer
+   );
+port (
+   ------------------------------------входные сигналы-----------------------
+   CLK			   : in std_logic;  											      -- тактовый от гнератора
+   reset			   : in std_logic;  											      -- сброс
+   main_enable	   : in std_logic;  											      -- разрешение работы
+   ena_clk_x_q	   : in std_logic_vector (3 downto 0); 				      -- разрешение частоты /2 /4 /8/ 16
+   qout_clk		   : in std_logic_vector (bit_pix-1 downto 0);		      -- счетчик пикселей
+   qout_v		   : in std_logic_vector (bit_strok-1 downto 0); 	      -- счетчик строк
+   data_in		   : in std_logic_vector (bit_data_ADV7343-1 downto 0); 	-- входные данные
+   ------------------------------------выходные сигналы----------------------
+   data_out		   : out std_logic_vector (bit_data_ADV7343-1 downto 0) 	-- выходные данные
+      );
+end component;
+signal data_TRS	   : std_logic_vector(bit_data_ADV7343-1 DOWNTO 0);	
+----------------------------------------------------------------------
 
 type state_type is (st0, st1, st2, st_wait);    -- Register to hold the current state
 signal state : state_type;                      -- Register to hold the current state
@@ -96,13 +118,13 @@ type ROM_array is array (0 to 31) of std_logic_vector (15 downto 0);
 signal reg_adv7343   : ROM_array ;  --регистры adv7343 
 
 -- --1080p25--
-constant content: ROM_array := (
-0  =>   X"17"	& 	X"02",   -- Software reset.
-1  =>   X"00"	& 	X"1C",   -- All DACs enabled. PLL enabled (4×).
-2  =>   X"01"	& 	X"10",   -- HD-SDR input mode..
-3  =>   X"30"	& 	X"80",   -- SMPTE 274M-9 1080p at 25 Hz
-4  =>   X"31"	& 	X"01",   -- Pixel data valid. 4× oversampling.
-others => X"00_1C"); 
+-- constant content: ROM_array := (
+-- 0  =>   X"17"	& 	X"02",   -- Software reset.
+-- 1  =>   X"00"	& 	X"1C",   -- All DACs enabled. PLL enabled (4×).
+-- 2  =>   X"01"	& 	X"10",   -- HD-SDR input mode..
+-- 3  =>   X"30"	& 	X"80",   -- SMPTE 274M-9 1080p at 25 Hz
+-- 4  =>   X"31"	& 	X"01",   -- Pixel data valid. 4× oversampling.
+-- others => X"00_1C"); 
 
 -- -- 8-Bit PAL Square Pixel YCrCb In (EAV/SAV), CVBS/Y-C Out--
 -- constant content: ROM_array := (
@@ -117,24 +139,41 @@ others => X"00_1C");
 -- 8  =>   X"8F"	& 	X"26",   -- -//-
 -- others => X"00_1C"); 
 
--- -- 16-Bit PAL Square Pixel RGB In, CVBS/Y-C Out--
--- constant content: ROM_array := (
--- 0  =>   X"17"	& 	X"02",   -- Software reset.
--- 1  =>   X"00"	& 	X"1C",   -- All DACs enabled. PLL enabled (16×).
--- 2  =>   X"01"	& 	X"00",   -- SD input mode.
--- 3  =>   X"80"	& 	X"11",   -- PAL standard. SSAF luma filter enabled. 1.3 MHz chroma filter enabled.
--- 4  =>   X"82"	& 	X"D3",   -- Pixel data valid. CVBS/Y-C (S-Video) out. SSAF PrPb filter enabled. Active video edge control enabled. Square pixel mode enabled.
+-- 16-Bit PAL Square Pixel RGB In, CVBS/Y-C Out--
+constant content: ROM_array := (
+0  =>   X"17"	& 	X"02",   -- Software reset.
+1  =>   X"00"	& 	X"1C",   -- All DACs enabled. PLL enabled (16×).
+2  =>   X"01"	& 	X"80",   -- SD input mode.
+3  =>   X"80"	& 	X"11",   -- PAL standard. SSAF luma filter enabled. 1.3 MHz chroma filter enabled.
+4  =>   X"82"	& 	X"d3",   -- Pixel data valid. CVBS/Y-C (S-Video) out. SSAF PrPb filter enabled. Active video edge control enabled. Square pixel mode enabled.
 
--- 5  =>   X"87"	& 	X"80",   -- RGB input enabled.
--- 6  =>   X"88"	& 	X"10",   -- 16-bit RGB input enabled.
+5  =>   X"87"	& 	X"00",   -- YCrCb input enabled.
+6  =>   X"88"	& 	X"00",   -- 16-bit YCbCr input enabled.
 
--- 7  =>   X"8C"	& 	X"0C",   -- Subcarrier frequency register values for CVBS and/or S-Video (Y-C) output in PAL square pixel mode (29.5 MHz input clock).
--- 8  =>   X"8D"	& 	X"8C",   -- -//-
--- 9 =>   X"8E"	& 	X"79",   -- -//-
--- 10  =>   X"8F"	& 	X"26",   -- -//-
--- others => X"00_1C"); 
+7  =>   X"8C"	& 	X"0C",   -- Subcarrier frequency register values for CVBS and/or S-Video (Y-C) output in PAL square pixel mode (29.5 MHz input clock).
+8  =>   X"8D"	& 	X"8C",   -- -//-
+9 =>   X"8E"	& 	X"79",   -- -//-
+10  =>   X"8F"	& 	X"26",   -- -//-
+others => X"00_1C"); 
 
 begin
+
+SAV_EAV_insert_q: SAV_EAV_insert   
+generic map (  
+   EKD_ADV7343_PAL.HsyncShift, 
+   EKD_ADV7343_PAL.ActivePixPerLine ) 
+port map (
+   -- Inputs
+   CLK			   => CLK,
+   reset			   => reset,
+   main_enable	   => main_enable,
+   ena_clk_x_q	   => ena_clk_x_q ,
+   qout_clk		   => qout_clk ,
+   qout_v		   => qout_v, 
+   data_in		   => data_in, 
+   -- Outputs 
+   data_out       => data_TRS
+);	
 
 ----------------------------------------------------------------------
 -- синхросизналы
@@ -143,40 +182,47 @@ Process(CLK)
 begin
 if rising_edge(CLK) then
 
-   if to_integer(unsigned(qout_V)) >=EKD_ADV7343_1080p25.VsyncShift 
-      and to_integer(unsigned(qout_V)) < EKD_ADV7343_1080p25.VsyncShift + EKD_ADV7343_1080p25.VsyncWidth then
+   if to_integer(unsigned(qout_V)) >=EKD_ADV7343_PAL.VsyncShift 
+      and to_integer(unsigned(qout_V)) < EKD_ADV7343_PAL.VsyncShift + EKD_ADV7343_PAL.VsyncWidth then
          dac_pvsync  <= '0';
       else
          dac_pvsync  <= '1';
    end if;
 
-   if to_integer(unsigned(qout_clk)) >=EKD_ADV7343_1080p25.HsyncShift 
-      and to_integer(unsigned(qout_clk)) < EKD_ADV7343_1080p25.HsyncShift + EKD_ADV7343_1080p25.HsyncWidth then
-         dac_phsync  <= '0';
-         Get_m       <= '1';
-      else
-         dac_phsync  <= '1';
-         Get_m       <= '0';
-         end if;
+   -- if to_integer(unsigned(qout_clk)) >=EKD_ADV7343_1080p25.HsyncShift 
+   --    and to_integer(unsigned(qout_clk)) < EKD_ADV7343_1080p25.HsyncShift + EKD_ADV7343_1080p25.HsyncWidth then
+   --       dac_phsync  <= '0';
+   --       Get_m       <= '1';
+   --    else
+   --       dac_phsync  <= '1';
+   --       Get_m       <= '0';
+   --       end if;
 
-   if to_integer(unsigned(qout_V)) >=EKD_ADV7343_1080p25.VsyncShift + EKD_ADV7343_1080p25.InActiveLine -  EKD_ADV7343_1080p25.VsyncWidth
-      and to_integer(unsigned(qout_V)) < EKD_ADV7343_1080p25.VsyncShift + EKD_ADV7343_1080p25.InActiveLine -  EKD_ADV7343_1080p25.VsyncWidth + EKD_ADV7343_1080p25.ActiveLine  then
-         dac_pblk_v  <= '1';
-      else
-         dac_pblk_v  <= '0';
-   end if;
+   -- if to_integer(unsigned(qout_V)) >=EKD_ADV7343_1080p25.VsyncShift + EKD_ADV7343_1080p25.InActiveLine -  EKD_ADV7343_1080p25.VsyncWidth
+   --    and to_integer(unsigned(qout_V)) < EKD_ADV7343_1080p25.VsyncShift + EKD_ADV7343_1080p25.InActiveLine -  EKD_ADV7343_1080p25.VsyncWidth + EKD_ADV7343_1080p25.ActiveLine  then
+   --       dac_pblk_v  <= '1';
+   --    else
+   --       dac_pblk_v  <= '0';
+   -- end if;
 
-   if to_integer(unsigned(qout_clk)) >=EKD_ADV7343_1080p25.HsyncShift + EKD_ADV7343_1080p25.HsyncWidthGapRight 
-      and to_integer(unsigned(qout_clk)) < EKD_ADV7343_1080p25.HsyncShift + EKD_ADV7343_1080p25.HsyncWidthGapRight  + EKD_ADV7343_1080p25.ActivePixPerLine  then
-         dac_pblk_h  <= '1';
-      else
-         dac_pblk_h  <= '0';
-   end if;
+   -- if to_integer(unsigned(qout_clk)) >=EKD_ADV7343_1080p25.HsyncShift + EKD_ADV7343_1080p25.HsyncWidthGapRight 
+   --    and to_integer(unsigned(qout_clk)) < EKD_ADV7343_1080p25.HsyncShift + EKD_ADV7343_1080p25.HsyncWidthGapRight  + EKD_ADV7343_1080p25.ActivePixPerLine  then
+   --       dac_pblk_h  <= '1';
+   --    else
+   --       dac_pblk_h  <= '0';
+   -- end if;
 end if;
 end process;
-DAC_PBLK <= dac_pblk_v and dac_pblk_h;
+-- DAC_PBLK <= dac_pblk_v and dac_pblk_h;
+DAC_PBLK    <= '1';
+dac_phsync  <= '1';
+-- dac_pvsync  <= '1';
+
+
 DAC_CLK     <= CLK;
-DAC_Y       <= data_in(7 downto 0);
+-- DAC_Y       <= x"80";
+DAC_Y       <= data_TRS(7 downto 0);
+
 ----------------------------------------------------------------------
 
 ----------------------------------------------------------------------
@@ -229,7 +275,7 @@ else
 	--прогрузка регистров синхронно с каждой 8 строкой --
    WHEN st0 =>
       if  qout_v(2 downto 0) = "000"	 then
-         if cnt_reg  < 6   then           
+         if cnt_reg  < 12   then           
             ena_i2c  <= '1';
          else
             state       <= st2;
