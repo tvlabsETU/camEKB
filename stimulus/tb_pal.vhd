@@ -27,8 +27,10 @@
 
 
 library ieee;
-use ieee.std_logic_1164.all;
-
+use IEEE.STD_LOGIC_1164.ALL;
+use ieee.numeric_std.all;
+use work.VIDEO_CONSTANTS.all;
+use work.My_component_pkg.all;
 entity tb_pal is
 end tb_pal;
 
@@ -102,7 +104,52 @@ architecture behavioral of tb_pal is
         );
     end component;
 
+
+    
+    -- signal qout_clk			: std_logic_vector (bit_pix-1 downto 0):=(Others => '0'); 
+    -- signal stroka_in        : std_logic := '0';
+
+
+component tb_IS is
+port (
+		--??????? ???????--	
+	CLK					: in std_logic;  												-- ???????? 
+	mode_generator		: in std_logic_vector (7 downto 0);						-- ??????? ??????????
+		--???????? ???????--	
+	XVS_Imx_Sim			: out std_logic; 												-- ?????????????
+	XHS_Imx_Sim			: out std_logic; 												-- ?????????????
+	DATA_IS_PAR			: out	std_logic_vector (bit_data_imx-1 downto 0);	-- ???????? ??????
+	DATA_IS_LVDS_ch_n	: out	std_logic_vector (3 downto 0);					-- ???????? ?????? ? ?????? 1
+	DATA_IS_CSI			: out	std_logic; 												-- ???????? ?????? CSI
+	CLK_DDR				: out std_logic		
+		);
+end component;
+
+signal XVS_Imx_Sim          :std_logic; 			
+signal XHS_Imx_Sim          :std_logic; 				
+signal DATA_IS_PAR          :std_logic_vector (bit_data_imx-1 downto 0); 	
+signal DATA_IS_LVDS_ch_n    :std_logic_vector (3 downto 0); 	
+signal DATA_IS_CSI          :std_logic; 				
+signal CLK_DDR              :std_logic; 					
+
+
 begin
+
+
+IMAGE_SENSOR_SIM_new_q: tb_IS	--??????? ???????? ?? ??????--       
+port map (
+    clk                 =>	SYSCLK,			
+    mode_generator      =>	x"00",
+    XVS_Imx_Sim         =>	XVS_Imx_Sim,		
+    XHS_Imx_Sim		    =>	XHS_Imx_Sim,
+    -- DATA_IS_PAR		    =>	DATA_IS_PAR,
+    -- DATA_IS_LVDS_ch_n   =>	DATA_IS_LVDS_ch_n,
+    DATA_IS_CSI		    =>	DATA_IS_CSI,
+    CLK_DDR 		    =>	CLK_DDR);
+
+
+
+
 
     process
         variable vhdl_initial : BOOLEAN := TRUE;
@@ -110,7 +157,7 @@ begin
     begin
         if ( vhdl_initial ) then
             -- Assert Reset
-            NSYSRESET <= '0';
+            NSYSRESET <= '1';
             wait for ( SYSCLK_PERIOD * 10 );
             
             NSYSRESET <= '1';
@@ -126,13 +173,13 @@ begin
         -- port map
         port map( 
             -- Inputs
-            IMX_1_XHS => '0',
-            IMX_1_XVS => '0',
+            IMX_1_XHS => XHS_Imx_Sim,
+            IMX_1_XVS => XVS_Imx_Sim,
             IMX_1_SDO => '0',
-            IMX_1_CH_P => (others=> '0'),
-            IMX_1_CH_N => (others=> '0'),
-            IMX_1_CLK_P => SYSCLK,
-            IMX_1_CLK_N => SYSCLK,
+            IMX_1_CH_P => DATA_IS_LVDS_ch_n,
+            IMX_1_CH_N => DATA_IS_LVDS_ch_n,
+            IMX_1_CLK_P => CLK_DDR,
+            IMX_1_CLK_N => CLK_DDR,
             IMX_2_XHS => '0',
             IMX_2_XVS => '0',
             IMX_2_SDO => '0',

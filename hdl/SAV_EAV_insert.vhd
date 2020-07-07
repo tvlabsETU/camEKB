@@ -61,16 +61,25 @@ port map (
    TRS_F1_V1_H0   => TRS_F1_V1_H0,
    TRS_F1_V1_H1   => TRS_F1_V1_H1
    );
-	
+   TRS_F0_V0_H0	<=	x"80" ;		
+   TRS_F0_V0_H1	<=	x"9D" ;		
+   TRS_F0_V1_H0	<=	x"AB" ;		
+   TRS_F0_V1_H1	<=	x"B6" ;		
+   TRS_F1_V0_H0	<=	x"C7" ;		
+   TRS_F1_V0_H1	<=	x"DA" ;		
+   TRS_F1_V1_H0	<=	x"EC" ;		
+   TRS_F1_V1_H1	<=	x"F1" ;		
+   TRS_SYNC_3FF	<=	x"FF" ;		
+   TRS_SYNC_0		<=	x"00" ;
 ------------------------------------------------------------
 -- вставка синхро кодов TRS к передаваемую последовательность
 ------------------------------------------------------------
 -- | LINE NUMBER | F | V | H (EAV) | H (SAV) |
--- |     0-21    | 0 | 1 |   1     |    0    |
--- |    22-309   | 0 | 0 |   1     |    0    |
--- |   310-311   | 0 | 1 |   1     |    0    |
--- |   312-334   | 1 | 0 |   1     |    0    |
--- |   335-622   | 1 | 1 |   1     |    0    |
+-- |     0-21    | 0 | 1 |   1     |    0    |  TRS_F0_V1_H1	<=	x"B6" ;	   TRS_F0_V1_H0	<=	x"AB" ;			
+-- |    22-309   | 0 | 0 |   1     |    0    |  TRS_F0_V0_H1	<=	x"9D" ;		TRS_F0_V0_H0	<=	x"80" ;	
+-- |   310-311   | 0 | 1 |   1     |    0    |  TRS_F0_V1_H1	<=	x"B6" ;	   TRS_F0_V1_H0	<=	x"AB" ;	
+-- |   312-334   | 1 | 0 |   1     |    0    |  TRS_F1_V0_H1	<=	x"DA" ;     TRS_F1_V0_H0	<=	x"C7" ;
+-- |   335-622   | 1 | 1 |   1     |    0    |  TRS_F1_V1_H1	<=	x"F1" ;     TRS_F1_V1_H0	<=	x"EC" ;
 -- |   623-624   | 1 | 0 |   1     |    0    |
 -- ena_clk_in  <= ena_clk_x_q(0);
 ena_clk_in  <= '1';
@@ -79,7 +88,7 @@ Process(CLK)
 begin
 if rising_edge(CLK) then
 	if ena_clk_in='1'	then
-		data_anc	   <=std_logic_vector(to_unsigned(3,bit_data_ADV7343));
+		data_anc	   <=std_logic_vector(to_unsigned(16,bit_data_ADV7343));
       data_video	<=data_in(bit_data_ADV7343-1 downto 0);
       -- | LINE NUMBER | F | V | H (EAV) | H (SAV) |
       -- |     0-21    | 0 | 1 |   1     |    0    |
@@ -126,20 +135,6 @@ if rising_edge(CLK) then
       -- | LINE NUMBER | F | V | H (EAV) | H (SAV) |
       -- |   312-334   | 1 | 0 |   1     |    0    |
       elsif (to_integer(unsigned (qout_V)) >= 312)	and (to_integer(unsigned (qout_V)) <= 334 ) then
-         if		to_integer(unsigned (qout_clk))	= HsyncShift - 1																						   then	data_out <= TRS_F1_V0_H0;  VALID_DATA<='0';
-         elsif	to_integer(unsigned (qout_clk))	= HsyncShift - 2																						   then	data_out <= TRS_SYNC_0;	   VALID_DATA<='0';
-         elsif	to_integer(unsigned (qout_clk))	= HsyncShift - 3																						   then	data_out <= TRS_SYNC_0;	   VALID_DATA<='0';
-         elsif	to_integer(unsigned (qout_clk))	= HsyncShift - 4																						   then	data_out <= TRS_SYNC_3FF;  VALID_DATA<='0';
-         elsif	to_integer(unsigned (qout_clk))	= HsyncShift + ActivePixPerLine + 0																   then	data_out <= TRS_SYNC_3FF;  VALID_DATA<='0';
-         elsif	to_integer(unsigned (qout_clk))	= HsyncShift + ActivePixPerLine + 1																   then	data_out <= TRS_SYNC_0;	   VALID_DATA<='0';
-         elsif	to_integer(unsigned (qout_clk))	= HsyncShift + ActivePixPerLine + 2																   then	data_out <= TRS_SYNC_0;	   VALID_DATA<='0';
-         elsif	to_integer(unsigned (qout_clk))	= HsyncShift + ActivePixPerLine + 3																   then	data_out <= TRS_F1_V0_H1;  VALID_DATA<='0';
-         elsif	to_integer(unsigned (qout_clk))	>= HsyncShift and to_integer(unsigned (qout_clk)) < HsyncShift + ActivePixPerLine	then	data_out <= data_video;		VALID_DATA<='0';
-         else																																									   data_out <= data_anc;      VALID_DATA<='0';
-         end if;
-      -- | LINE NUMBER | F | V | H (EAV) | H (SAV) |
-      -- |   335-622   | 1 | 1 |   1     |    0    |
-      elsif (to_integer(unsigned (qout_V)) >= 335)	and (to_integer(unsigned (qout_V)) <= 622 ) then
          if		to_integer(unsigned (qout_clk))	= HsyncShift - 1																						   then	data_out <= TRS_F1_V1_H0;  VALID_DATA<='0';
          elsif	to_integer(unsigned (qout_clk))	= HsyncShift - 2																						   then	data_out <= TRS_SYNC_0;	   VALID_DATA<='0';
          elsif	to_integer(unsigned (qout_clk))	= HsyncShift - 3																						   then	data_out <= TRS_SYNC_0;	   VALID_DATA<='0';
@@ -148,12 +143,12 @@ if rising_edge(CLK) then
          elsif	to_integer(unsigned (qout_clk))	= HsyncShift + ActivePixPerLine + 1																   then	data_out <= TRS_SYNC_0;	   VALID_DATA<='0';
          elsif	to_integer(unsigned (qout_clk))	= HsyncShift + ActivePixPerLine + 2																   then	data_out <= TRS_SYNC_0;	   VALID_DATA<='0';
          elsif	to_integer(unsigned (qout_clk))	= HsyncShift + ActivePixPerLine + 3																   then	data_out <= TRS_F1_V1_H1;  VALID_DATA<='0';
-         elsif	to_integer(unsigned (qout_clk))	>= HsyncShift and to_integer(unsigned (qout_clk)) < HsyncShift + ActivePixPerLine	then	data_out <= data_video;		VALID_DATA<='1';
+         elsif	to_integer(unsigned (qout_clk))	>= HsyncShift and to_integer(unsigned (qout_clk)) < HsyncShift + ActivePixPerLine	then	data_out <= data_video;		VALID_DATA<='0';
          else																																									   data_out <= data_anc;      VALID_DATA<='0';
          end if;
       -- | LINE NUMBER | F | V | H (EAV) | H (SAV) |
-      -- |   623-624   | 1 | 0 |   1     |    0    |
-      elsif (to_integer(unsigned (qout_V)) >= 623)	and (to_integer(unsigned (qout_V)) <= 624 ) then
+      -- |   335-622   | 1 | 1 |   1     |    0    |
+      elsif (to_integer(unsigned (qout_V)) >= 335)	and (to_integer(unsigned (qout_V)) <= 622 ) then
          if		to_integer(unsigned (qout_clk))	= HsyncShift - 1																						   then	data_out <= TRS_F1_V0_H0;  VALID_DATA<='0';
          elsif	to_integer(unsigned (qout_clk))	= HsyncShift - 2																						   then	data_out <= TRS_SYNC_0;	   VALID_DATA<='0';
          elsif	to_integer(unsigned (qout_clk))	= HsyncShift - 3																						   then	data_out <= TRS_SYNC_0;	   VALID_DATA<='0';
@@ -162,6 +157,20 @@ if rising_edge(CLK) then
          elsif	to_integer(unsigned (qout_clk))	= HsyncShift + ActivePixPerLine + 1																   then	data_out <= TRS_SYNC_0;	   VALID_DATA<='0';
          elsif	to_integer(unsigned (qout_clk))	= HsyncShift + ActivePixPerLine + 2																   then	data_out <= TRS_SYNC_0;	   VALID_DATA<='0';
          elsif	to_integer(unsigned (qout_clk))	= HsyncShift + ActivePixPerLine + 3																   then	data_out <= TRS_F1_V0_H1;  VALID_DATA<='0';
+         elsif	to_integer(unsigned (qout_clk))	>= HsyncShift and to_integer(unsigned (qout_clk)) < HsyncShift + ActivePixPerLine	then	data_out <= data_video;		VALID_DATA<='1';
+         else																																									   data_out <= data_anc;      VALID_DATA<='0';
+         end if;
+      -- | LINE NUMBER | F | V | H (EAV) | H (SAV) |
+      -- |   623-624   | 1 | 0 |   1     |    0    |
+      elsif (to_integer(unsigned (qout_V)) >= 623)	and (to_integer(unsigned (qout_V)) <= 624 ) then
+         if		to_integer(unsigned (qout_clk))	= HsyncShift - 1																						   then	data_out <= TRS_F1_V1_H0;  VALID_DATA<='0';
+         elsif	to_integer(unsigned (qout_clk))	= HsyncShift - 2																						   then	data_out <= TRS_SYNC_0;	   VALID_DATA<='0';
+         elsif	to_integer(unsigned (qout_clk))	= HsyncShift - 3																						   then	data_out <= TRS_SYNC_0;	   VALID_DATA<='0';
+         elsif	to_integer(unsigned (qout_clk))	= HsyncShift - 4																						   then	data_out <= TRS_SYNC_3FF;  VALID_DATA<='0';
+         elsif	to_integer(unsigned (qout_clk))	= HsyncShift + ActivePixPerLine + 0																   then	data_out <= TRS_SYNC_3FF;  VALID_DATA<='0';
+         elsif	to_integer(unsigned (qout_clk))	= HsyncShift + ActivePixPerLine + 1																   then	data_out <= TRS_SYNC_0;	   VALID_DATA<='0';
+         elsif	to_integer(unsigned (qout_clk))	= HsyncShift + ActivePixPerLine + 2																   then	data_out <= TRS_SYNC_0;	   VALID_DATA<='0';
+         elsif	to_integer(unsigned (qout_clk))	= HsyncShift + ActivePixPerLine + 3																   then	data_out <= TRS_F1_V1_H1;  VALID_DATA<='0';
          elsif	to_integer(unsigned (qout_clk))	>= HsyncShift and to_integer(unsigned (qout_clk)) < HsyncShift + ActivePixPerLine	then	data_out <= data_video;		VALID_DATA<='0';
          else																																									   data_out <= data_anc;      VALID_DATA<='0';
          end if;

@@ -139,7 +139,7 @@ begin
          => \GND\, OADIV2 => \GND\, OADIV3 => \GND\, OADIV4 => 
         \GND\, OAMUX0 => \GND\, OAMUX1 => \GND\, OAMUX2 => \VCC\, 
         DLYGLA0 => \GND\, DLYGLA1 => \GND\, DLYGLA2 => \GND\, 
-        DLYGLA3 => \GND\, DLYGLA4 => \GND\, OBDIV0 => \GND\, 
+        DLYGLA3 => \GND\, DLYGLA4 => \GND\, OBDIV0 => \VCC\, 
         OBDIV1 => \GND\, OBDIV2 => \GND\, OBDIV3 => \GND\, OBDIV4
          => \GND\, OBMUX0 => \GND\, OBMUX1 => \VCC\, OBMUX2 => 
         \GND\, DLYYB0 => \GND\, DLYYB1 => \GND\, DLYYB2 => \GND\, 
@@ -204,7 +204,7 @@ end DEF_ARCH;
 -- PPHASESHIFT:0
 -- DLYAVAL:1
 -- OAMUX:4
--- SEC1FREQ:137.500000
+-- SEC1FREQ:68.750000
 -- UGLB:1
 -- UYB:0
 -- GLBDLYVAL:1

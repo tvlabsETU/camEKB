@@ -1,0 +1,50 @@
+ ** Message System Log
+ ** Database: 
+ ** Date:   Tue Jul 07 02:59:34 2020
+
+
+****************
+Macro Parameters
+****************
+
+Name                            : mult_x_x
+Family                          : PA3LDP
+Output Format                   : VHDL
+Type                            : Multiplier
+Variation                       : Booth Advanced Options
+Clock                           : Rising
+DataA Width                     : 12
+DataB Width                     : 12
+Representation                  : Unsigned
+Final Adder                     : Instantiate
+Pipeline Stages                 : 1
+Summation Network               : Wallace
+Max PGen Width                  : 0
+Final Adder Speed               : Sklansky
+Hybrid Val                      : 0
+Insert Pad                      : No
+Insert I/O Reg                  : No
+DebugLevel                      : 0
+
+**************
+Compile Report
+**************
+
+
+Netlist Resource Report
+=======================
+
+    CORE                       Used:    716  Total:  75264   (0.95%)
+    IO (W/ clocks)             Used:      0  Total:    341   (0.00%)
+    Differential IO            Used:      0  Total:    168   (0.00%)
+    GLOBAL (Chip+Quadrant)     Used:      0  Total:     18   (0.00%)
+    PLL                        Used:      0  Total:      6   (0.00%)
+    RAM/FIFO                   Used:      0  Total:    112   (0.00%)
+    Low Static ICC             Used:      0  Total:      1   (0.00%)
+    FlashROM                   Used:      0  Total:      1   (0.00%)
+    User JTAG                  Used:      0  Total:      1   (0.00%)
+
+Wrote VHDL netlist to G:/ACTELL/EKB/EKB/Libero/smartgen\mult_x_x\mult_x_x.vhd.
+
+ ** Log Ended:   Tue Jul 07 02:59:35 2020
+

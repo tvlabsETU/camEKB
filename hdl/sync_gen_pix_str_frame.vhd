@@ -114,7 +114,7 @@ port map (
 	CLKA			=> CLK,	
 	-- Outputs 
 	GLA			=> CLK_1_1,		--137.5 МГц
-	GLB			=> CLK_1_2, 	--137.5 МГц
+	GLB			=> CLK_1_2, 	--68.75 МГц
 	LOCK			=> locked_pll_1
 );	
 
@@ -122,7 +122,7 @@ PLL_1_q: PLL_1
 port map (
 	-- Inputs
 	POWERDOWN	=> PLL_POWERDOWN_N,
-	CLKA			=> CLK_1_2,	
+	CLKA			=> CLK_1_1,	
 	-- Outputs 
 	GLA			=> CLK_2_1,		--29.5 МГц
 	GLB			=> CLK_2_2, 	--29.5 МГц
@@ -136,12 +136,12 @@ port map (
 ----------------------------------------------------------------------
 gen_pix_str_frame_IS: gen_pix_str_frame    	             
 generic map (
-	EKD_ADV7343_1080p25.PixPerLine,
-	EKD_ADV7343_1080p25.LinePerFrame
+	EKD_2200_1250p50.PixPerLine,
+	EKD_2200_1250p50.LinePerFrame
 	) 
 port map (
 			-----in---------
-	CLK				=> CLK_1_2,	
+	CLK				=> CLK_1_1,	
 	reset				=> main_reset ,
 	main_enable		=> main_enable,
 	mode_sync_gen 	=> mode_sync_gen_IS,

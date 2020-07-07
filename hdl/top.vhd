@@ -99,26 +99,26 @@ architecture rtl of EKB_top is
 ----------------------------------------------------------------------
 ---модель симцуляции цотоприемника
 ----------------------------------------------------------------------
-component IMAGE_SENSOR_SIM is
-port (
-		--входные сигналы--	
-	CLK					: in std_logic;  												-- тактовый 
-	mode_generator		: in std_logic_vector (7 downto 0);						-- задание генератора
-		--выходные сигналы--	
-	XVS_Imx_Sim			: out std_logic; 												-- синхронизация
-	XHS_Imx_Sim			: out std_logic; 												-- синхронизация
-	DATA_IS_PAR			: out	std_logic_vector (bit_data_imx-1 downto 0);	-- выходной сигнал
-	DATA_IS_LVDS_ch_n	: out	std_logic_vector (3 downto 0);					-- выходной сигнал в канале 1
-	DATA_IS_CSI			: out	std_logic; 												-- выходной сигнал CSI
-	CLK_DDR				: out std_logic		
-		);
-end component;
-signal XVS_Imx_Sim				: std_logic:='0';
-signal XHS_Imx_Sim				: std_logic:='0';
-signal DATA_IS_LVDS_ch_n_Sim	: std_logic_vector (3 downto 0);
-signal DATA_IS_CSI_Sim			: std_logic:='0';
-signal CLK_DDR_Sim				: std_logic:='0';
-signal DATA_IS_PAR_Sim			: std_logic_vector (bit_data_imx-1 downto 0):=(Others => '0'); 
+-- component IMAGE_SENSOR_SIM is
+-- port (
+-- 		--входные сигналы--	
+-- 	CLK					: in std_logic;  												-- тактовый 
+-- 	mode_generator		: in std_logic_vector (7 downto 0);						-- задание генератора
+-- 		--выходные сигналы--	
+-- 	XVS_Imx_Sim			: out std_logic; 												-- синхронизация
+-- 	XHS_Imx_Sim			: out std_logic; 												-- синхронизация
+-- 	DATA_IS_PAR			: out	std_logic_vector (bit_data_imx-1 downto 0);	-- выходной сигнал
+-- 	DATA_IS_LVDS_ch_n	: out	std_logic_vector (3 downto 0);					-- выходной сигнал в канале 1
+-- 	DATA_IS_CSI			: out	std_logic; 												-- выходной сигнал CSI
+-- 	CLK_DDR				: out std_logic		
+-- 		);
+-- end component;
+-- signal XVS_Imx_Sim				: std_logic:='0';
+-- signal XHS_Imx_Sim				: std_logic:='0';
+-- signal DATA_IS_LVDS_ch_n_Sim	: std_logic_vector (3 downto 0);
+-- signal DATA_IS_CSI_Sim			: std_logic:='0';
+-- signal CLK_DDR_Sim				: std_logic:='0';
+-- signal DATA_IS_PAR_Sim			: std_logic_vector (bit_data_imx-1 downto 0):=(Others => '0'); 
 
 ----------------------------------------------------------------------
 ---модуль синхрогенератора
@@ -257,13 +257,13 @@ signal reset_imx	: std_logic:='1';
 component ADV7343_cntrl is
 	port (
 	------------------------------------входные сигналы-----------------------
-		CLK				: in std_logic;  											-- тактовый от гнератора
-		reset				: in std_logic;  											-- сброс
-		main_enable		: in std_logic;  											-- разрешение работы
-		qout_clk	    	: in	std_logic_vector (bit_pix-1 downto 0); 	-- счетчик пикселей
-		qout_v			: in	std_logic_vector (bit_strok-1 downto 0); 	-- счетчик строк
-		ena_clk_x_q		: in	std_logic_vector (3 downto 0); 				-- разрешение частоты /2 /4 /8/ 16
-		data_in     	: in std_logic_vector (7 downto 0);             -- режим работы
+		CLK				: in std_logic;  												-- тактовый от гнератора
+		reset				: in std_logic;  												-- сброс
+		main_enable		: in std_logic;  												-- разрешение работы
+		qout_clk	    	: in	std_logic_vector (bit_pix-1 downto 0); 		-- счетчик пикселей
+		qout_v			: in	std_logic_vector (bit_strok-1 downto 0); 		-- счетчик строк
+		ena_clk_x_q		: in	std_logic_vector (3 downto 0); 					-- разрешение частоты /2 /4 /8/ 16
+		data_in     	: in std_logic_vector (bit_data_imx-1 downto 0);	-- режим работы
 		------------------------------------выходные сигналы----------------------
 		DAC_Y				:out std_logic_vector(7 downto 0);
 		DAC_PHSYNC		:out std_logic;
@@ -280,26 +280,8 @@ component ADV7343_cntrl is
 end component;
 signal data_Inteface	: std_logic_vector (7 downto 0);				
 
+
 begin
-
--- --------------------------------------------------------------------
--- -- --модель симцуляции фотоприемника
--- --------------------------------------------------------------------
--- IMAGE_SENSOR_SIM_q: IMAGE_SENSOR_SIM                    
--- port map (
--- 				-----in---------
--- 	CLK						=>	CLK_in_1,			
--- 	mode_generator 		=>	x"00",			
--- 				------ out------
--- 	XVS_Imx_Sim				=> XVS_Imx_Sim,
--- 	XHS_Imx_Sim				=> XHS_Imx_Sim,
--- 	DATA_IS_PAR				=>	DATA_IS_PAR_Sim,
--- 	DATA_IS_LVDS_ch_n		=> DATA_IS_LVDS_ch_n_Sim,
--- 	-- DATA_IS_CSI				=>	main_reset
--- 	CLK_DDR					=>	CLK_DDR_Sim	
--- 	);
-
-
 
 ----------------------------------------------------------------------
 ---модуль сброса
@@ -446,10 +428,11 @@ port map (
 	qout_clk	    	=> qout_clk_Inteface,
 	qout_v			=> qout_v_Inteface,
 	ena_clk_x_q		=> ena_clk_x_q_Inteface,
-	data_in     	=> x"80",
-	-- data_in     	=> qout_clk_Inteface(7 downto 0),
+	data_in     	=> qout_clk_Inteface(7 downto 0) & x"f",
+	-- data_in     	=> x"80",
+
 				--OUT--
-	DAC_Y				=>	data_Inteface,			
+	DAC_Y				=>	DAC_Y,			
 	DAC_PHSYNC		=>	DAC_PHSYNC,	
 	DAC_PVSYNC		=>	DAC_PVSYNC,	
 	DAC_PBLK			=>	DAC_PBLK,		
@@ -462,20 +445,20 @@ port map (
 	DAC_SFL			=>	DAC_SFL		
 	);
 	
-	DAC_Y	<=data_Inteface;
+	-- DAC_Y	<=data_Inteface;
 	
 -----------------------------------------------------------------------
-GPIO0		<=	data_Inteface(0);
-GPIO1		<=	data_Inteface(1);
-GPIO2		<=	data_Inteface(2);
-GPIO3		<=	data_Inteface(3);
-GPIO4		<=	data_Inteface(4);
-GPIO5		<=	data_Inteface(5);
-GPIO6		<=	data_Inteface(6);
-GPIO7		<=	data_Inteface(7);
+GPIO0		<=	qout_clk_IS(0);
+GPIO1		<=	qout_clk_IS(1);
+GPIO2		<=	qout_clk_IS(2);
+GPIO3		<=	qout_clk_IS(3);
+GPIO4		<=	qout_clk_IS(4);
+GPIO5		<=	qout_clk_IS(5);
+GPIO6		<=	qout_clk_IS(6);
+GPIO7		<=	qout_clk_IS(7);
 GPIO8		<=	IMX_1_XHS;
 GPIO9		<=	sync_H;
-GPIO10	<=	sync_V;
+GPIO10	<=	kadr_Inteface;
 end rtl;
 
 

@@ -15,7 +15,7 @@ port (
    qout_clk	    	: in	std_logic_vector (bit_pix-1 downto 0); 	-- счетчик пикселей
    qout_v			: in	std_logic_vector (bit_strok-1 downto 0); 	-- счетчик строк
    ena_clk_x_q		: in	std_logic_vector (3 downto 0); 				-- разрешение частоты /2 /4 /8/ 16
-   data_in     	: in std_logic_vector (7 downto 0);             -- режим работы
+   data_in     	: in std_logic_vector (bit_data_imx-1 downto 0);             -- режим работы
    ------------------------------------выходные сигналы----------------------
    DAC_Y				:out std_logic_vector(7 downto 0);
    DAC_PHSYNC		:out std_logic;
@@ -32,6 +32,44 @@ port (
 end ADV7343_cntrl;
 
 architecture beh of ADV7343_cntrl is 
+
+
+---------------------------------------------------
+-- преобразование RGB в YCrCb согласно REC601/REC709
+-- коэффициенты преобразования зависят от рекомендации
+---------------------------------------------------
+component REC_RGB_to_YCrCb is
+generic 
+(
+   koef_Y_r	   : integer :=66;			
+   koef_Y_g	   : integer :=129;			
+   koef_Y_b	   : integer :=24;			
+   koef_Cr_r	: integer :=112;			
+   koef_Cr_g	: integer :=94;			
+   koef_Cr_b	: integer :=18;			
+   koef_Cb_r	: integer :=38;			
+   koef_Cb_g	: integer :=74;			
+   koef_Cb_b	: integer :=112	
+);
+port (
+   CLK			: in std_logic; 												--	тактовый сигнал данных	
+   main_reset	: in std_logic;  												-- main_reset
+   ena_clk		: in std_logic;  												-- разрешение по частоте
+   data_R		: in std_logic_vector (bit_data_imx-1 downto 0);	-- data IN R
+   data_G		: in std_logic_vector (bit_data_imx-1 downto 0); 	-- data IN G
+   data_B		: in std_logic_vector (bit_data_imx-1 downto 0); 	-- data IN B
+   data_Y		: out std_logic_vector (bit_data_imx-1 downto 0);	-- data OUT Y
+   data_Cr		: out std_logic_vector (bit_data_imx-1 downto 0);	-- data OUT Cr
+   data_Cb		: out std_logic_vector (bit_data_imx-1 downto 0) 	-- data OUT Cb
+      );	
+end component;
+
+signal data_Y_rec	   : std_logic_vector(bit_data_imx-1 DOWNTO 0);	
+signal data_Cr_rec   : std_logic_vector(bit_data_imx-1 DOWNTO 0);	
+signal data_Cb_rec   : std_logic_vector(bit_data_imx-1 DOWNTO 0);	
+
+signal DAC_YCrCb  : std_logic_vector(bit_data_imx-1 DOWNTO 0);	
+
 ----------------------------------------------------------------------
 ---модуль вставки TRS кодовв видеопоток
 ----------------------------------------------------------------------
@@ -60,7 +98,7 @@ type state_type is (st0, st1, st2, st_wait);    -- Register to hold the current 
 signal state : state_type;                      -- Register to hold the current state
 signal dac_pblk_v    : std_logic:='0';		
 signal dac_pblk_h    : std_logic:='0';	
-signal cnt_reg       : integer range 0 to 10:=0;	
+signal cnt_reg       : integer range 0 to 31:=0;	
 
 ----------------------------------------------------------------------
 component i2c_master IS
@@ -158,6 +196,37 @@ others => X"00_1C");
 
 begin
 
+---------------------------------------------------
+-- преобразование RGB в YCrCb согласно REC601/REC709
+-- коэффициенты преобразования зависят от рекомендации
+---------------------------------------------------
+REC_RGB_to_YCrCb_q: REC_RGB_to_YCrCb   
+generic map (  
+   REC_601.koef_Y_r, 
+   REC_601.koef_Y_g, 
+   REC_601.koef_Y_b, 
+   REC_601.koef_Cr_r, 
+   REC_601.koef_Cr_g, 
+   REC_601.koef_Cr_b, 
+   REC_601.koef_Cb_r, 
+   REC_601.koef_Cb_g, 
+   REC_601.koef_Cb_b   
+   ) 
+port map (
+   -- Inputs
+   CLK         => CLK,
+   main_reset  => reset,
+   ena_clk     => '1',
+   data_R      => data_in ,
+   data_G      => data_in ,
+   data_B      => data_in, 
+   -- Outputs 
+   data_Y      => data_Y_rec,
+   data_Cr     => data_Cr_rec,
+   data_Cb     => data_Cb_rec
+);	   
+
+
 SAV_EAV_insert_q: SAV_EAV_insert   
 generic map (  
    EKD_ADV7343_PAL.HsyncShift, 
@@ -170,24 +239,32 @@ port map (
    ena_clk_x_q	   => ena_clk_x_q ,
    qout_clk		   => qout_clk ,
    qout_v		   => qout_v, 
-   data_in		   => data_in, 
+   data_in		   => DAC_YCrCb(11 downto 4), 
    -- Outputs 
    data_out       => data_TRS
 );	
 
 ----------------------------------------------------------------------
--- синхросизналы
+-- синхросигналы
 ----------------------------------------------------------------------
 Process(CLK)
 begin
 if rising_edge(CLK) then
 
-   if to_integer(unsigned(qout_V)) >=EKD_ADV7343_PAL.VsyncShift 
-      and to_integer(unsigned(qout_V)) < EKD_ADV7343_PAL.VsyncShift + EKD_ADV7343_PAL.VsyncWidth then
-         dac_pvsync  <= '0';
-      else
-         dac_pvsync  <= '1';
+
+   if qout_clk(0)='0' then
+      DAC_YCrCb <= data_Y_rec;
+      -- DAC_YCrCb <= x"400";
+      else 
+      DAC_YCrCb <= x"800";
    end if;
+
+   -- if to_integer(unsigned(qout_V)) >=EKD_ADV7343_PAL.VsyncShift 
+   --    and to_integer(unsigned(qout_V)) < EKD_ADV7343_PAL.VsyncShift + EKD_ADV7343_PAL.VsyncWidth then
+   --       dac_pvsync  <= '0';
+   --    else
+   --       dac_pvsync  <= '1';
+   -- end if;
 
    -- if to_integer(unsigned(qout_clk)) >=EKD_ADV7343_1080p25.HsyncShift 
    --    and to_integer(unsigned(qout_clk)) < EKD_ADV7343_1080p25.HsyncShift + EKD_ADV7343_1080p25.HsyncWidth then
@@ -216,12 +293,11 @@ end process;
 -- DAC_PBLK <= dac_pblk_v and dac_pblk_h;
 DAC_PBLK    <= '1';
 dac_phsync  <= '1';
--- dac_pvsync  <= '1';
+dac_pvsync  <= '1';
 
 
 DAC_CLK     <= CLK;
--- DAC_Y       <= x"80";
-DAC_Y       <= data_TRS(7 downto 0);
+DAC_Y       <= data_TRS;
 
 ----------------------------------------------------------------------
 

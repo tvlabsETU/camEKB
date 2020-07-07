@@ -291,7 +291,7 @@ Process(CLK)
 begin
 if rising_edge(CLK) then
 	if ena_clk_in='1'	then
-		if 		(to_integer(unsigned (qout_V_IS))	<=	VsyncWidth_is)	
+		if 		(to_integer(unsigned (qout_V_IS))	<=	1)	
 			then	XVS_Imx_Sim	<='0';
 			else	XVS_Imx_Sim	<='1';
 		end if;

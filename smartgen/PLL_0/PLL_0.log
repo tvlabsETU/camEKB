@@ -1,6 +1,6 @@
  ** Message System Log
  ** Database: 
- ** Date:   Wed Jul 01 17:26:52 2020
+ ** Date:   Mon Jul 06 20:39:33 2020
 
 
 ****************
@@ -22,7 +22,7 @@ Primary Freq(Mhz)               : 137.500000
 Primary PhaseShift              : 0
 Primary Delay Value Index       : 1
 Primary Mux Select              : 4
-Secondary1 Freq(Mhz)            : 137.500000
+Secondary1 Freq(Mhz)            : 68.750000
 Use GLB                         : YES
 Use YB                          : NO
 GLB Delay Value Index           : 1
@@ -42,7 +42,7 @@ Configuration Bits:
 FINDIV[6:0]     0011010
 FBDIV[6:0]      0110001
 OADIV[4:0]      00000
-OBDIV[4:0]      00000
+OBDIV[4:0]      00001
 OCDIV[4:0]      00000
 OAMUX[2:0]      100
 OBMUX[2:0]      010
@@ -61,7 +61,7 @@ Primary Clock Frequency 137.500
 Primary Clock Phase Shift 0.000
 Primary Clock Output Delay from CLKA 2.200
 
-Secondary1 Clock Frequency 137.500
+Secondary1 Clock Frequency 68.750
 Secondary1 Clock Phase Shift 0.000
 Secondary1 Clock Global Output Delay from CLKA 3.450
 
@@ -86,5 +86,5 @@ Netlist Resource Report
 
 Wrote VHDL netlist to G:/ACTELL/EKB/EKB/Libero/smartgen\PLL_0\PLL_0.vhd.
 
- ** Log Ended:   Wed Jul 01 17:26:53 2020
+ ** Log Ended:   Mon Jul 06 20:39:33 2020
 

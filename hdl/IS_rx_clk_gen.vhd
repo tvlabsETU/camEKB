@@ -55,7 +55,7 @@ port map (
 clk_rx_Serial_ch		<= clk_rx_Serial;
 
 
-
+image_sensor_RX_LVDS_q/IS_rx_clk_gen_q/pll_imx_dck_q0/Core:CLKA
 div_clk_q0: count_n_modul                    
 generic map (3) 
 port map (
