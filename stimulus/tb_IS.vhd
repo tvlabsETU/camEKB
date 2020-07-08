@@ -5,58 +5,62 @@ use ieee.numeric_std.all;
 use work.VIDEO_CONSTANTS.all;
 use work.My_component_pkg.all;
 ---------------------------------------------------------------
--- ?????? ?????????? ?????????????
--- ???????? ?????? ? 3 ????????? ???????????? ??? / LVDS (1-2-4 ?????) / CSI (1 ?????)
--- ? ??????????? ?? mode_IMAGE_SENSOR (use work.VIDEO_CONSTANTS.all ) ????? ???????? ????? ?????????
--- mode_IMAGE_SENSOR (3 downto 0) = 0 CSI - 1 ?????
--- mode_IMAGE_SENSOR (3 downto 0) = 1 LVDS - 1 ?????
--- mode_IMAGE_SENSOR (3 downto 0) = 2 LVDS - 2 ?????
--- mode_IMAGE_SENSOR (3 downto 0) = 3 LVDS - 4 ?????
--- ??????????? ?????? ???????????? bit_data_imx 12 / 10 / 8 bit
+-- модель симцуляции цотоприемника
+-- выходной сигнал в 3 вариантах паралелльный код / LVDS (1-2-4 линии) / CSI (1 линия)
+-- в зависимости от mode_IMAGE_SENSOR (use work.VIDEO_CONSTANTS.all ) можно изменять режим симуляции
+-- mode_IMAGE_SENSOR (3 downto 0) = 0 CSI - 1 линия
+-- mode_IMAGE_SENSOR (3 downto 0) = 1 LVDS - 1 линия
+-- mode_IMAGE_SENSOR (3 downto 0) = 2 LVDS - 2 линия
+-- mode_IMAGE_SENSOR (3 downto 0) = 3 LVDS - 4 линия
+-- разрядность данный определяется bit_data_imx 12 / 10 / 8 bit
 
 -- mode_IMAGE_SENSOR (7 downto 4) = 0 B/W
 -- mode_IMAGE_SENSOR (7 downto 4) = 1 COLOR
 
--- mode_generator ?????????? ??? ?????? ??? ????????
--- ??????? 4 ???? ??????? ?? ??? ???????, ??????? ?? ????????????
+-- mode_generator определяет тип данных для передачи
+-- младшие 4 бита отвечаю за тип сигнала, старшие за кастомизацию
 -- 	[7..4]						[3..0]
--- 	????? ????????				0 ???????????? ???? ?? ???????????
--- 	????? ????????				1 ???????????? ???? ?? ?????????
--- 	none							2 ???????????? ?????? ?? ?????? ???????? SMPTE
--- 	?????? ??????				3 ????????? ????
--- 	????????????? ?????		4 ??????? ?????? (color bar)
--- 	none							5 ?????? ?? ?????
+-- 	сдвиг разрядов				0 градационный клин по горизонтали
+-- 	сдвиг разрядов				1 градационный клин по вертикали
+-- 	none							2 шумоподобный сигнал на основе полинома SMPTE
+-- 	размер клеток				3 шахматное поле
+-- 	интенсиыность полос		4 цветные полосы (color bar)
+-- 	none							5 сигнал из файла
 --------------------------------------------------------------
 --------------------------------------------------------------
--- ?????? PLL ??? ????????? ?????????????
--- ??? 2200?1250 50p ?????????? ??????? (PixFreq)  137.5 ???
--- ??? 2200?1125 30p ?????????? ??????? (PixFreq)  74.25 ???
--- ??? ?????????? ??????? > 74.25 ??? ?????? ??????????? CSI-2/ LVDS ?? 1 ?????
+-- модель PLL для симуляции фотоприемника
+-- для 2200х1250 50p пиксельаня частота (PixFreq)  137.5 МГц
+-- для 2200х1125 30p пиксельаня частота (PixFreq)  74.25 МГц
+-- для пиксельной частоты > 74.25 Мгц нельзя использвать CSI-2/ LVDS по 1 линии
 --       mode                        SerFreq
--- CSI      8 bit       PixFreq*4      = 297 ???
--- LVDS_1ch 8 bit       PixFreq*4      = 297 ???
--- LVDS_1ch 10 bit      PixFreq*5      = 371.25 ???
--- LVDS_1ch 12 bit      PixFreq*6      = 445.5 ???
--- LVDS_2ch 8 bit       PixFreq*4 /2   = 148.5 ???
--- LVDS_2ch 10 bit      PixFreq*5 /2   = 185.625 ???
--- LVDS_2ch 12 bit      PixFreq*6 /2   = 222.75 ???
--- LVDS_4ch 8 bit       PixFreq*4 /4   = 74.25 ???
--- LVDS_4ch 10 bit      PixFreq*5 /4   = 92.8125 ???
--- LVDS_4ch 12 bit      PixFreq*6 /4   = 111.375 ???
+-- CSI      8 bit       PixFreq*4      = 297 МГц
+-- LVDS_1ch 8 bit       PixFreq*4      = 297 МГц
+-- LVDS_1ch 10 bit      PixFreq*5      = 371.25 МГц
+-- LVDS_1ch 12 bit      PixFreq*6      = 445.5 МГц
+-- LVDS_2ch 8 bit       PixFreq*4 /2   = 148.5 МГц
+-- LVDS_2ch 10 bit      PixFreq*5 /2   = 185.625 МГц
+-- LVDS_2ch 12 bit      PixFreq*6 /2   = 222.75 МГц
+-- LVDS_4ch 8 bit       PixFreq*4 /4   = 74.25 МГц
+-- LVDS_4ch 10 bit      PixFreq*5 /4   = 92.8125 МГц
+-- LVDS_4ch 12 bit      PixFreq*6 /4   = 111.375 МГц
 --------------------------------------------------------------
+
 
 entity tb_IS is
 port (
-		--??????? ???????--	
-	CLK					: in std_logic;  												-- ???????? 
-	mode_generator		: in std_logic_vector (7 downto 0);						-- ??????? ??????????
-		--???????? ???????--	
-	XVS_Imx_Sim			: out std_logic; 												-- ?????????????
-	XHS_Imx_Sim			: out std_logic; 												-- ?????????????
-	DATA_IS_PAR			: out	std_logic_vector (bit_data_imx-1 downto 0);	-- ???????? ??????
-	DATA_IS_LVDS_ch_n	: out	std_logic_vector (3 downto 0);					-- ???????? ?????? ? ?????? 1
-	DATA_IS_CSI			: out	std_logic; 												-- ???????? ?????? CSI
-	CLK_DDR				: out std_logic		
+		--входные сигналы--	
+	CLK					: in std_logic;  												-- тактовый 
+	mode_generator		: in std_logic_vector (7 downto 0);						-- задание генератора
+		--выходные сигналы--	
+	XVS_Imx_Sim			: out std_logic; 												-- синхронизация
+	XHS_Imx_Sim			: out std_logic; 												-- синхронизация
+	DATA_IS_PAR			: out	std_logic_vector (bit_data_imx-1 downto 0);	-- выходной сигнал
+	DATA_IS_LVDS_ch_P	: out	std_logic_vector (3 downto 0);					-- выходной сигнал в канале 1
+	DATA_IS_LVDS_ch_N	: out	std_logic_vector (3 downto 0);					-- выходной сигнал в канале 1
+	DATA_IS_CSI_P		: out	std_logic; 												-- выходной сигнал CSI
+	DATA_IS_CSI_N		: out	std_logic; 												-- выходной сигнал CSI
+	CLK_DDR_P			: out std_logic;		
+	CLK_DDR_N			: out std_logic		
 		);
 end tb_IS;
 
@@ -99,7 +103,7 @@ signal locked_pll_q		: std_logic_vector(31 downto 0);
 ----------------------------------------------------------------------
 
 ----------------------------------------------------------------------
--- ?????? ????????? ???????????? ?? ????????????? ? ???????????? ????
+-- модуль генерации видеосигнала от фотоприемника в паралелльном коде
 ----------------------------------------------------------------------
 component IS_SIM_Paralell is
 generic  (
@@ -113,22 +117,23 @@ generic  (
 	VsyncWidth_is			: integer
 );
 port (
-		--??????? ???????--	
-	CLK					: in std_logic;  												-- ???????? 
+		--входные сигналы--	
+	CLK					: in std_logic;  												-- тактовый 
 	main_reset			: in std_logic;  												-- main_reset
 	main_enable			: in std_logic;  												-- main_enable
-	mode_generator		: in std_logic_vector (7 downto 0);						--??????? ??????
-		--???????? ???????--	
+	mode_generator		: in std_logic_vector (7 downto 0);						--задание режима
+		--выходные сигналы--	
 	qout_V_out			: out std_logic_vector (bit_strok-1 downto 0);		-- 
 	qout_clk_out		: out std_logic_vector (bit_pix-1 downto 0 );		-- 
-	XVS_Imx_Sim			: out std_logic; 												-- ?????????????
-	XHS_Imx_Sim			: out std_logic; 												-- ?????????????
-	DATA_IS_pix_ch_1	: out  std_logic_vector (bit_data_imx-1 downto 0);	-- ???????? ??????
-	DATA_IS_pix_ch_2	: out  std_logic_vector (bit_data_imx-1 downto 0);	-- ???????? ??????
-	DATA_IS_pix_ch_3	: out  std_logic_vector (bit_data_imx-1 downto 0);	-- ???????? ??????
-	DATA_IS_pix_ch_4	: out  std_logic_vector (bit_data_imx-1 downto 0)	-- ???????? ??????
+	XVS_Imx_Sim			: out std_logic; 												-- синхронизация
+	XHS_Imx_Sim			: out std_logic; 												-- синхронизация
+	DATA_IS_pix_ch_1	: out  std_logic_vector (bit_data_imx-1 downto 0);	-- выходной сигнал
+	DATA_IS_pix_ch_2	: out  std_logic_vector (bit_data_imx-1 downto 0);	-- выходной сигнал
+	DATA_IS_pix_ch_3	: out  std_logic_vector (bit_data_imx-1 downto 0);	-- выходной сигнал
+	DATA_IS_pix_ch_4	: out  std_logic_vector (bit_data_imx-1 downto 0)	-- выходной сигнал
 	);
 end component;
+
 signal qout_V_out				: std_logic_vector (bit_strok-1 downto 0);
 signal qout_clk_out			: std_logic_vector (bit_pix-1 downto 0);
 signal DATA_IS_pix_ch_1		: std_logic_vector (bit_data_imx-1 downto 0);
@@ -137,71 +142,51 @@ signal DATA_IS_pix_ch_3		: std_logic_vector (bit_data_imx-1 downto 0);
 signal DATA_IS_pix_ch_4		: std_logic_vector (bit_data_imx-1 downto 0);
 ----------------------------------------------------------------------
 
-
 ----------------------------------------------------------------------
--- ?????? ????????? ???????????? ?? ????????????? ????? ?????????????
+-- модуль генерации видеосигнала от фотоприемника после сериализатора
 ----------------------------------------------------------------------
 component IS_SIM_serial_DDR is
 generic  (bit_data	: integer);
 port (
-		--??????? ???????--	
-	CLK_fast				: in std_logic;  												-- ???????? 
+		--входные сигналы--	
+	CLK_fast				: in std_logic;  												-- тактовый 
 	main_reset			: in std_logic;  												-- main_reset
 	main_enable			: in std_logic;  												-- main_enable
-	DATA_IMX_OUT		: in std_logic_vector (bit_data_imx-1 downto 0);	-- ??????? ??????
-		--???????? ???????--	
-	IMX_DDR_VIDEO		: out std_logic												-- ???????? ??????
+	DATA_IMX_OUT		: in std_logic_vector (bit_data_imx-1 downto 0);	-- входной сигнал
+		--выходные сигналы--	
+	IMX_DDR_VIDEO		: out std_logic												-- выходной сигнал
 		);
 end component;
+signal DATA_IS_LVDS_ch	: std_logic_vector (3 downto 0);
 ------------------------------------------------------------------------------------
 
 begin
-
---------------------------------------------------------------------
--- ?????? PLL ??? ??????????? ?????? ?? ?????????????
+----------------------------------------------------------------------
+-- модули PLL для фомирования данных от фотоприемника
 ----------------------------------------------------------------------
 PLL_POWERDOWN_N	<=	'1';
 PLL_SIM_IS_q0: PLL_SIM_IS                   
 port map (
 	-- Inputs
 	POWERDOWN	=> PLL_POWERDOWN_N,
-	CLKA			=> CLK,				--74.25 ???
+	CLKA			=> CLK,				--74.25 МГц
 	-- Outputs 
-	GLA			=> CLK_IS_pix,		--137.5 ???
+	GLA			=> CLK_IS_pix,		--137.5 МГц
 	LOCK			=> locked_pll_0
 );	
 PLL_SIM_IS_q1: PLL_SIM_IS_1                   
 port map (
 	-- Inputs
 	POWERDOWN	=> PLL_POWERDOWN_N,
-	CLKA			=> CLK,				--74.25 ???
+	CLKA			=> CLK,				--74.25 МГц
 	-- Outputs 
-	GLA			=> CLK_IS_DDR_0, 	--206.25 ???	// ? ?????? LVDS 4 ch 12 bit
-	GLB			=> CLK_IS_DDR_1, 	--206.25 ???	// 180 phase shift
-	GLC			=> CLK_IS_DDR_2, 	--206.25 ???	// 90 phase shift
-	LOCK        => locked_pll_1
+	GLA			=> CLK_IS_DDR_0, 	--206.25 МГц	// в режиме LVDS 4 ch 12 bit
+	GLB			=> CLK_IS_DDR_1, 	--206.25 МГц	// 180 phase shift
+	GLC			=> CLK_IS_DDR_2, 	--206.25 МГц	// 90 phase shift
+	LOCK			=> locked_pll_1
 );	
--- 
-
--- XVS_Imx_Sim <=	CLK_IS_pix;		
--- XHS_Imx_Sim	<=	CLK_IS_DDR_0;			
--- -- DATA_IS_PAR	<=	CLK_IS_DDR_1;			
--- -- DATA_IS_LVDS_ch_n<=	CLK_IS_DDR_2;		
--- DATA_IS_CSI	<=	locked_pll_1;			
--- CLK_DDR		<=	CLK_IS_pix;		
-
-
--- XVS_Imx_Sim <=	CLK;		
--- XHS_Imx_Sim	<=	CLK;			
--- DATA_IS_PAR	<=	CLK;			
--- DATA_IS_LVDS_ch_n<=	CLK;		
--- DATA_IS_CSI	<=	CLK;			
--- CLK_DDR		<=	CLK;			
-
-
-
 ----------------------------------------------------------------------
--- ???????? reset ??? ??????????? ?????? 
+-- задержка reset для корректного сброса 
 ----------------------------------------------------------------------
 process (CLK)
 begin
@@ -216,37 +201,26 @@ end if;
 end process;
 
 ----------------------------------------------------------------------
--- ?????? ????????? ???????????? ?? ????????????? ? ???????????? ????
+-- модуль генерации видеосигнала от фотоприемника в паралелльном коде
 ----------------------------------------------------------------------
 IS_SIM_Paralell_q: IS_SIM_Paralell    
 generic map (
-	EKD_2200_1250p50.PixPerLine,
-	EKD_2200_1250p50.HsyncShift,
-	EKD_2200_1250p50.ActivePixPerLine,
-	EKD_2200_1250p50.HsyncWidth,
-	EKD_2200_1250p50.LinePerFrame,
-	EKD_2200_1250p50.VsyncShift,
-	EKD_2200_1250p50.ActiveLine,
-	EKD_2200_1250p50.VsyncWidth
-
-	-- EKD_ADV7343_1080p25.PixPerLine,
-	-- EKD_ADV7343_1080p25.HsyncShift,
-	-- EKD_ADV7343_1080p25.ActivePixPerLine,
-	-- EKD_ADV7343_1080p25.HsyncWidth,
-	-- EKD_ADV7343_1080p25.LinePerFrame,
-	-- EKD_ADV7343_1080p25.VsyncShift,
-	-- EKD_ADV7343_1080p25.ActiveLine,
-	-- EKD_ADV7343_1080p25.VsyncWidth
-
-
+	IMX_2200_1250p50.PixPerLine,
+	IMX_2200_1250p50.HsyncShift,
+	IMX_2200_1250p50.ActivePixPerLine,
+	IMX_2200_1250p50.HsyncWidth,
+	IMX_2200_1250p50.LinePerFrame,
+	IMX_2200_1250p50.VsyncShift,
+	IMX_2200_1250p50.ActiveLine,
+	IMX_2200_1250p50.VsyncWidth
 	)
 port map (
-				------??????? ???????-----------
+				------входные сигналы-----------
 	CLK					=>	CLK_IS_pix,			
 	main_reset			=>	main_reset ,
 	main_enable			=>	main_enable  ,		
 	mode_generator		=>	mode_generator,
-				------???????? ???????-----------
+				------выходные сигналы-----------
 	qout_V_out			=> qout_V_out,
 	qout_clk_out		=> qout_clk_out,
 	XVS_Imx_Sim			=> XVS_Imx_Sim,
@@ -257,54 +231,56 @@ port map (
 	DATA_IS_pix_ch_4	=> DATA_IS_pix_ch_4
 	);	
 ----------------------------------------------------------------------
--- ?????? ????????? ???????????? ?? ????????????? ????? ?????????????
--- ?????? ????? ???????? ?????????????? ??????????
+-- модуль генерации видеосигнала от фотоприемника после сериализатора
+-- каждый канал передачи обрабатывается независимо
 ----------------------------------------------------------------------
 IS_SIM_serial_DDR_q1: IS_SIM_serial_DDR                   
 generic map (bit_data_imx) 
 port map (
-				------??????? ???????-----------
+				------входные сигналы-----------
 	CLK_fast				=>	CLK_IS_DDR_0,			
 	main_reset			=>	main_reset ,
 	main_enable			=>	main_enable  ,		
 	DATA_IMX_OUT		=>	DATA_IS_pix_ch_1,
-				------???????? ???????-----------
-	IMX_DDR_VIDEO		=>	DATA_IS_LVDS_ch_n(0)
+				------выходные сигналы-----------
+	IMX_DDR_VIDEO		=>	DATA_IS_LVDS_ch(0)
 	);	
 IS_SIM_serial_DDR_q2: IS_SIM_serial_DDR                   
 generic map (bit_data_imx) 
 port map (
-				------??????? ???????-----------
+				------входные сигналы-----------
 	CLK_fast				=>	CLK_IS_DDR_0,			
 	main_reset			=>	main_reset ,
 	main_enable			=>	main_enable  ,		
 	DATA_IMX_OUT		=>	DATA_IS_pix_ch_2,
-				------???????? ???????-----------
-	IMX_DDR_VIDEO		=>	DATA_IS_LVDS_ch_n(1)
+				------выходные сигналы-----------
+	IMX_DDR_VIDEO		=>	DATA_IS_LVDS_ch(1)
 	);	
 IS_SIM_serial_DDR_q3: IS_SIM_serial_DDR                   
 generic map (bit_data_imx) 
 port map (
-				------??????? ???????-----------
+				------входные сигналы-----------
 	CLK_fast				=>	CLK_IS_DDR_0,			
 	main_reset			=>	main_reset ,
 	main_enable			=>	main_enable  ,		
 	DATA_IMX_OUT		=>	DATA_IS_pix_ch_3,
-				------???????? ???????-----------
-	IMX_DDR_VIDEO		=>	DATA_IS_LVDS_ch_n(2)
+				------выходные сигналы-----------
+	IMX_DDR_VIDEO		=>	DATA_IS_LVDS_ch(2)
 	);	
 IS_SIM_serial_DDR_q4: IS_SIM_serial_DDR                   
 generic map (bit_data_imx) 
 port map (
-				------??????? ???????-----------
+				------входные сигналы-----------
 	CLK_fast				=>	CLK_IS_DDR_0,			
 	main_reset			=>	main_reset ,
 	main_enable			=>	main_enable  ,		
 	DATA_IMX_OUT		=>	DATA_IS_pix_ch_4,
-				------???????? ???????-----------
-	IMX_DDR_VIDEO		=>	DATA_IS_LVDS_ch_n(3)
+				------выходные сигналы-----------
+	IMX_DDR_VIDEO		=>	DATA_IS_LVDS_ch(3)
 	);	
-
-CLK_DDR	<=	CLK_IS_DDR_2;
+CLK_DDR_P			<=	 CLK_IS_DDR_2;
+CLK_DDR_N			<=	not CLK_IS_DDR_2;
+DATA_IS_LVDS_ch_P <= DATA_IS_LVDS_ch;
+DATA_IS_LVDS_ch_N <= not DATA_IS_LVDS_ch;
 
 end ;

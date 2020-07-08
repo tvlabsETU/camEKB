@@ -57,8 +57,8 @@ architecture behavioral of tb_pal is
             IMX_2_SDO : in std_logic;
             IMX_2_CH_P : in std_logic_vector(3 downto 0);
             IMX_2_CH_N : in std_logic_vector(3 downto 0);
-            IMX_2_CLK_P : in std_logic_vector(0 to 0);
-            IMX_2_CLK_N : in std_logic_vector(0 to 0);
+            IMX_2_CLK_P : in std_logic;
+            IMX_2_CLK_N : in std_logic;
             CLK_in : in std_logic;
             Reset_main : in std_logic;
 
@@ -112,40 +112,49 @@ architecture behavioral of tb_pal is
 
 component tb_IS is
 port (
-		--??????? ???????--	
-	CLK					: in std_logic;  												-- ???????? 
-	mode_generator		: in std_logic_vector (7 downto 0);						-- ??????? ??????????
-		--???????? ???????--	
-	XVS_Imx_Sim			: out std_logic; 												-- ?????????????
-	XHS_Imx_Sim			: out std_logic; 												-- ?????????????
-	DATA_IS_PAR			: out	std_logic_vector (bit_data_imx-1 downto 0);	-- ???????? ??????
-	DATA_IS_LVDS_ch_n	: out	std_logic_vector (3 downto 0);					-- ???????? ?????? ? ?????? 1
-	DATA_IS_CSI			: out	std_logic; 												-- ???????? ?????? CSI
-	CLK_DDR				: out std_logic		
-		);
+    --??????? ???????--	
+    CLK					: in std_logic;  								        -- ???????? 
+    mode_generator		: in std_logic_vector (7 downto 0);						-- ??????? ??????????
+        --???????? ???????--	
+    XVS_Imx_Sim			: out std_logic; 									    -- ?????????????
+    XHS_Imx_Sim			: out std_logic; 									    -- ?????????????
+    DATA_IS_PAR			: out std_logic_vector (bit_data_imx-1 downto 0);	    -- ???????? ??????
+    DATA_IS_LVDS_ch_P	: out std_logic_vector (3 downto 0);					-- ???????? ?????? ? ?????? 1
+    DATA_IS_LVDS_ch_N	: out std_logic_vector (3 downto 0);					-- ???????? ?????? ? ?????? 1
+    DATA_IS_CSI_P		: out std_logic; 									    -- ???????? ?????? CSI
+    DATA_IS_CSI_N		: out std_logic; 									    -- ???????? ?????? CSI
+    CLK_DDR_P			: out std_logic;		
+    CLK_DDR_N			: out std_logic		
+    );
 end component;
 
 signal XVS_Imx_Sim          :std_logic; 			
 signal XHS_Imx_Sim          :std_logic; 				
-signal DATA_IS_PAR          :std_logic_vector (bit_data_imx-1 downto 0); 	
-signal DATA_IS_LVDS_ch_n    :std_logic_vector (3 downto 0); 	
-signal DATA_IS_CSI          :std_logic; 				
-signal CLK_DDR              :std_logic; 					
-
+signal DATA_IS_LVDS_ch_P    :std_logic_vector (3 downto 0); 	
+signal DATA_IS_LVDS_ch_N    :std_logic_vector (3 downto 0); 	
+signal DATA_IS_CSI_P        :std_logic; 				
+signal DATA_IS_CSI_N        :std_logic; 				
+signal CLK_DDR_P            :std_logic; 					
+signal CLK_DDR_N            :std_logic; 					
 
 begin
 
 
-IMAGE_SENSOR_SIM_new_q: tb_IS	--??????? ???????? ?? ??????--       
+IMAGE_SENSOR_SIM_new_q: tb_IS	   
 port map (
+    --??????? ???????--	
     clk                 =>	SYSCLK,			
     mode_generator      =>	x"00",
+    --???????? ???????--	
     XVS_Imx_Sim         =>	XVS_Imx_Sim,		
     XHS_Imx_Sim		    =>	XHS_Imx_Sim,
-    -- DATA_IS_PAR		    =>	DATA_IS_PAR,
-    -- DATA_IS_LVDS_ch_n   =>	DATA_IS_LVDS_ch_n,
-    DATA_IS_CSI		    =>	DATA_IS_CSI,
-    CLK_DDR 		    =>	CLK_DDR);
+    DATA_IS_LVDS_ch_P   =>	DATA_IS_LVDS_ch_P,
+    DATA_IS_LVDS_ch_N   =>	DATA_IS_LVDS_ch_N,
+    -- XHS_Imx_Sim		    =>	XHS_Imx_Sim,
+    -- XHS_Imx_Sim		    =>	XHS_Imx_Sim,
+    CLK_DDR_P		    =>	CLK_DDR_P,
+    CLK_DDR_N		    =>	CLK_DDR_N
+);
 
 
 
@@ -176,17 +185,17 @@ port map (
             IMX_1_XHS => XHS_Imx_Sim,
             IMX_1_XVS => XVS_Imx_Sim,
             IMX_1_SDO => '0',
-            IMX_1_CH_P => DATA_IS_LVDS_ch_n,
-            IMX_1_CH_N => DATA_IS_LVDS_ch_n,
-            IMX_1_CLK_P => CLK_DDR,
-            IMX_1_CLK_N => CLK_DDR,
+            IMX_1_CH_P => DATA_IS_LVDS_ch_P,
+            IMX_1_CH_N => DATA_IS_LVDS_ch_N,
+            IMX_1_CLK_P => CLK_DDR_P,
+            IMX_1_CLK_N => CLK_DDR_N,
             IMX_2_XHS => '0',
             IMX_2_XVS => '0',
             IMX_2_SDO => '0',
             IMX_2_CH_P => (others=> '0'),
             IMX_2_CH_N => (others=> '0'),
-            IMX_2_CLK_P => (others=> '0'),
-            IMX_2_CLK_N => (others=> '0'),
+            IMX_2_CLK_P => '0',
+            IMX_2_CLK_N => '0',
             CLK_in => SYSCLK,
             Reset_main => NSYSRESET,
 

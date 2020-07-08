@@ -23,12 +23,9 @@ add wave -position 7  sim:/tb_pal/EKB_top_0/sync_gen_pix_str_frame_q/qout_v_Inte
 add wave -position 8  sim:/tb_pal/EKB_top_0/sync_gen_pix_str_frame_q/kadr_Inteface
 
 add wave -noupdate -divider Image_SEnsor
-add wave -position end  sim:/tb_pal/IMAGE_SENSOR_SIM_new_q/qout_V_out
-add wave -position end  sim:/tb_pal/IMAGE_SENSOR_SIM_new_q/qout_clk_out
-add wave -position end  sim:/tb_pal/IMAGE_SENSOR_SIM_new_q/XVS_Imx_Sim
-add wave -position end  sim:/tb_pal/IMAGE_SENSOR_SIM_new_q/XHS_Imx_Sim
+
 add wave -noupdate -divider SMPTE_SERDES
 
-
+add wave -position end sim:/tb_pal/EKB_top_0/image_sensor_RX_LVDS_q/data_RAW_RX
 
 add wave -noupdate -divider HSI

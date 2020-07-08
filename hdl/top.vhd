@@ -51,8 +51,8 @@ entity EKB_top is
 	IMX_2_XTRIG		:out std_logic;  
 	IMX_2_CH_P		:in std_logic_vector(3 downto 0);	-- channel DDR IMX 1
 	IMX_2_CH_N		:in std_logic_vector(3 downto 0);	-- channel DDR IMX 1
-	IMX_2_CLK_P		:in std_logic_vector(0 downto 0);	-- channel DDR IMX CLK 
-	IMX_2_CLK_N		:in std_logic_vector(0 downto 0);	-- channel DDR IMX CLK 
+	IMX_2_CLK_P		:in std_logic;	-- channel DDR IMX CLK 
+	IMX_2_CLK_N		:in std_logic;	-- channel DDR IMX CLK 
 		--ADV7343--	
 	DAC_Y				:out std_logic_vector(7 downto 0);
 	DAC_PHSYNC		:out std_logic;
@@ -96,29 +96,6 @@ entity EKB_top is
 end EKB_top;
 
 architecture rtl of EKB_top is
-----------------------------------------------------------------------
----модель симцуляции цотоприемника
-----------------------------------------------------------------------
--- component IMAGE_SENSOR_SIM is
--- port (
--- 		--входные сигналы--	
--- 	CLK					: in std_logic;  												-- тактовый 
--- 	mode_generator		: in std_logic_vector (7 downto 0);						-- задание генератора
--- 		--выходные сигналы--	
--- 	XVS_Imx_Sim			: out std_logic; 												-- синхронизация
--- 	XHS_Imx_Sim			: out std_logic; 												-- синхронизация
--- 	DATA_IS_PAR			: out	std_logic_vector (bit_data_imx-1 downto 0);	-- выходной сигнал
--- 	DATA_IS_LVDS_ch_n	: out	std_logic_vector (3 downto 0);					-- выходной сигнал в канале 1
--- 	DATA_IS_CSI			: out	std_logic; 												-- выходной сигнал CSI
--- 	CLK_DDR				: out std_logic		
--- 		);
--- end component;
--- signal XVS_Imx_Sim				: std_logic:='0';
--- signal XHS_Imx_Sim				: std_logic:='0';
--- signal DATA_IS_LVDS_ch_n_Sim	: std_logic_vector (3 downto 0);
--- signal DATA_IS_CSI_Sim			: std_logic:='0';
--- signal CLK_DDR_Sim				: std_logic:='0';
--- signal DATA_IS_PAR_Sim			: std_logic_vector (bit_data_imx-1 downto 0):=(Others => '0'); 
 
 ----------------------------------------------------------------------
 ---модуль синхрогенератора
@@ -203,8 +180,8 @@ signal CLK_in_1				: std_logic:='1';
 component image_sensor_RX_LVDS is
 port (		
 			--image sensor IN--
-	IMX_CH_P			:in std_logic_vector(3 to 0);	-- channel DDR IMX 1
-	IMX_CH_N			:in std_logic_vector(3 to 0);	-- channel DDR IMX 1
+	IMX_CH_P			:in std_logic_vector(3 downto 0);	-- channel DDR IMX 1
+	IMX_CH_N			:in std_logic_vector(3 downto 0);	-- channel DDR IMX 1
 	IMX_CLK_P		:in std_logic;						-- channel DDR IMX CLK 
 	IMX_CLK_N		:in std_logic;						-- channel DDR IMX CLK 	
 	XVS				: in std_logic; 
@@ -250,6 +227,39 @@ signal AGC_VGA		: std_logic_vector (15 downto 0);
 signal AGC_str		: std_logic_vector (15 downto 0);				
 signal DEBUG_0		: std_logic_vector (7 downto 0);				
 signal reset_imx	: std_logic:='1';						
+----------------------------------------------------------------------
+--	модуль downscaling
+----------------------------------------------------------------------
+component Scaling is
+generic  (
+	PixPerLine_IS					: integer;
+	HsyncShift_IS		   		: integer;
+	ActivePixPerLine_IS  		: integer;
+	PixPerLine_Inteface		   : integer;
+	HsyncShift_Inteface		   : integer;
+	ActivePixPerLine_Inteface  : integer
+	);
+
+port (		
+			--image sensor IN--
+	CLK_wr     				: in std_logic;   										-- тактовый 
+	CLK_rd     				: in std_logic;   										-- тактовый 
+	reset						: in std_logic;  											-- сброс
+	data_in					: in std_logic_vector (bit_data_imx-1 downto 0);	-- channel DDR IMX 1
+	main_enable				: in std_logic;  											-- разрешение работы
+	Mode_debug				: in std_logic_vector (7 downto 0); 				-- отладка
+	ena_clk_x_q_IS			: in std_logic_vector (3 downto 0); 				-- разрешение частоты /2 /4 /8/ 16
+	qout_clk_IS				: in std_logic_vector (bit_pix-1 downto 0); 		-- счетчик пикселей
+	qout_v_IS				: in  std_logic_vector (bit_strok-1 downto 0); 	-- счетчик строк
+	qout_frame_IS			: in std_logic_vector (bit_frame-1 downto 0); 	-- счетчик кадров
+	ena_clk_x_q_Inteface	: in std_logic_vector (3 downto 0); 				-- разрешение частоты /2 /4 /8/ 16
+	qout_clk_Inteface		: in std_logic_vector (bit_pix-1 downto 0); 		-- счетчик пикселей
+	qout_v_Inteface		: in  std_logic_vector (bit_strok-1 downto 0); 	-- счетчик строк
+		---------Other------------
+	data_out			: out std_logic_vector (bit_data_imx-1 downto 0)-- выходной RAW сигнал					  	 														  		
+		);
+end component;
+signal data_Scaling		: std_logic_vector (bit_data_imx-1 downto 0);				
 
 ----------------------------------------------------------------------
 ---модуль интерфейса ADV7343
@@ -387,9 +397,9 @@ port map (
 -- 	IMX_2_XTRIG		<=	'1';
 
 
--- ----------------------------------------------------------------------
--- ---модуль приема сигнала изображения от фотоприеника
--- ----------------------------------------------------------------------
+----------------------------------------------------------------------
+---модуль приема сигнала изображения от фотоприеника
+----------------------------------------------------------------------
 -- image_sensor_RX_LVDS_q: image_sensor_RX_LVDS                    
 -- port map (
 -- 				--image sensor IN--
@@ -397,8 +407,8 @@ port map (
 -- 	IMX_CH_N				=> IMX_1_CH_N,			
 -- 	IMX_CLK_P			=> IMX_1_CLK_P,			
 -- 	IMX_CLK_N			=> IMX_1_CLK_N,			
--- 	XVS					=> XVS_Imx_Sim,			
--- 	XHS					=> XHS_Imx_Sim,			
+-- 	XVS					=> IMX_1_XVS,			
+-- 	XHS					=> IMX_1_XHS,	
 -- 		---------Other------------
 -- 	CLK_sys				=> CLK_1,
 -- 	reset_1				=> main_reset,
@@ -415,6 +425,39 @@ port map (
 -- 	);
 -- ----------------------------------------------------------------------
 
+----------------------------------------------------------------------
+--	модуль downscaling
+----------------------------------------------------------------------
+Scaling_q: Scaling    
+generic map (
+	EKD_2200_1250p50.PixPerLine,
+	EKD_2200_1250p50.HsyncShift,
+	EKD_2200_1250p50.ActivePixPerLine,
+	EKD_ADV7343_PAL.PixPerLine,
+	EKD_ADV7343_PAL.HsyncShift,
+	EKD_ADV7343_PAL.ActivePixPerLine)
+port map (
+				--image sensor IN--
+	CLK_wr     				=> CLK_1,			
+	CLK_rd     				=> CLK_3,			
+	reset						=> reset_sync_gen,			
+	-- data_in					=> data_RAW_RX,		
+	data_in					=> qout_clk_IS(11 downto 0),		
+
+	
+	main_enable				=> main_enable,			
+	Mode_debug				=> x"00",	
+	ena_clk_x_q_IS			=> ena_clk_x_q_IS,
+	qout_clk_IS				=> qout_clk_IS,
+	qout_v_IS				=> qout_v_IS,
+	qout_frame_IS			=> qout_frame_IS,		
+	ena_clk_x_q_Inteface	=> ena_clk_x_q_Inteface,
+	qout_clk_Inteface		=> qout_clk_Inteface,
+	qout_v_Inteface		=> qout_v_Inteface,
+		---------out------------
+	data_out					=> data_Scaling
+	);
+
 
 ----------------------------------------------------------------------
 ---модуль интерфейса ADV7343
@@ -428,9 +471,8 @@ port map (
 	qout_clk	    	=> qout_clk_Inteface,
 	qout_v			=> qout_v_Inteface,
 	ena_clk_x_q		=> ena_clk_x_q_Inteface,
-	data_in     	=> qout_clk_Inteface(7 downto 0) & x"f",
+	data_in     	=> data_Scaling,
 	-- data_in     	=> x"80",
-
 				--OUT--
 	DAC_Y				=>	DAC_Y,			
 	DAC_PHSYNC		=>	DAC_PHSYNC,	
@@ -444,9 +486,7 @@ port map (
 	DAC_CLK			=>	DAC_CLK,		
 	DAC_SFL			=>	DAC_SFL		
 	);
-	
-	-- DAC_Y	<=data_Inteface;
-	
+		
 -----------------------------------------------------------------------
 GPIO0		<=	qout_clk_IS(0);
 GPIO1		<=	qout_clk_IS(1);

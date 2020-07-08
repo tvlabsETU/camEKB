@@ -141,7 +141,7 @@ generic map (
 	) 
 port map (
 			-----in---------
-	CLK				=> CLK_1_1,	
+	CLK				=> CLK_1_2,	
 	reset				=> main_reset ,
 	main_enable		=> main_enable,
 	mode_sync_gen 	=> mode_sync_gen_IS,
@@ -182,7 +182,7 @@ port map (
 ----------------------------------------------------------------------
 --выходные сигналы
 ----------------------------------------------------------------------
-CLK_1_out	<=	CLK_1_1;
+CLK_1_out	<=	CLK_1_2;
 CLK_2_out	<=	CLK_1_2;
 CLK_3_out	<=	CLK_2_1;
 CLK_4_out	<=	CLK_2_2;

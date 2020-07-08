@@ -43,19 +43,17 @@ begin
 -- данный блок только  для ProAsic
 -- !! требует описания constrain !!
 --------------------------------------------------------------------
--- clk_rx_Serial_ch		<= dck_is;
--- clk_rx_Serial		   <= dck_is;
+clk_rx_Serial_ch		<= dck_is;
+clk_rx_Serial		   <= dck_is;
 
-pll_imx_dck_q0: pll_imx_dck                    
-port map (
-   POWERDOWN   =>	'1',			
-   CLKA		   =>	dck_is ,
-   -- LOCK        =>	main_enable,		
-   GLA		   => clk_rx_Serial);
-clk_rx_Serial_ch		<= clk_rx_Serial;
+-- pll_imx_dck_q0: pll_imx_dck                    
+-- port map (
+--    POWERDOWN   =>	'1',			
+--    CLKA		   =>	dck_is ,
+--    -- LOCK        =>	main_enable,		
+--    GLA		   => clk_rx_Serial);
+-- clk_rx_Serial_ch		<= clk_rx_Serial;
 
-
-image_sensor_RX_LVDS_q/IS_rx_clk_gen_q/pll_imx_dck_q0/Core:CLKA
 div_clk_q0: count_n_modul                    
 generic map (3) 
 port map (

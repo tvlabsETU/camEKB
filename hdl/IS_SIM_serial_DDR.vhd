@@ -79,7 +79,7 @@ port map (
 parall_to_serial_imx0: parall_to_serial                    
 generic map (bit_data / 2) 
 port map (
-	dir		=>	'0',		
+	dir		=>	'1',		
 	ena		=>	ena_CLK_fast,
 	clk		=>	CLK_fast,			
 	data		=>	DATA_IMX_OUT_r ,
@@ -89,7 +89,7 @@ port map (
 parall_to_serial_imx1: parall_to_serial                    
 generic map (bit_data / 2) 
 port map (
-	dir		=>	'0',		
+	dir		=>	'1',		
 	ena		=>	ena_CLK_fast,
 	clk		=>	CLK_fast,			
 	data		=>	DATA_IMX_OUT_f ,

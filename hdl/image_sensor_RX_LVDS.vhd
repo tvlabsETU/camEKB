@@ -179,11 +179,6 @@ port map (
 ----------------------------------------------------------------------
 
 -- align_load_0	<=	qout_v_IS(9 downto 7) 	;
-
-		
-
-
-
 RX_DDR_CH_q0: RX_DDR_CH   
 generic map (bit_data_imx) 
 port map (
@@ -240,7 +235,7 @@ port map (
 sync_word_4ch_q: sync_word_4ch   
 generic map (
 		bit_data_imx,
-		EKD_ADV7343_1080p25.PixPerLine
+		IMX_2200_1250p50.PixPerLine
 		) 
 port map (
 		-- Inputs
@@ -263,13 +258,13 @@ port map (
 -- модуль мультиплексирования 1/2/4 каналов от фотоприемнка в RAW
 ----------------------------------------------------------------------
 
-data_RAW_RX	<=	data_rx_ch_0;
+-- data_RAW_RX	<=	data_rx_ch_0;
 
 rx_ch_n_to_raw_q: rx_ch_to_raw   
 generic map (
-	EKD_ADV7343_1080p25.PixPerLine,
-	EKD_ADV7343_1080p25.HsyncShift,
-	EKD_ADV7343_1080p25.ActivePixPerLine
+	EKD_2200_1250p50.PixPerLine,
+	EKD_2200_1250p50.HsyncShift,
+	EKD_2200_1250p50.ActivePixPerLine
 		) 
 port map (
 		-- Inputs
@@ -284,11 +279,11 @@ port map (
 	data_rx_ch_0	  	=> data_rx_ch_0,	
    data_rx_ch_1	  	=> data_rx_ch_1,	
    data_rx_ch_2	  	=> data_rx_ch_2,	
-   data_rx_ch_3	  	=> data_rx_ch_3	
+   data_rx_ch_3	  	=> data_rx_ch_3,	
 		-- Outputs
-	-- data_rx_raw			=> data_RAW_RX
+	data_rx_raw			=> data_RAW_RX
 );	
-sync_H	<=dck_is;
-sync_V	<=is_ch(0);
+sync_H	<=valid_data_rx;
+sync_V	<=valid_data_rx;
 
 end ;

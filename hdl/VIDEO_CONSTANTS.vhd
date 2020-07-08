@@ -11,7 +11,10 @@ constant bit_data_ADV7343	: integer :=8;		--разрядность данных 
 
 constant bit_frame			: integer :=8;		--бит на счетчик кадров 		
 constant bit_pix				: integer :=12;	--разрядность счетчика пикселей		
-constant bit_RAM_1_str		: integer :=9;		--разрядность шины адреса RAM на 1 строку при приеме данных от IMX 	
+constant bit_RAM_1_str		: integer :=9;		--разрядность шины адреса RAM на 1 строку при приеме данных от IMX
+constant bit_RAM_scaling	: integer :=10;		--разрядность шины адреса RAM на 1 строку при scaling
+
+
 constant bit_strok			: integer :=12;	--разрядность счетчика строк		
 ---------------------------------------------------------------------------------
 constant N_channel_imx		: integer :=4;		--	количесвтво каналов по LVDS 1 / 2 / 4
@@ -268,10 +271,10 @@ constant EKD_ADV7343_PAL :	VideoStandartType:=	(	PixPerLine				=>	1888,
 																	VsyncWidth				=>	5,	
 																	VsyncShift				=>	5);	
 
-constant EKD_2200_1250p50 :	VideoStandartType:=	(	PixPerLine			=>	2200,
-																		ActivePixPerLine	=>	1536,	
+constant EKD_2200_1250p50 :	VideoStandartType:=	(	PixPerLine			=>	1100,
+																		ActivePixPerLine	=>	768,	
 																		InActivePixPerLine=>	664,	
-																		HsyncWidth			=>	10,	
+																		HsyncWidth			=>	1,	
 																		HsyncWidthGapLeft	=>	15,	
 																		HsyncWidthGapRight=>	15,	
 																		HsyncShift			=>	30,
@@ -279,7 +282,21 @@ constant EKD_2200_1250p50 :	VideoStandartType:=	(	PixPerLine			=>	2200,
 																		ActiveLine			=>	1150,
 																		InActiveLine		=>	100,
 																		VsyncWidth			=>	5,	
-																		VsyncShift			=>	5);	
+																		VsyncShift			=>	5);
+																		
+constant IMX_2200_1250p50 :	VideoStandartType:=	(	PixPerLine			=>	2200,
+																		ActivePixPerLine	=>	1536,	
+																		InActivePixPerLine=>	664,	
+																		HsyncWidth			=>	3,	
+																		HsyncWidthGapLeft	=>	15,	
+																		HsyncWidthGapRight=>	15,	
+																		HsyncShift			=>	30,
+																		LinePerFrame		=>	1250,
+																		ActiveLine			=>	1150,
+																		InActiveLine		=>	100,
+																		VsyncWidth			=>	5,	
+																		VsyncShift			=>	5);
+
 
 -- constant EKD_ADV7343_PAL :	VideoStandartType:=		(	PixPerLine				=>	944,
 -- 																		ActivePixPerLine		=>	768,	

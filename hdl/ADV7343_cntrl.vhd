@@ -226,6 +226,16 @@ port map (
    data_Cb     => data_Cb_rec
 );	   
 
+Process(CLK)
+begin
+if rising_edge(CLK) then
+   if qout_clk(0)='0' then
+      DAC_YCrCb <= data_Y_rec;
+      else 
+      DAC_YCrCb <= x"800";
+   end if;
+end if;
+end process;
 
 SAV_EAV_insert_q: SAV_EAV_insert   
 generic map (  
@@ -244,58 +254,9 @@ port map (
    data_out       => data_TRS
 );	
 
-----------------------------------------------------------------------
--- синхросигналы
-----------------------------------------------------------------------
-Process(CLK)
-begin
-if rising_edge(CLK) then
-
-
-   if qout_clk(0)='0' then
-      DAC_YCrCb <= data_Y_rec;
-      -- DAC_YCrCb <= x"400";
-      else 
-      DAC_YCrCb <= x"800";
-   end if;
-
-   -- if to_integer(unsigned(qout_V)) >=EKD_ADV7343_PAL.VsyncShift 
-   --    and to_integer(unsigned(qout_V)) < EKD_ADV7343_PAL.VsyncShift + EKD_ADV7343_PAL.VsyncWidth then
-   --       dac_pvsync  <= '0';
-   --    else
-   --       dac_pvsync  <= '1';
-   -- end if;
-
-   -- if to_integer(unsigned(qout_clk)) >=EKD_ADV7343_1080p25.HsyncShift 
-   --    and to_integer(unsigned(qout_clk)) < EKD_ADV7343_1080p25.HsyncShift + EKD_ADV7343_1080p25.HsyncWidth then
-   --       dac_phsync  <= '0';
-   --       Get_m       <= '1';
-   --    else
-   --       dac_phsync  <= '1';
-   --       Get_m       <= '0';
-   --       end if;
-
-   -- if to_integer(unsigned(qout_V)) >=EKD_ADV7343_1080p25.VsyncShift + EKD_ADV7343_1080p25.InActiveLine -  EKD_ADV7343_1080p25.VsyncWidth
-   --    and to_integer(unsigned(qout_V)) < EKD_ADV7343_1080p25.VsyncShift + EKD_ADV7343_1080p25.InActiveLine -  EKD_ADV7343_1080p25.VsyncWidth + EKD_ADV7343_1080p25.ActiveLine  then
-   --       dac_pblk_v  <= '1';
-   --    else
-   --       dac_pblk_v  <= '0';
-   -- end if;
-
-   -- if to_integer(unsigned(qout_clk)) >=EKD_ADV7343_1080p25.HsyncShift + EKD_ADV7343_1080p25.HsyncWidthGapRight 
-   --    and to_integer(unsigned(qout_clk)) < EKD_ADV7343_1080p25.HsyncShift + EKD_ADV7343_1080p25.HsyncWidthGapRight  + EKD_ADV7343_1080p25.ActivePixPerLine  then
-   --       dac_pblk_h  <= '1';
-   --    else
-   --       dac_pblk_h  <= '0';
-   -- end if;
-end if;
-end process;
--- DAC_PBLK <= dac_pblk_v and dac_pblk_h;
 DAC_PBLK    <= '1';
 dac_phsync  <= '1';
 dac_pvsync  <= '1';
-
-
 DAC_CLK     <= CLK;
 DAC_Y       <= data_TRS;
 

@@ -165,69 +165,68 @@ end process;
 ---------------------------------------------------
 Process(clk_rx_Parallel,main_reset)
 begin
-if	rising_edge (clk_rx_Parallel) then
-	if main_reset='1'	then
-		align_load_0		<=	"000";
-		align_load_1		<=	"000";
-		align_load_2		<=	"000";
-		align_load_3		<=	"000";
-		align_done			<=	'0';
-		stp					<=	st00;
-	else
-		case( stp ) is
-			when st00 => --  проверка какой канал сихронизировался
-				if Sync_flag	= '1'	then
-					if		 catch_align(0) ='0'	then	stp	<=	st0_1;		-- работаем с 1 каналом
-					elsif	 catch_align(1) ='0'	then	stp	<=	st1_1;		-- работаем с 2 каналом
-					elsif	 catch_align(2) ='0'	then	stp	<=	st2_1;		-- работаем с 3 каналом
-					elsif	 catch_align(3) ='0'	then	stp	<=	st3_1;		-- работаем с 4 каналом
-					else										stp	<=	st00;		align_done	<='1';
-					end if;	
+if main_reset='1'	then
+	align_load_0		<=	"000";
+	align_load_1		<=	"000";
+	align_load_2		<=	"000";
+	align_load_3		<=	"000";
+	align_done			<=	'0';
+	stp					<=	st00;
+elsif	rising_edge (clk_rx_Parallel) then
+
+	
+	case( stp ) is
+		when st00 => --  проверка какой канал сихронизировался
+			if Sync_flag	= '1'	then
+				if		 catch_align(0) ='0'	then	stp	<=	st0_1;		-- работаем с 1 каналом
+				elsif	 catch_align(1) ='0'	then	stp	<=	st1_1;		-- работаем с 2 каналом
+				elsif	 catch_align(2) ='0'	then	stp	<=	st2_1;		-- работаем с 3 каналом
+				elsif	 catch_align(3) ='0'	then	stp	<=	st3_1;		-- работаем с 4 каналом
+				else										stp	<=	st00;		align_done	<='1';
+				end if;	
+			end if;
+		--------------------------------управление для канала 1-----------------------------
+		when st0_1 => -- изменяем последрвательность байт синхронизации			
+				if align_load_0 < "111"	then
+					align_load_0	<=		std_logic_vector(unsigned (align_load_0)+1);
+					stp	<=	st00;
+				else
+					align_load_0	<=	"000";
+					stp	<=	st00;	-- байт не найден. поиск продолжаем
 				end if;
-			--------------------------------управление для канала 1-----------------------------
-			when st0_1 => -- изменяем последрвательность байт синхронизации			
-					if align_load_0 < "111"	then
-						align_load_0	<=		std_logic_vector(unsigned (align_load_0)+1);
-						stp	<=	st00;
-					else
-						align_load_0	<=	"000";
-						stp	<=	st00;	-- байт не найден. поиск продолжаем
-					end if;
-			--------------------------------управление для канала 2-----------------------------
-			when st1_1 => -- изменяем последрвательность байт синхронизации			
-					if align_load_1 < "111"	then
-						align_load_1	<=		std_logic_vector(unsigned (align_load_1)+1);
-						stp	<=	st00;
-					else
-						align_load_1	<=	"000";
-						stp	<=	st00;	-- байт не найден. поиск продолжаем
-					end if;
-			--------------------------------управление для канала 3-----------------------------
-			when st2_1 => -- изменяем последрвательность байт синхронизации			
-					if align_load_2 < "111"	then
-						align_load_2	<=		std_logic_vector(unsigned (align_load_2)+1);
-						stp	<=	st00;
-					else
-						align_load_2	<=	"000";
-						stp	<=	st00;	-- байт не найден. поиск продолжаем
-					end if;
-			--------------------------------управление для канала 4-----------------------------
-			when st3_1 => -- изменяем последрвательность байт синхронизации			
-					if align_load_3 < "111"	then
-						align_load_3	<=		std_logic_vector(unsigned (align_load_3)+1);
-						stp	<=	st00;
-					else
-						align_load_3	<=	"000";
-						stp	<=	st00;	-- байт не найден. поиск продолжаем
-					end if;
-			when others => -- что то делаем, например ждём a=0
-				null;
-			end case;
-	end if;
+		--------------------------------управление для канала 2-----------------------------
+		when st1_1 => -- изменяем последрвательность байт синхронизации			
+				if align_load_1 < "111"	then
+					align_load_1	<=		std_logic_vector(unsigned (align_load_1)+1);
+					stp	<=	st00;
+				else
+					align_load_1	<=	"000";
+					stp	<=	st00;	-- байт не найден. поиск продолжаем
+				end if;
+		--------------------------------управление для канала 3-----------------------------
+		when st2_1 => -- изменяем последрвательность байт синхронизации			
+				if align_load_2 < "111"	then
+					align_load_2	<=		std_logic_vector(unsigned (align_load_2)+1);
+					stp	<=	st00;
+				else
+					align_load_2	<=	"000";
+					stp	<=	st00;	-- байт не найден. поиск продолжаем
+				end if;
+		--------------------------------управление для канала 4-----------------------------
+		when st3_1 => -- изменяем последрвательность байт синхронизации			
+				if align_load_3 < "111"	then
+					align_load_3	<=		std_logic_vector(unsigned (align_load_3)+1);
+					stp	<=	st00;
+				else
+					align_load_3	<=	"000";
+					stp	<=	st00;	-- байт не найден. поиск продолжаем
+				end if;
+		when others => -- что то делаем, например ждём a=0
+			null;
+	end case;
 end if;
 end process;
 -----------------------------------
-
 
 process (clk_rx_Parallel)
 begin
@@ -235,8 +234,10 @@ if rising_edge(clk_rx_Parallel) then
 	IF main_reset='1'	then
 		valid_data_rx	<='0';
 	else
-		if	 	word_ch_1 = word_align_SAV_valid 	then	valid_data_rx	<='1';
-		elsif	word_ch_1 = word_align_EAV_valid 	then	valid_data_rx	<='0';
+		if to_integer(unsigned (cnt_imx_word_rx)) >= 2 and to_integer(unsigned (cnt_imx_word_rx)) < 2 + PixPerLine / N_channel_imx	then
+			valid_data_rx	<= '1' ;
+		else
+			valid_data_rx	<= '0';
 		end if;
 	end if;
 end if;

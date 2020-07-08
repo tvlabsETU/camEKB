@@ -54,46 +54,44 @@ signal sclk_spi_master		: std_logic:='0';
 signal ss_n_spi_master		: std_logic:='0';		
 signal mosi_spi_master		: std_logic:='0';										
 signal busy_spi_master		: std_logic:='0';										
-signal tx_spi_master		: std_logic_vector (23 downto 0):=(others => '0');										
-signal rx_spi_master		: std_logic_vector (23 downto 0):=(others => '0');	
+signal tx_spi_master			: std_logic_vector (23 downto 0):=(others => '0');										
+signal rx_spi_master			: std_logic_vector (23 downto 0):=(others => '0');	
 -------------------------------------------------------------------
 
 -------------------------------------------------------------------
-signal qout_imx				: std_logic_vector (29 downto 0):=(others => '0');			
+signal qout_imx				: std_logic_vector (23 downto 0):=(others => '0');			
 signal reset_gs				: std_logic:='0';		
 signal ena_spi_imx			: std_logic:='0';				
-signal CLK_SPI				: std_logic:='0';			 		-- такт SPI
+signal CLK_SPI					: std_logic:='0';			 		-- такт SPI
 signal enable_clk_spi		: std_logic:='0';					--	сигнал разрешения тактов CLK для формирования частоты CLK_SPI						
 signal addr_rom_reg			: std_logic_vector (7 downto 0):=(others => '0');											
 signal addr_reg_ACTIVE		: std_logic_vector (7 downto 0):=(others => '0');	--адерес для регистров обновляемых каждый кадр											
-signal ena_rw_reg			: std_logic:='0';			 		-- такт SPI				
+signal ena_rw_reg				: std_logic:='0';			 		-- такт SPI				
 					
 type state_type is (st0, st1, st2, st_wait);					-- Register to hold the current state
 signal state : state_type;										-- Register to hold the current state
-
-
 type ROM_array is array (0 to 255) of std_logic_vector (23 downto 0);
 type ROM_array2 is array (0 to 31) of std_logic_vector (23 downto 0);
-signal content2				: ROM_array2 ; 						--память для регистров обновляемых каждый кадр
+signal content2	: ROM_array2 ; 						--память для регистров обновляемых каждый кадр
 constant content: ROM_array := (
-0=>		X"C0"	& 	X"01"	& 	X"02"	,
-1=>		X"20"	& 	X"05"	& 	X"02"	,--8(1h) ch LVDS /4(2h) ch LVDS  
-2=>		X"01"	& 	X"0C"	& 	X"02"	,--1: 12 bit
-3=>		X"0C"	& 	X"0D"	& 	X"02"	,-- 1080p-FULL HD mode 
-4=>		X"65"	& 	X"10"	& 	X"02"	,--1125
-5=>		X"04"	& 	X"11"	& 	X"02"	,
+0=>	X"C0"	& 	X"01"	& 	X"02"	,
+1=>	X"20"	& 	X"05"	& 	X"02"	,--8(1h) ch LVDS /4(2h) ch LVDS  
+2=>	X"01"	& 	X"0C"	& 	X"02"	,--1: 12 bit
+3=>	X"0C"	& 	X"0D"	& 	X"02"	,-- 1080p-FULL HD mode 
+4=>	X"65"	& 	X"10"	& 	X"02"	,--1125
+5=>	X"04"	& 	X"11"	& 	X"02"	,
 -- 4=>		X"ee"	& 	X"10"	& 	X"02"	,
 -- 5=>		X"02"	& 	X"11"	& 	X"02"	,--750
 
-6=>		X"50"	& 	X"14"	& 	X"02"	,
-7=>		X"0a"	& 	X"15"	& 	X"02"	,
+6=>	X"50"	& 	X"14"	& 	X"02"	,
+7=>	X"0a"	& 	X"15"	& 	X"02"	,
 -- 6=>		X"78"	& 	X"14"	& 	X"02"	,
 -- 7=>		X"0f"	& 	X"15"	& 	X"02"	,--3960
 
 
 
-8=>		X"01"	& 	X"16"	& 	X"02"	,
-9=>		X"01"	& 	X"19"	& 	X"02"	,
+8=>	X"01"	& 	X"16"	& 	X"02"	,
+9=>	X"01"	& 	X"19"	& 	X"02"	,
 10=>	X"01"	& 	X"1B"	& 	X"02"	,--FREQ = 0h
 11=>	X"30"	& 	X"1C"	& 	X"02"	,--8(1h) ch LVDS /4(3h) ch LVDS  
 12=>	X"00"	& 	X"23"	& 	X"02"	,
@@ -320,35 +318,33 @@ constant content: ROM_array := (
 218=>	X"08"	& 	X"af"	& 	X"02"	,	-- The  value  is  set  according  to  drive mode. 
 											-- 0Eh: All-pixel, ROI, 1/2 Subsampling, FD Binning 
 											-- 0Ah: 1080p-Full HD 										
-219=>	X"50"	& 	X"8d"	& 	X"02"	,	-- SHS
-220=>	X"04"	& 	X"8e"	& 	X"02"	,	-- SHS
+219=>	X"00"	& 	X"8d"	& 	X"02"	,	-- SHS
+220=>	X"01"	& 	X"8e"	& 	X"02"	,	-- SHS
 221=>	X"00"	& 	X"8f"	& 	X"02"	,	-- SHS
-222=>	X"00"	& 	X"04"	& 	X"04"	,	-- GAIN
+222=>	X"40"	& 	X"04"	& 	X"04"	,	-- GAIN
 223=>	X"00"	& 	X"05"	& 	X"04"	,	-- GAIN
 
 224=>	X"00"	& 	X"08"	& 	X"02"	,	-- REGHOLD
 225=>	X"00"	& 	X"00"	& 	X"02"	,	-- STANDBY
 226=>	X"00"	& 	X"0a"	& 	X"02"	,	-- XMSTA
 
- others => X"00_00_82"); 
- 
- 
- 
+others => X"00_00_82"); 
+
 begin
 --
 enable_clk_spi		<=	ena_clk;
 --
 ------------------------------------счетчик пикселей для глобальных сигналов запуска/сброса -----------------------------
 pix_str_reset_imx: count_n_modul                   
-generic map (30) 
+generic map (24) 
 port map (
-				----IN signal---------
-			clk			=>CLK,	
-			reset		=>MAIN_reset,
-			en			=>'1',
-			modul		=> std_logic_vector(to_unsigned(1073741821,30)),
-				----OUT signal---------
-			qout		=>qout_imx);	
+		----IN signal---------
+	clk			=>CLK,	
+	reset		=>MAIN_reset,
+	en			=>'1',
+	modul		=> std_logic_vector(to_unsigned(1073741821,24)),
+		----OUT signal---------
+	qout		=>qout_imx);	
 ----------------------------------------------------------------------------------------------------
 Process(CLK)
 begin
@@ -376,7 +372,8 @@ end process;
 -----------------------------------------------------------------------------------
 Process(CLK, enable_clk_spi)
 begin
-if rising_edge(CLK) and enable_clk_spi = '1' then
+if rising_edge(CLK)  then
+	if enable_clk_spi = '1' then
 	-- Vmax	<= n_strok;
 ---------------------------------cброс--------------------------------
 	if reset_gs='0'	 
@@ -450,6 +447,8 @@ if rising_edge(CLK) and enable_clk_spi = '1' then
 ------------------------------------------------------------
 	WHEN others =>
 	END CASE;
+	end if;
+
 end if;
 end process;	
 
@@ -463,29 +462,28 @@ miso_spi_master		<='0';
 spi_master_q: spi_master                   
 generic map (24) 
 port map (
-					-- IN-----
+			-- IN-----
 --			clk			=>CLK_SPI,
-			clk			=>CLK,
-			clk_en		=>enable_clk_spi,
-			reset_n		=>reset_n_spi_master,
-			enable		=>enable_spi_master,
-			cpol		=>cpol_spi_master,
-			cpha		=>cpha_spi_master,
-			miso		=>miso_spi_master,
-			tx			=>tx_spi_master,
-					-- OUT----
-			sclk		=>sclk_spi_master,
-			ss_n		=>ss_n_spi_master,
-			mosi		=>mosi_spi_master,
-			busy		=>busy_spi_master,
-			rx			=>rx_spi_master
-			);	
-
- -- ----------------------регистры обновляемые каждый кадр ---------------------
-content2(0)<=AGC_VGA(7 downto 0)			& X"04"	& X"04";
-content2(1)<=AGC_VGA(15 downto 8)			& X"05"	& X"04";
-content2(2)<=AGC_str(7 downto 0)			& X"8d"	& X"02";
-content2(3)<=AGC_str(15 downto 8)			& X"8e"	& X"02";
+	clk		=> CLK,
+	clk_en	=> enable_clk_spi,
+	reset_n	=> reset_n_spi_master,
+	enable	=> enable_spi_master,
+	cpol		=> cpol_spi_master,
+	cpha		=> cpha_spi_master,
+	miso		=> miso_spi_master,
+	tx			=> tx_spi_master,
+			-- OUT----
+	sclk		=> sclk_spi_master,
+	ss_n		=> ss_n_spi_master,
+	mosi		=> mosi_spi_master,
+	busy		=> busy_spi_master,
+	rx			=> rx_spi_master
+	);	
+----------------------регистры обновляемые каждый кадр ---------------------
+content2(0)<=AGC_VGA(7 downto 0)		& X"04"	& X"04";
+content2(1)<=AGC_VGA(15 downto 8)	& X"05"	& X"04";
+content2(2)<=AGC_str(7 downto 0)		& X"8d"	& X"02";
+content2(3)<=AGC_str(15 downto 8)	& X"8e"	& X"02";
 -- content2(4)<=black_lavel_imx(7 downto 0)	& X"54"	& X"84";
 -- content2(5)<=black_lavel_imx(15 downto 8)	& X"55"	& X"84";
 -- content2(6)<=Vmax(7 downto 0)				& X"10"	& X"82";
