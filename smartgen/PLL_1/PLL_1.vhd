@@ -130,17 +130,30 @@ begin
     \VCC\ <= VCC_power_net1;
 
     Core : PLL
+<<<<<<< HEAD
       generic map(VCOFREQUENCY => 177.000)
 
       port map(CLKA => CLKAP, EXTFB => \GND\, POWERDOWN => 
         POWERDOWN, GLA => GLA, LOCK => LOCK, GLB => OPEN, YB => 
         OPEN, GLC => OPEN, YC => OPEN, OADIV0 => \VCC\, OADIV1
+=======
+      generic map(VCOFREQUENCY => 147.500)
+
+      port map(CLKA => CLKAP, EXTFB => \GND\, POWERDOWN => 
+        POWERDOWN, GLA => GLA, LOCK => LOCK, GLB => GLB, YB => 
+        OPEN, GLC => OPEN, YC => OPEN, OADIV0 => \GND\, OADIV1
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
          => \GND\, OADIV2 => \VCC\, OADIV3 => \GND\, OADIV4 => 
         \GND\, OAMUX0 => \GND\, OAMUX1 => \GND\, OAMUX2 => \VCC\, 
         DLYGLA0 => \GND\, DLYGLA1 => \GND\, DLYGLA2 => \GND\, 
         DLYGLA3 => \GND\, DLYGLA4 => \GND\, OBDIV0 => \GND\, 
+<<<<<<< HEAD
         OBDIV1 => \GND\, OBDIV2 => \GND\, OBDIV3 => \GND\, OBDIV4
          => \GND\, OBMUX0 => \GND\, OBMUX1 => \GND\, OBMUX2 => 
+=======
+        OBDIV1 => \GND\, OBDIV2 => \VCC\, OBDIV3 => \GND\, OBDIV4
+         => \GND\, OBMUX0 => \GND\, OBMUX1 => \VCC\, OBMUX2 => 
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
         \GND\, DLYYB0 => \GND\, DLYYB1 => \GND\, DLYYB2 => \GND\, 
         DLYYB3 => \GND\, DLYYB4 => \GND\, DLYGLB0 => \GND\, 
         DLYGLB1 => \GND\, DLYGLB2 => \GND\, DLYGLB3 => \GND\, 
@@ -150,8 +163,13 @@ begin
         \GND\, DLYYC1 => \GND\, DLYYC2 => \GND\, DLYYC3 => \GND\, 
         DLYYC4 => \GND\, DLYGLC0 => \GND\, DLYGLC1 => \GND\, 
         DLYGLC2 => \GND\, DLYGLC3 => \GND\, DLYGLC4 => \GND\, 
+<<<<<<< HEAD
         FINDIV0 => \VCC\, FINDIV1 => \GND\, FINDIV2 => \GND\, 
         FINDIV3 => \GND\, FINDIV4 => \VCC\, FINDIV5 => \GND\, 
+=======
+        FINDIV0 => \GND\, FINDIV1 => \VCC\, FINDIV2 => \VCC\, 
+        FINDIV3 => \GND\, FINDIV4 => \VCC\, FINDIV5 => \VCC\, 
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
         FINDIV6 => \GND\, FBDIV0 => \GND\, FBDIV1 => \VCC\, 
         FBDIV2 => \GND\, FBDIV3 => \VCC\, FBDIV4 => \VCC\, FBDIV5
          => \VCC\, FBDIV6 => \GND\, FBDLY0 => \GND\, FBDLY1 => 
@@ -194,7 +212,11 @@ end DEF_ARCH;
 -- SMARTGEN_DIE:IT14X14M4LDP
 -- SMARTGEN_PACKAGE:fg484
 -- AGENIII_IS_SUBPROJECT_LIBERO:T
+<<<<<<< HEAD
 -- FIN:54.000000
+=======
+-- FIN:137.500000
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
 -- CLKASRC:2
 -- FBDLY:1
 -- FBMUX:1
@@ -203,6 +225,16 @@ end DEF_ARCH;
 -- PPHASESHIFT:0
 -- DLYAVAL:1
 -- OAMUX:4
+<<<<<<< HEAD
+=======
+-- SEC1FREQ:29.500000
+-- UGLB:1
+-- UYB:0
+-- GLBDLYVAL:1
+-- YBDLYVAL:1
+-- S1PHASESHIFT:0
+-- OBMUX:2
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
 -- POWERDOWN_POLARITY:0
 -- LOCK_POLARITY:1
 -- LOCK_CTL:0

@@ -61,6 +61,7 @@ signal we_addr				: std_logic_vector (7 downto 0);
 signal re_addr				: std_logic_vector (7 downto 0);
 signal ram_raddr			: std_logic_vector (bit_RAM_scaling-1 downto 0);
 signal ram_waddr			: std_logic_vector (bit_RAM_scaling-1 downto 0);
+<<<<<<< HEAD
 signal ram_waddr_0		: std_logic_vector (bit_RAM_scaling-1 downto 0);
 signal ram_waddr_1		: std_logic_vector (bit_RAM_scaling-1 downto 0);
 signal ram_waddr_2		: std_logic_vector (bit_RAM_scaling-1 downto 0);
@@ -77,6 +78,9 @@ signal ram_waddr_44		: std_logic_vector (bit_RAM_scaling-1 downto 0);
 signal ram_waddr_55		: std_logic_vector (bit_RAM_scaling-1 downto 0);
 signal ram_waddr_66		: std_logic_vector (bit_RAM_scaling-1 downto 0);
 signal ram_waddr_77		: std_logic_vector (bit_RAM_scaling-1 downto 0);
+=======
+
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
 signal data_ram_0			: std_logic_vector (bit_data_imx-1 downto 0);
 signal data_ram_1			: std_logic_vector (bit_data_imx-1 downto 0);
 signal data_ram_2			: std_logic_vector (bit_data_imx-1 downto 0);
@@ -85,6 +89,7 @@ signal data_ram_4			: std_logic_vector (bit_data_imx-1 downto 0);
 signal data_ram_5			: std_logic_vector (bit_data_imx-1 downto 0);
 signal data_ram_6			: std_logic_vector (bit_data_imx-1 downto 0);
 signal data_ram_7			: std_logic_vector (bit_data_imx-1 downto 0);
+<<<<<<< HEAD
 
 signal data_in_0			: std_logic_vector (bit_data_imx-1 downto 0);
 signal data_in_00			: std_logic_vector (bit_data_imx-1 downto 0);
@@ -124,6 +129,8 @@ signal data_in_77			: std_logic_vector (bit_data_imx-1 downto 0);
 
 
 
+=======
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
 ----------------------------------------------------------------------
 
 signal data_ram_0_w		: std_logic_vector (bit_data_imx+1 downto 0);
@@ -143,12 +150,16 @@ signal ram_ena				: std_logic_vector (1 downto 0);
 
 ----------------------------------------------------------------------
 
+<<<<<<< HEAD
 signal reset_ram_0			: std_logic:='0';
 signal reset_ram_1			: std_logic:='0';
+=======
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
 
 begin
 ----------------------------------------------------------------------
 -- сигналы для чтения
+<<<<<<< HEAD
 
 
 Process(CLK_rd)
@@ -160,6 +171,8 @@ if rising_edge(CLK_rd) then
 end if;
 end process;
 
+=======
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
 Process(CLK_rd)
 begin
 if rising_edge(CLK_rd) then
@@ -214,6 +227,7 @@ if rising_edge(CLK_wr) then
 end if;
 end process;
 
+<<<<<<< HEAD
 -- сигналы для записи
 Process(CLK_wr)
 begin
@@ -257,6 +271,8 @@ end process;
 
 
 
+=======
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
 ram_waddr_q: count_n_modul	--шина адреса для чтения      
 generic map (bit_RAM_scaling) 
 port map (
@@ -333,6 +349,7 @@ end process;
 Ram_scaling_q0: Ram_scaling   
 port map (
    -- Inputs
+<<<<<<< HEAD
    WD			=> data_in_00,
    WEN		=> we_addr(0),
    REN	   => re_addr(0),
@@ -341,6 +358,16 @@ port map (
    WCLK		=> CLK_wr, 
    RCLK		=> CLK_rd, 
    RESET		=> reset_ram_1, 
+=======
+   WD			=> data_in,
+   WEN		=> we_addr(0),
+   REN	   => re_addr(0),
+   WADDR	   => ram_waddr ,
+   RADDR		=> ram_raddr ,
+   WCLK		=> CLK_wr, 
+   RCLK		=> CLK_rd, 
+   RESET		=> reset, 
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
    -- Outputs 
    RD       => data_ram_0
 );	
@@ -348,6 +375,7 @@ port map (
 Ram_scaling_q1: Ram_scaling   
 port map (
    -- Inputs
+<<<<<<< HEAD
    WD			=> data_in_11,
    WEN		=> we_addr(1),
    REN	   => re_addr(1),
@@ -356,6 +384,16 @@ port map (
    WCLK		=> CLK_wr, 
    RCLK		=> CLK_rd, 
    RESET		=> reset_ram_1, 
+=======
+   WD			=> data_in,
+   WEN		=> we_addr(1),
+   REN	   => re_addr(1),
+   WADDR	   => ram_waddr ,
+   RADDR		=> ram_raddr ,
+   WCLK		=> CLK_wr, 
+   RCLK		=> CLK_rd, 
+   RESET		=> reset, 
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
    -- Outputs 
    RD       => data_ram_1
 );	
@@ -363,6 +401,7 @@ port map (
 Ram_scaling_q2: Ram_scaling   
 port map (
    -- Inputs
+<<<<<<< HEAD
    WD			=> data_in_22,
    WEN		=> we_addr(2),
    REN	   => re_addr(2),
@@ -371,6 +410,16 @@ port map (
    WCLK		=> CLK_wr, 
    RCLK		=> CLK_rd, 
    RESET		=> reset_ram_1, 
+=======
+   WD			=> data_in,
+   WEN		=> we_addr(2),
+   REN	   => re_addr(2),
+   WADDR	   => ram_waddr ,
+   RADDR		=> ram_raddr ,
+   WCLK		=> CLK_wr, 
+   RCLK		=> CLK_rd, 
+   RESET		=> reset, 
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
    -- Outputs 
    RD       => data_ram_2
 );	
@@ -378,6 +427,7 @@ port map (
 Ram_scaling_q3: Ram_scaling   
 port map (
    -- Inputs
+<<<<<<< HEAD
    WD			=> data_in_33,
    WEN		=> we_addr(3),
    REN	   => re_addr(3),
@@ -386,6 +436,16 @@ port map (
    WCLK		=> CLK_wr, 
    RCLK		=> CLK_rd, 
    RESET		=> reset_ram_1, 
+=======
+   WD			=> data_in,
+   WEN		=> we_addr(3),
+   REN	   => re_addr(3),
+   WADDR	   => ram_waddr ,
+   RADDR		=> ram_raddr ,
+   WCLK		=> CLK_wr, 
+   RCLK		=> CLK_rd, 
+   RESET		=> reset, 
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
    -- Outputs 
    RD       => data_ram_3
 );	
@@ -393,6 +453,7 @@ port map (
 Ram_scaling_q4: Ram_scaling   
 port map (
    -- Inputs
+<<<<<<< HEAD
    WD			=> data_in_44,
    WEN		=> we_addr(4),
    REN	   => re_addr(4),
@@ -401,6 +462,16 @@ port map (
    WCLK		=> CLK_wr, 
    RCLK		=> CLK_rd, 
    RESET		=> reset_ram_1, 
+=======
+   WD			=> data_in,
+   WEN		=> we_addr(4),
+   REN	   => re_addr(4),
+   WADDR	   => ram_waddr ,
+   RADDR		=> ram_raddr ,
+   WCLK		=> CLK_wr, 
+   RCLK		=> CLK_rd, 
+   RESET		=> reset, 
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
    -- Outputs 
    RD       => data_ram_4
 );	
@@ -408,6 +479,7 @@ port map (
 Ram_scaling_q5: Ram_scaling   
 port map (
    -- Inputs
+<<<<<<< HEAD
    WD			=> data_in_55,
    WEN		=> we_addr(5),
    REN	   => re_addr(5),
@@ -416,6 +488,16 @@ port map (
    WCLK		=> CLK_wr, 
    RCLK		=> CLK_rd, 
    RESET		=> reset_ram_1, 
+=======
+   WD			=> data_in,
+   WEN		=> we_addr(5),
+   REN	   => re_addr(5),
+   WADDR	   => ram_waddr ,
+   RADDR		=> ram_raddr ,
+   WCLK		=> CLK_wr, 
+   RCLK		=> CLK_rd, 
+   RESET		=> reset, 
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
    -- Outputs 
    RD       => data_ram_5
 );	
@@ -423,6 +505,7 @@ port map (
 Ram_scaling_q6: Ram_scaling   
 port map (
    -- Inputs
+<<<<<<< HEAD
    WD			=> data_in_66,
    WEN		=> we_addr(6),
    REN	   => re_addr(6),
@@ -431,6 +514,16 @@ port map (
    WCLK		=> CLK_wr, 
    RCLK		=> CLK_rd, 
    RESET		=> reset_ram_1, 
+=======
+   WD			=> data_in,
+   WEN		=> we_addr(6),
+   REN	   => re_addr(6),
+   WADDR	   => ram_waddr ,
+   RADDR		=> ram_raddr ,
+   WCLK		=> CLK_wr, 
+   RCLK		=> CLK_rd, 
+   RESET		=> reset, 
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
    -- Outputs 
    RD       => data_ram_6
 );	
@@ -438,6 +531,7 @@ port map (
 Ram_scaling_q7: Ram_scaling   
 port map (
    -- Inputs
+<<<<<<< HEAD
    WD			=> data_in_77,
    WEN		=> we_addr(7),
    REN	   => re_addr(7),
@@ -446,6 +540,16 @@ port map (
    WCLK		=> CLK_wr, 
    RCLK		=> CLK_rd, 
    RESET		=> reset_ram_1, 
+=======
+   WD			=> data_in,
+   WEN		=> we_addr(7),
+   REN	   => re_addr(7),
+   WADDR	   => ram_waddr ,
+   RADDR		=> ram_raddr ,
+   WCLK		=> CLK_wr, 
+   RCLK		=> CLK_rd, 
+   RESET		=> reset, 
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
    -- Outputs 
    RD       => data_ram_7
 );	

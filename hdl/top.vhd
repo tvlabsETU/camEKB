@@ -260,7 +260,10 @@ port (
 		);
 end component;
 signal data_Scaling		: std_logic_vector (bit_data_imx-1 downto 0);				
+<<<<<<< HEAD
 signal data_in_scaling	: std_logic_vector (bit_data_imx-1 downto 0);				
+=======
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
 
 ----------------------------------------------------------------------
 ---модуль интерфейса ADV7343
@@ -297,7 +300,11 @@ begin
 ----------------------------------------------------------------------
 ---модуль сброса
 ----------------------------------------------------------------------
+<<<<<<< HEAD
 inpuf_q: INBUF 
+=======
+inpuf_q: INBUF
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
 port map (
 	PAD	=>	CLK_in,
 	Y		=>	CLK_in_1
@@ -354,6 +361,7 @@ port map (
 	);
 
 
+<<<<<<< HEAD
 ----------------------------------------------------------------------
 --модуль управления ФП
 ----------------------------------------------------------------------
@@ -473,6 +481,112 @@ port map (
 		---------out------------
 	data_out					=> data_Scaling
 	);
+=======
+-- ----------------------------------------------------------------------
+-- --модуль управления ФП
+-- ----------------------------------------------------------------------
+-- imx_control_q1: imx_control                    
+-- port map (
+-- 				--IN--
+-- 	CLK						=> CLK_1,				
+-- 	ena_clk					=> ena_clk_x_q_IS(3),			
+-- 	MAIN_reset				=> main_reset,		
+-- 	qout_v					=> qout_v_IS,			
+-- 	AGC_VGA					=> AGC_VGA,			
+-- 	AGC_str					=> AGC_str,			
+-- 	DEBUG						=> DEBUG_0,			
+-- 				--OUT--
+-- 	reset_imx				=> IMX_1_XCLR,		
+-- 	SDI_imx					=> IMX_1_SDI,			
+-- 	XCE_imx					=> IMX_1_XCE,			
+-- 	SCK_imx					=> IMX_1_SCK			
+-- 	);
+-- 	IMX_1_INCK		<=	CLK_2;
+-- 	IMX_1_XTRIG		<=	'1';
+-- --------------------------------------------------------------------
+-- -- модуль управления ФП
+-- --------------------------------------------------------------------
+-- imx_control_q2: imx_control                    
+-- port map (
+-- 				--IN--
+-- 	CLK						=> CLK_1,				
+-- 	ena_clk					=> ena_clk_x_q_IS(3),			
+-- 	MAIN_reset				=> main_reset,		
+-- 	qout_v					=> qout_v_IS,			
+-- 	AGC_VGA					=> AGC_VGA,			
+-- 	AGC_str					=> AGC_str,			
+-- 	DEBUG						=> DEBUG_0,			
+-- 				--OUT--
+-- 	reset_imx				=> IMX_2_XCLR,		
+-- 	SDI_imx					=> IMX_2_SDI,			
+-- 	XCE_imx					=> IMX_2_XCE,			
+-- 	SCK_imx					=> IMX_2_SCK			
+-- 	);
+-- 	IMX_2_INCK		<=	CLK_2;
+-- 	IMX_2_XTRIG		<=	'1';
+
+
+----------------------------------------------------------------------
+---модуль приема сигнала изображения от фотоприеника
+----------------------------------------------------------------------
+-- image_sensor_RX_LVDS_q: image_sensor_RX_LVDS                    
+-- port map (
+-- 				--image sensor IN--
+-- 	IMX_CH_P				=> IMX_1_CH_P,			
+-- 	IMX_CH_N				=> IMX_1_CH_N,			
+-- 	IMX_CLK_P			=> IMX_1_CLK_P,			
+-- 	IMX_CLK_N			=> IMX_1_CLK_N,			
+-- 	XVS					=> IMX_1_XVS,			
+-- 	XHS					=> IMX_1_XHS,	
+-- 		---------Other------------
+-- 	CLK_sys				=> CLK_1,
+-- 	reset_1				=> main_reset,
+-- 	reset_2				=> reset_RX,
+-- 	main_enable			=> main_enable,
+-- 	Mode_debug			=> x"00",
+-- 	ena_clk_x_q_IS		=> ena_clk_x_q_IS,
+-- 	qout_clk_IS			=> qout_clk_IS,
+-- 	qout_v_IS			=> qout_v_IS,			
+-- 		---------out------------
+-- 	sync_H				=> sync_H,
+-- 	sync_V				=> sync_V,		
+-- 	data_RAW_RX			=> data_RAW_RX
+-- 	);
+-- ----------------------------------------------------------------------
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
+
+----------------------------------------------------------------------
+--	модуль downscaling
+----------------------------------------------------------------------
+Scaling_q: Scaling    
+generic map (
+	EKD_2200_1250p50.PixPerLine,
+	EKD_2200_1250p50.HsyncShift,
+	EKD_2200_1250p50.ActivePixPerLine,
+	EKD_ADV7343_PAL.PixPerLine,
+	EKD_ADV7343_PAL.HsyncShift,
+	EKD_ADV7343_PAL.ActivePixPerLine)
+port map (
+				--image sensor IN--
+	CLK_wr     				=> CLK_1,			
+	CLK_rd     				=> CLK_3,			
+	reset						=> reset_sync_gen,			
+	-- data_in					=> data_RAW_RX,		
+	data_in					=> qout_clk_IS(11 downto 0),		
+
+	
+	main_enable				=> main_enable,			
+	Mode_debug				=> x"00",	
+	ena_clk_x_q_IS			=> ena_clk_x_q_IS,
+	qout_clk_IS				=> qout_clk_IS,
+	qout_v_IS				=> qout_v_IS,
+	qout_frame_IS			=> qout_frame_IS,		
+	ena_clk_x_q_Inteface	=> ena_clk_x_q_Inteface,
+	qout_clk_Inteface		=> qout_clk_Inteface,
+	qout_v_Inteface		=> qout_v_Inteface,
+		---------out------------
+	data_out					=> data_Scaling
+	);
 
 
 ----------------------------------------------------------------------
@@ -504,6 +618,7 @@ port map (
 	);
 		
 -----------------------------------------------------------------------
+<<<<<<< HEAD
 -- GPIO0		<=	data_RAW_RX(4);
 -- GPIO1		<=	data_RAW_RX(5);
 -- GPIO2		<=	data_RAW_RX(6);
@@ -528,6 +643,19 @@ GPIO8		<=	kadr_IS;
 GPIO9		<=	stroka_Inteface;
 GPIO10	<=	kadr_Inteface;
 	
+=======
+GPIO0		<=	qout_clk_IS(0);
+GPIO1		<=	qout_clk_IS(1);
+GPIO2		<=	qout_clk_IS(2);
+GPIO3		<=	qout_clk_IS(3);
+GPIO4		<=	qout_clk_IS(4);
+GPIO5		<=	qout_clk_IS(5);
+GPIO6		<=	qout_clk_IS(6);
+GPIO7		<=	qout_clk_IS(7);
+GPIO8		<=	IMX_1_XHS;
+GPIO9		<=	sync_H;
+GPIO10	<=	kadr_Inteface;
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
 end rtl;
 
 

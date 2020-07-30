@@ -44,14 +44,58 @@ begin
 --Захват первых N кадров от фотоприемника для синхронизации
 ----------------------------------------------------------------------
 ------------------------------------счетчик пикселей для глобальных сигналов запуска/сброса -----------------------------
+<<<<<<< HEAD
 process (XVS_imx,lock_pll_all)
+=======
+-- process (XVS_imx,lock_pll_all)
+-- begin
+-- if lock_pll_all='0' then
+--     sync_V_imx  <='1';
+--     ena_sync    <='0';    
+-- else
+--     if falling_edge(XVS_imx) then
+--         if  cnt_V_imx   >100 and cnt_V_imx  <200  then   
+--             ena_sync    <='1';
+--         else
+--             ena_sync    <='0';
+--         end if ;
+--         if cnt_V_imx >= N_frame_imx_sync   then
+--             sync_V_imx  <='0';
+--         end if ;
+--     end if;
+-- end if;
+-- end process;
+
+-- process (XVS_imx,lock_pll_all)   -- счетчик кадров от фотоприемника
+-- begin
+-- if lock_pll_all='0' then
+--     cnt_V_imx  <=0;
+-- else
+--     if falling_edge(XVS_imx) then
+--         if sync_V_imx='1'   then
+--             cnt_V_imx   <=cnt_V_imx+1;
+--         end if ;
+--     end if;
+-- end if;
+-- end process;
+
+-- sunc_imx    <=  not (XVS_imx);
+
+------------------------------------счетчик пикселей для глобальных сигналов запуска/сброса -----------------------------
+process (XHS_imx,lock_pll_all)
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
 begin
 if lock_pll_all='0' then
     sync_V_imx  <='1';
     ena_sync    <='0';    
 else
+<<<<<<< HEAD
     if falling_edge(XVS_imx) then
         if  cnt_V_imx   >100 and cnt_V_imx  <200  then   
+=======
+    if falling_edge(XHS_imx) then
+        if  cnt_V_imx   >=1 and cnt_V_imx  <2  then   
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
             ena_sync    <='1';
         else
             ena_sync    <='0';
@@ -63,12 +107,20 @@ else
 end if;
 end process;
 
+<<<<<<< HEAD
 process (XVS_imx,lock_pll_all)   -- счетчик кадров от фотоприемника
+=======
+process (XHS_imx,lock_pll_all)   -- счетчик кадров от фотоприемника
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
 begin
 if lock_pll_all='0' then
     cnt_V_imx  <=0;
 else
+<<<<<<< HEAD
     if falling_edge(XVS_imx) then
+=======
+    if falling_edge(XHS_imx) then
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
         if sync_V_imx='1'   then
             cnt_V_imx   <=cnt_V_imx+1;
         end if ;
@@ -76,6 +128,7 @@ else
 end if;
 end process;
 
+<<<<<<< HEAD
 sunc_imx    <=  not (XVS_imx);
 
 ------------------------------------счетчик пикселей для глобальных сигналов запуска/сброса -----------------------------
@@ -112,6 +165,9 @@ sunc_imx    <=  not (XVS_imx);
 -- end process;
 
 -- sunc_imx    <=  not (XHS_imx);
+=======
+sunc_imx    <=  not (XHS_imx);
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
 
 ----------------------------------------------------------------------
 -- для организации правльного синхронного сброса FLASH FPGA 

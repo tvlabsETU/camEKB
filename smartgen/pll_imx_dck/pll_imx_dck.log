@@ -1,6 +1,10 @@
  ** Message System Log
  ** Database: 
+<<<<<<< HEAD
  ** Date:   Mon Jul 20 19:28:40 2020
+=======
+ ** Date:   Wed Jul 01 00:34:48 2020
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
 
 
 ****************
@@ -13,13 +17,22 @@ Output Format                   : VHDL
 Type                            : Static PLL
 PowerDown                       : Active Low
 Lock                            : Active High
+<<<<<<< HEAD
 Input Freq(Mhz)                 : 216.000000
+=======
+Input Freq(Mhz)                 : 111.375000
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
 CLKA Source                     : Core Logic
 Feedback Delay Value Index      : 1
 Feedback Mux Select             : 1
 XDLY Mux Select                 : No
+<<<<<<< HEAD
 Primary Freq(Mhz)               : 216.000000
 Primary PhaseShift              : 270
+=======
+Primary Freq(Mhz)               : 111.375000
+Primary PhaseShift              : 0
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
 Primary Delay Value Index       : 1
 Primary Mux Select              : 4
 Secondary1 Freq(Mhz)            : 0.000000
@@ -39,12 +52,21 @@ Secondary2 Mux Select           : 0
 Lock Control                    : No
 
 Configuration Bits:
+<<<<<<< HEAD
 FINDIV[6:0]     0100111
 FBDIV[6:0]      0100111
 OADIV[4:0]      00000
 OBDIV[4:0]      00000
 OCDIV[4:0]      00000
 OAMUX[2:0]      111
+=======
+FINDIV[6:0]     0010100
+FBDIV[6:0]      0010100
+OADIV[4:0]      00000
+OBDIV[4:0]      00000
+OCDIV[4:0]      00000
+OAMUX[2:0]      100
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
 OBMUX[2:0]      000
 OCMUX[2:0]      000
 FBSEL[1:0]      01
@@ -55,11 +77,19 @@ DLYGLB[4:0]     00000
 DLYGLC[4:0]     00000
 DLYYB[4:0]      00000
 DLYYC[4:0]      00000
+<<<<<<< HEAD
 VCOSEL[2:0]     110
 
 Primary Clock Frequency 216.000
 Primary Clock Phase Shift 270.000
 Primary Clock Output Delay from CLKA 5.672
+=======
+VCOSEL[2:0]     100
+
+Primary Clock Frequency 111.375
+Primary Clock Phase Shift 0.000
+Primary Clock Output Delay from CLKA 2.200
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
 
 
 **************
@@ -80,7 +110,13 @@ Netlist Resource Report
     FlashROM                   Used:      0  Total:      1   (0.00%)
     User JTAG                  Used:      0  Total:      1   (0.00%)
 
+<<<<<<< HEAD
 Wrote VHDL netlist to G:/ACTELL/EKB/EKB_v1/EKB/Libero/smartgen\pll_imx_dck\pll_imx_dck.vhd.
 
  ** Log Ended:   Mon Jul 20 19:28:41 2020
+=======
+Wrote VHDL netlist to G:/ACTELL/EKB/EKB/Libero/smartgen\pll_imx_dck\pll_imx_dck.vhd.
+
+ ** Log Ended:   Wed Jul 01 00:34:48 2020
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
 

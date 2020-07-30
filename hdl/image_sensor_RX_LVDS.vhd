@@ -94,15 +94,22 @@ signal align_load_0		: std_logic_vector (2 downto 0);
 signal align_load_1		: std_logic_vector (2 downto 0);
 signal align_load_2		: std_logic_vector (2 downto 0);
 signal align_load_3		: std_logic_vector (2 downto 0);
+<<<<<<< HEAD
 signal align_load_00		: std_logic_vector (2 downto 0);
 
 
+=======
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
 signal valid_data_rx		: std_logic:='0';
 signal cnt_imx_word_rx	: std_logic_vector (bit_pix-1 DOWNTO 0);
 ----------------------------------------------------------------------
 -- модуль мультиплексирования 1/2/4 каналов от фотоприемнка в RAW
 ----------------------------------------------------------------------
+<<<<<<< HEAD
 component mux_ch_to_raw is
+=======
+component rx_ch_to_raw is
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
 generic  (
 	PixPerLine			: integer;
 	HsyncShift			: integer;
@@ -125,6 +132,7 @@ port (
 		);
 end component;
 signal data_rx_raw	: std_logic_vector (bit_data_imx-1 downto 0);
+<<<<<<< HEAD
 -- data_RAW_RX_in
 ----------------------------------------------------------------------
 -- lvds преобразователь
@@ -134,6 +142,18 @@ signal data_rx_raw	: std_logic_vector (bit_data_imx-1 downto 0);
 signal QF_ddr	: std_logic_vector (3 downto 0);
 signal QR_ddr	: std_logic_vector (3 downto 0);
 
+=======
+----------------------------------------------------------------------
+-- lvds преобразователь
+----------------------------------------------------------------------
+component ddr_data_imx is
+port( PADP : in    std_logic_vector(3 downto 0);
+		PADN : in    std_logic_vector(3 downto 0);
+		Y    : out   std_logic_vector(3 downto 0)
+	);
+end component;
+signal is_ch	: std_logic_vector (3 downto 0);
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
 
 component INBUF_LVDS is
 port( PADP : in    std_logic;
@@ -143,6 +163,7 @@ port( PADP : in    std_logic;
 end component;
 signal dck_is	: std_logic;
 ----------------------------------------------------------------------
+<<<<<<< HEAD
 signal data_rx_ch_0_w	: std_logic_vector (bit_data_imx downto 0);
 signal data_rx_ch_1_w	: std_logic_vector (bit_data_imx downto 0);
 signal data_rx_ch_2_w	: std_logic_vector (bit_data_imx downto 0);
@@ -150,6 +171,8 @@ signal data_rx_ch_3_w	: std_logic_vector (bit_data_imx downto 0);
 
 signal data_rx_ch_0_1_w	: std_logic_vector (bit_data_imx downto 0);
 signal data_rx_ch_2_3_w	: std_logic_vector (bit_data_imx downto 0);
+=======
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
 
 signal reset_1_0	: std_logic;
 signal reset_1_1	: std_logic;
@@ -219,6 +242,22 @@ port map (
 );	
 
 ----------------------------------------------------------------------
+-- lvds преобразователь
+----------------------------------------------------------------------
+ddr_data_imx_q: ddr_data_imx                   
+port map (
+		PADP	=> IMX_CH_P,
+		PADN	=> IMX_CH_N,
+		Y		=> is_ch
+);	
+INBUF_LVDS_q: INBUF_LVDS                   
+port map (
+		PADP	=> IMX_CLK_P,
+		PADN	=> IMX_CLK_N,
+		Y		=> dck_is
+);	
+
+----------------------------------------------------------------------
 -- модуль генерации тактовых частот  
 ----------------------------------------------------------------------
 IS_rx_clk_gen_q: IS_rx_clk_gen                   
@@ -237,6 +276,7 @@ port map (
 -- модуль приема DDR данных по 1..4 каналу
 ----------------------------------------------------------------------
 
+<<<<<<< HEAD
 -- Process(clk_rx_Serial_ch)
 -- begin
 -- if rising_edge(clk_rx_Serial_ch) then
@@ -250,6 +290,9 @@ port map (
 -- align_load_0	<=	"010" 	;
 
 
+=======
+-- align_load_0	<=	qout_v_IS(9 downto 7) 	;
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
 RX_DDR_CH_q0: RX_DDR_CH   
 generic map (bit_data_imx) 
 port map (
@@ -325,6 +368,7 @@ port map (
 		-- Outputs
 	cnt_imx_word_rx	=> cnt_imx_word_rx,
 	valid_data_rx		=> valid_data_rx,
+<<<<<<< HEAD
 	align_load_0		=> align_load_0
    -- align_load_1     	=> align_load_1,
    -- align_load_2     	=> align_load_2,
@@ -367,6 +411,20 @@ port map (
 
 
 mux_ch_to_raw_q: mux_ch_to_raw   
+=======
+	align_load_0		=> align_load_0,
+   align_load_1     	=> align_load_1,
+   align_load_2     	=> align_load_2,
+   align_load_3     	=> align_load_3
+);	
+----------------------------------------------------------------------
+-- модуль мультиплексирования 1/2/4 каналов от фотоприемнка в RAW
+----------------------------------------------------------------------
+
+-- data_RAW_RX	<=	data_rx_ch_0;
+
+rx_ch_n_to_raw_q: rx_ch_to_raw   
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
 generic map (
 	EKD_2200_1250p50.PixPerLine,
 	EKD_2200_1250p50.HsyncShift,
@@ -389,6 +447,8 @@ port map (
 		-- Outputs
 	data_rx_raw			=> data_RAW_RX
 );	
+sync_H	<=valid_data_rx;
+sync_V	<=valid_data_rx;
 
 -- Process(CLK_sys)
 -- begin

@@ -1,6 +1,10 @@
  ** Message System Log
  ** Database: 
+<<<<<<< HEAD
  ** Date:   Mon Jul 20 12:21:51 2020
+=======
+ ** Date:   Tue Jul 07 00:43:38 2020
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
 
 
 ****************
@@ -82,5 +86,9 @@ Netlist Resource Report
 
 Wrote VHDL netlist to G:/ACTELL/EKB/EKB/Libero/smartgen\PLL_SIM_IS\PLL_SIM_IS.vhd.
 
+<<<<<<< HEAD
  ** Log Ended:   Mon Jul 20 12:21:52 2020
+=======
+ ** Log Ended:   Tue Jul 07 00:43:39 2020
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
 

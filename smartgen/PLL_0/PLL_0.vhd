@@ -131,7 +131,11 @@ begin
     \VCC\ <= VCC_power_net1;
 
     Core : PLL
+<<<<<<< HEAD
       generic map(VCOFREQUENCY => 216.000)
+=======
+      generic map(VCOFREQUENCY => 137.500)
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
 
       port map(CLKA => CLKAP, EXTFB => \GND\, POWERDOWN => 
         POWERDOWN, GLA => GLA, LOCK => LOCK, GLB => GLB, YB => 
@@ -139,8 +143,13 @@ begin
          => \VCC\, OADIV2 => \GND\, OADIV3 => \GND\, OADIV4 => 
         \GND\, OAMUX0 => \GND\, OAMUX1 => \GND\, OAMUX2 => \VCC\, 
         DLYGLA0 => \GND\, DLYGLA1 => \GND\, DLYGLA2 => \GND\, 
+<<<<<<< HEAD
         DLYGLA3 => \GND\, DLYGLA4 => \GND\, OBDIV0 => \GND\, 
         OBDIV1 => \VCC\, OBDIV2 => \GND\, OBDIV3 => \GND\, OBDIV4
+=======
+        DLYGLA3 => \GND\, DLYGLA4 => \GND\, OBDIV0 => \VCC\, 
+        OBDIV1 => \GND\, OBDIV2 => \GND\, OBDIV3 => \GND\, OBDIV4
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
          => \GND\, OBMUX0 => \GND\, OBMUX1 => \VCC\, OBMUX2 => 
         \GND\, DLYYB0 => \GND\, DLYYB1 => \GND\, DLYYB2 => \GND\, 
         DLYYB3 => \GND\, DLYYB4 => \GND\, DLYGLB0 => \GND\, 
@@ -151,10 +160,17 @@ begin
         \GND\, DLYYC1 => \GND\, DLYYC2 => \GND\, DLYYC3 => \GND\, 
         DLYYC4 => \GND\, DLYGLC0 => \GND\, DLYGLC1 => \GND\, 
         DLYGLC2 => \GND\, DLYGLC3 => \GND\, DLYGLC4 => \GND\, 
+<<<<<<< HEAD
         FINDIV0 => \VCC\, FINDIV1 => \GND\, FINDIV2 => \VCC\, 
         FINDIV3 => \GND\, FINDIV4 => \VCC\, FINDIV5 => \GND\, 
         FINDIV6 => \GND\, FBDIV0 => \VCC\, FBDIV1 => \VCC\, 
         FBDIV2 => \VCC\, FBDIV3 => \VCC\, FBDIV4 => \VCC\, FBDIV5
+=======
+        FINDIV0 => \GND\, FINDIV1 => \VCC\, FINDIV2 => \GND\, 
+        FINDIV3 => \VCC\, FINDIV4 => \VCC\, FINDIV5 => \GND\, 
+        FINDIV6 => \GND\, FBDIV0 => \VCC\, FBDIV1 => \GND\, 
+        FBDIV2 => \GND\, FBDIV3 => \GND\, FBDIV4 => \VCC\, FBDIV5
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
          => \VCC\, FBDIV6 => \GND\, FBDLY0 => \GND\, FBDLY1 => 
         \GND\, FBDLY2 => \GND\, FBDLY3 => \GND\, FBDLY4 => \GND\, 
         FBSEL0 => \VCC\, FBSEL1 => \GND\, XDLYSEL => \GND\, 
@@ -200,11 +216,19 @@ end DEF_ARCH;
 -- FBDLY:1
 -- FBMUX:1
 -- XDLYSEL:0
+<<<<<<< HEAD
 -- PRIMFREQ:54.000000
 -- PPHASESHIFT:0
 -- DLYAVAL:1
 -- OAMUX:4
 -- SEC1FREQ:72.000000
+=======
+-- PRIMFREQ:137.500000
+-- PPHASESHIFT:0
+-- DLYAVAL:1
+-- OAMUX:4
+-- SEC1FREQ:68.750000
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
 -- UGLB:1
 -- UYB:0
 -- GLBDLYVAL:1

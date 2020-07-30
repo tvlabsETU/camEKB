@@ -54,6 +54,7 @@ clk_rx_Serial		   <= dck_is;
 --    GLA		   => clk_rx_Serial);
 -- clk_rx_Serial_ch		<= clk_rx_Serial;
 
+<<<<<<< HEAD
 -- div_clk_q0: count_n_modul                    
 -- generic map (3) 
 -- port map (
@@ -64,6 +65,10 @@ clk_rx_Serial		   <= dck_is;
 --    qout		=>	div_clk_DCK);
 div_clk_q0: count_fast                    
 generic map (3,5) 
+=======
+div_clk_q0: count_n_modul                    
+generic map (3) 
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
 port map (
    clk      =>	clk_rx_Serial,			
    reset		=>	main_reset ,

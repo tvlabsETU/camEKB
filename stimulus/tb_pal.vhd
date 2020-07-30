@@ -79,8 +79,13 @@ architecture behavioral of tb_pal is
             DAC_PHSYNC : out std_logic;
             DAC_PVSYNC : out std_logic;
             DAC_PBLK : out std_logic;
+<<<<<<< HEAD
             -- DAC_LF1 : out std_logic;
             -- DAC_LF2 : out std_logic;
+=======
+            DAC_LF1 : out std_logic;
+            DAC_LF2 : out std_logic;
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
             DAC_SDA : out std_logic;
             DAC_SCL : out std_logic;
             DAC_CLK : out std_logic;
@@ -216,8 +221,13 @@ port map (
             DAC_PHSYNC =>  open,
             DAC_PVSYNC =>  open,
             DAC_PBLK =>  open,
+<<<<<<< HEAD
             -- DAC_LF1 =>  open,
             -- DAC_LF2 =>  open,
+=======
+            DAC_LF1 =>  open,
+            DAC_LF2 =>  open,
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
             DAC_SDA =>  open,
             DAC_SCL =>  open,
             DAC_CLK =>  open,

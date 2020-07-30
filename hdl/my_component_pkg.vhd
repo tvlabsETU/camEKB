@@ -13,12 +13,15 @@ port (
 	Y 		: out std_logic	
 );
 end component;
+<<<<<<< HEAD
 component CLKBUF is
 	port (
 		PAD   : in std_logic;
 		Y 		: out std_logic	
 	);
 	end component;
+=======
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
 
 component count_n_modul
 generic (n		: integer);

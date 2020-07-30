@@ -1,6 +1,10 @@
  ** Message System Log
  ** Database: 
+<<<<<<< HEAD
  ** Date:   Mon Jul 20 16:29:37 2020
+=======
+ ** Date:   Mon Jul 06 20:39:33 2020
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
 
 
 ****************
@@ -18,11 +22,19 @@ CLKA Source                     : Core Logic
 Feedback Delay Value Index      : 1
 Feedback Mux Select             : 1
 XDLY Mux Select                 : No
+<<<<<<< HEAD
 Primary Freq(Mhz)               : 54.000000
 Primary PhaseShift              : 0
 Primary Delay Value Index       : 1
 Primary Mux Select              : 4
 Secondary1 Freq(Mhz)            : 72.000000
+=======
+Primary Freq(Mhz)               : 137.500000
+Primary PhaseShift              : 0
+Primary Delay Value Index       : 1
+Primary Mux Select              : 4
+Secondary1 Freq(Mhz)            : 68.750000
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
 Use GLB                         : YES
 Use YB                          : NO
 GLB Delay Value Index           : 1
@@ -39,10 +51,17 @@ Secondary2 Mux Select           : 0
 Lock Control                    : Yes
 
 Configuration Bits:
+<<<<<<< HEAD
 FINDIV[6:0]     0010101
 FBDIV[6:0]      0111111
 OADIV[4:0]      00011
 OBDIV[4:0]      00010
+=======
+FINDIV[6:0]     0011010
+FBDIV[6:0]      0110001
+OADIV[4:0]      00000
+OBDIV[4:0]      00001
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
 OCDIV[4:0]      00000
 OAMUX[2:0]      100
 OBMUX[2:0]      010
@@ -57,11 +76,19 @@ DLYYB[4:0]      00000
 DLYYC[4:0]      00000
 VCOSEL[2:0]     111
 
+<<<<<<< HEAD
 Primary Clock Frequency 54.000
 Primary Clock Phase Shift 0.000
 Primary Clock Output Delay from CLKA 2.200
 
 Secondary1 Clock Frequency 72.000
+=======
+Primary Clock Frequency 137.500
+Primary Clock Phase Shift 0.000
+Primary Clock Output Delay from CLKA 2.200
+
+Secondary1 Clock Frequency 68.750
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
 Secondary1 Clock Phase Shift 0.000
 Secondary1 Clock Global Output Delay from CLKA 3.450
 
@@ -86,5 +113,9 @@ Netlist Resource Report
 
 Wrote VHDL netlist to G:/ACTELL/EKB/EKB_v1/EKB/Libero/smartgen\PLL_0\PLL_0.vhd.
 
+<<<<<<< HEAD
  ** Log Ended:   Mon Jul 20 16:29:38 2020
+=======
+ ** Log Ended:   Mon Jul 06 20:39:33 2020
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
 

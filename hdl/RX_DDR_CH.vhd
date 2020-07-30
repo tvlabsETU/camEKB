@@ -165,6 +165,7 @@ end process;
 Process(clk_rx_Serial)
 begin
 if rising_edge (clk_rx_Serial) then
+<<<<<<< HEAD
 	-- if  load_q(2 downto 0)	=	align_load then
 	case align_load is
 		when "000" =>
@@ -218,6 +219,11 @@ if rising_edge (clk_rx_Serial) then
 		when others =>
 			null;
 	end case;
+=======
+	CH_0_QR_reg			<=	CH_0_QR;
+	-- VIDEO_CH_0_reg		<=	CH_0_QF 		& CH_0_QR_reg  &  VIDEO_CH_0_reg(bit_data-1 downto 2) ;
+	VIDEO_CH_0_reg		<=	VIDEO_CH_0_reg(bit_data-3 downto 0) & CH_0_QF 		& CH_0_QR_reg;
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
 end if;
 end process;
 
@@ -228,6 +234,7 @@ Process(clk_rx_Serial)
 begin
 if rising_edge (clk_rx_Serial) then
 	if pattern_load='1' then
+<<<<<<< HEAD
 		-- data_rx_Parallel	<=	VIDEO_CH_0_reg;
 		data_rx_Parallel(0)	<=	VIDEO_CH_0_reg_1(5);
 		data_rx_Parallel(1)	<=	VIDEO_CH_0_reg_1(4);
@@ -241,6 +248,21 @@ if rising_edge (clk_rx_Serial) then
 		data_rx_Parallel(9)	<=	VIDEO_CH_0_reg_2(2);
 		data_rx_Parallel(10)	<=	VIDEO_CH_0_reg_2(1);
 		data_rx_Parallel(11)	<=	VIDEO_CH_0_reg_2(0);
+=======
+		data_rx_Parallel	<=	VIDEO_CH_0_reg;
+		-- data_rx_Parallel(0)	<=	VIDEO_CH_0_reg(11);
+		-- data_rx_Parallel(1)	<=	VIDEO_CH_0_reg(10);
+		-- data_rx_Parallel(2)	<=	VIDEO_CH_0_reg(9);
+		-- data_rx_Parallel(3)	<=	VIDEO_CH_0_reg(8);
+		-- data_rx_Parallel(4)	<=	VIDEO_CH_0_reg(7);
+		-- data_rx_Parallel(5)	<=	VIDEO_CH_0_reg(6);
+		-- data_rx_Parallel(6)	<=	VIDEO_CH_0_reg(5);
+		-- data_rx_Parallel(7)	<=	VIDEO_CH_0_reg(4);
+		-- data_rx_Parallel(8)	<=	VIDEO_CH_0_reg(3);
+		-- data_rx_Parallel(9)	<=	VIDEO_CH_0_reg(2);
+		-- data_rx_Parallel(10)	<=	VIDEO_CH_0_reg(1);
+		-- data_rx_Parallel(11)	<=	VIDEO_CH_0_reg(0);
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
 	end if;
 end if;
 end process;

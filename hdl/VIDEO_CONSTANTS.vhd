@@ -271,7 +271,11 @@ constant EKD_ADV7343_PAL :	VideoStandartType:=	(	PixPerLine				=>	1888,
 																	VsyncWidth				=>	5,	
 																	VsyncShift				=>	5);	
 
+<<<<<<< HEAD
 constant EKD_2200_1250p50 :	VideoStandartType:=	(	PixPerLine			=>	1152,
+=======
+constant EKD_2200_1250p50 :	VideoStandartType:=	(	PixPerLine			=>	1100,
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
 																		ActivePixPerLine	=>	768,	
 																		InActivePixPerLine=>	664,	
 																		HsyncWidth			=>	1,	
@@ -284,7 +288,11 @@ constant EKD_2200_1250p50 :	VideoStandartType:=	(	PixPerLine			=>	1152,
 																		VsyncWidth			=>	5,	
 																		VsyncShift			=>	5);
 																		
+<<<<<<< HEAD
 constant IMX_2200_1250p50 :	VideoStandartType:=	(	PixPerLine			=>	2304,
+=======
+constant IMX_2200_1250p50 :	VideoStandartType:=	(	PixPerLine			=>	2200,
+>>>>>>> e296f02de89eba86bbe678e34dace66c718d9223
 																		ActivePixPerLine	=>	1536,	
 																		InActivePixPerLine=>	664,	
 																		HsyncWidth			=>	3,	
