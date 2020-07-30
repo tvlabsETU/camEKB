@@ -1,6 +1,6 @@
  ** Message System Log
  ** Database: 
- ** Date:   Sun May 03 05:38:06 2020
+ ** Date:   Wed Jul 08 02:45:42 2020
 
 
 ****************
@@ -19,9 +19,9 @@ FF                              : None
 Read Clock                      : Rising
 Write Clock                     : Rising
 Write Depth                     : 512
-Write Width                     : 12
+Write Width                     : 13
 Read Depth                      : 512
-Read Width                      : 12
+Read Width                      : 13
 RAM Type                        : Two Port
 Clocks                          : Independent Read and Write Clocks
 Write Mode A                    : Hold Data
@@ -81,5 +81,5 @@ Netlist Resource Report
 
 Wrote VHDL netlist to G:/ACTELL/EKB/EKB/Libero/smartgen\two_port_RAM\two_port_RAM.vhd.
 
- ** Log Ended:   Sun May 03 05:38:07 2020
+ ** Log Ended:   Wed Jul 08 02:45:43 2020
 

@@ -63,8 +63,7 @@ port(
 	POWERDOWN 	: in    std_logic;
 	CLKA      	: in    std_logic;
 	LOCK      	: out   std_logic;
-	GLA       	: out   std_logic;
-	GLB       	: out   std_logic
+	GLA       	: out   std_logic
 	);
 
 end component;
@@ -72,6 +71,23 @@ signal CLK_2_1				: std_logic;
 signal CLK_2_2				: std_logic;
 signal CLK_2_3				: std_logic;
 signal locked_pll_2		: std_logic;
+
+-- ----------------------------------------------------------------------
+-- -- PLL_1 entity declaration
+-- ----------------------------------------------------------------------
+-- component PLL_2 is
+-- 	port( 
+-- 		POWERDOWN 	: in    std_logic;
+-- 		CLKA      	: in    std_logic;
+-- 		LOCK      	: out   std_logic;
+-- 		GLA       	: out   std_logic
+-- 		-- GLB       	: out   std_logic
+-- 		);
+-- end component;
+
+-- signal CLK_3_1				: std_logic;
+
+
 ----------------------------------------------------------------------
 
 ----------------------------------------------------------------------
@@ -97,18 +113,7 @@ component gen_pix_str_frame is
 		qout_frame		: out	std_logic_vector (bit_frame-1 downto 0) 	-- счетчик кадров
 			);
 end component;
-
 ----------------------------------------------------------------------
-
-signal CLK_in		: std_logic;
-
-component CLKBUF is
-	port (
-	PAD	: in std_logic;  											-- тактовый от гнератора
-	Y		: out std_logic 	 										-- переполенени счетчика по строке	
-		);
-end component;
-
 
 begin
 
@@ -117,14 +122,6 @@ main_reset	<= reset;
 ----------------------------------------------------------------------
 --PLL с необходимыми чатотами
 ----------------------------------------------------------------------
--- CLKBUF_q: CLKBUF
--- port map(
--- 	PAD	=>CLK,
--- 	Y		=>CLK_in
--- );
-
-
-
 PLL_POWERDOWN_N	<=	'1';
 PLL_0_q: PLL_0                   
 port map (
@@ -132,21 +129,32 @@ port map (
 	POWERDOWN	=> PLL_POWERDOWN_N,
 	CLKA			=> CLK,	
 	-- Outputs 
-	GLA			=> CLK_1_1,		--137.5 МГц
-	GLB			=> CLK_1_2, 	--137.5 МГц
+	GLA			=> CLK_1_1,		--54 МГц
+	GLB			=> CLK_1_2, 	--72 МГц
+	-- GLC			=> CLK_1_3, 	--68.75 МГц
 	LOCK			=> locked_pll_1
 );	
 
--- PLL_1_q: PLL_1                   
+PLL_1_q: PLL_1                   
+port map (
+	-- Inputs
+	POWERDOWN	=> PLL_POWERDOWN_N,
+	CLKA			=> CLK_1_1,	
+	-- Outputs 
+	GLA			=> CLK_2_1,		--29.5 МГц
+	-- GLB			=> CLK_2_2, 	--29.5 МГц
+	LOCK			=> locked_pll_2
+);	
+
+-- PLL_2_q: PLL_2                   
 -- port map (
 -- 	-- Inputs
 -- 	POWERDOWN	=> PLL_POWERDOWN_N,
--- 	CLKA			=> CLK,	
+-- 	CLKA			=> CLK_1_3,	
 -- 	-- Outputs 
--- 	GLA			=> CLK_2_1,		--29.5 МГц
--- 	GLB			=> CLK_2_2, 	--29.5 МГц
--- 	LOCK			=> locked_pll_2
+-- 	GLA			=> CLK_3_1		--54 МГц
 -- );	
+
 
 -- ----------------------------------------------------------------------
 
@@ -179,12 +187,12 @@ port map (
 ----------------------------------------------------------------------
 gen_pix_str_frame_Inteface: gen_pix_str_frame    	             
 generic map (
-	EKD_ADV7343_1080p25.PixPerLine,
-	EKD_ADV7343_1080p25.LinePerFrame
+	EKD_ADV7343_PAL.PixPerLine,
+	EKD_ADV7343_PAL.LinePerFrame
 	) 
 port map (
 			-----in---------
-	CLK				=> CLK_1_2,	
+	CLK				=> CLK_2_1,	
 	reset				=> main_reset ,
 	main_enable		=> main_enable,
 	mode_sync_gen 	=> mode_sync_gen_Inteface,
@@ -206,6 +214,6 @@ CLK_2_out	<=	CLK_1_2;
 CLK_3_out	<=	CLK_2_1;
 CLK_4_out	<=	CLK_2_2;
 Lock_PLL_1	<=locked_pll_1;
-Lock_PLL_2	<=locked_pll_1;
+Lock_PLL_2	<=locked_pll_2;
 end ;
 

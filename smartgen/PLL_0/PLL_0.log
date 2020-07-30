@@ -1,6 +1,6 @@
  ** Message System Log
  ** Database: 
- ** Date:   Mon Jun 29 01:30:41 2020
+ ** Date:   Mon Jul 20 16:29:37 2020
 
 
 ****************
@@ -18,11 +18,11 @@ CLKA Source                     : Core Logic
 Feedback Delay Value Index      : 1
 Feedback Mux Select             : 1
 XDLY Mux Select                 : No
-Primary Freq(Mhz)               : 74.250000
+Primary Freq(Mhz)               : 54.000000
 Primary PhaseShift              : 0
 Primary Delay Value Index       : 1
 Primary Mux Select              : 4
-Secondary1 Freq(Mhz)            : 74.250000
+Secondary1 Freq(Mhz)            : 72.000000
 Use GLB                         : YES
 Use YB                          : NO
 GLB Delay Value Index           : 1
@@ -39,10 +39,10 @@ Secondary2 Mux Select           : 0
 Lock Control                    : Yes
 
 Configuration Bits:
-FINDIV[6:0]     0001101
-FBDIV[6:0]      0001101
-OADIV[4:0]      00000
-OBDIV[4:0]      00000
+FINDIV[6:0]     0010101
+FBDIV[6:0]      0111111
+OADIV[4:0]      00011
+OBDIV[4:0]      00010
 OCDIV[4:0]      00000
 OAMUX[2:0]      100
 OBMUX[2:0]      010
@@ -55,13 +55,13 @@ DLYGLB[4:0]     00000
 DLYGLC[4:0]     00000
 DLYYB[4:0]      00000
 DLYYC[4:0]      00000
-VCOSEL[2:0]     101
+VCOSEL[2:0]     111
 
-Primary Clock Frequency 74.250
+Primary Clock Frequency 54.000
 Primary Clock Phase Shift 0.000
 Primary Clock Output Delay from CLKA 2.200
 
-Secondary1 Clock Frequency 74.250
+Secondary1 Clock Frequency 72.000
 Secondary1 Clock Phase Shift 0.000
 Secondary1 Clock Global Output Delay from CLKA 3.450
 
@@ -84,7 +84,7 @@ Netlist Resource Report
     FlashROM                   Used:      0  Total:      1   (0.00%)
     User JTAG                  Used:      0  Total:      1   (0.00%)
 
-Wrote VHDL netlist to G:/ACTELL/EKB/EKB/Libero/smartgen\PLL_0\PLL_0.vhd.
+Wrote VHDL netlist to G:/ACTELL/EKB/EKB_v1/EKB/Libero/smartgen\PLL_0\PLL_0.vhd.
 
- ** Log Ended:   Mon Jun 29 01:30:42 2020
+ ** Log Ended:   Mon Jul 20 16:29:38 2020
 

@@ -1,0 +1,40 @@
+ ** Message System Log
+ ** Database: 
+ ** Date:   Wed Jul 29 13:28:18 2020
+
+
+****************
+Macro Parameters
+****************
+
+Name                            : ddr_lvds
+Family                          : PA3LDP
+Output Format                   : VHDL
+Type                            : DDR
+Variation                       : With Special Input Buffers
+Clear Polarity                  : Active High
+Width                           : 4
+Input Buffer Technology         : LVDS
+
+**************
+Compile Report
+**************
+
+
+Netlist Resource Report
+=======================
+
+    CORE                       Used:      0  Total:  75264   (0.00%)
+    IO (W/ clocks)             Used:      8  Total:    341   (2.35%)
+    Differential IO            Used:      4  Total:    168   (2.38%)
+    GLOBAL (Chip+Quadrant)     Used:      0  Total:     18   (0.00%)
+    PLL                        Used:      0  Total:      6   (0.00%)
+    RAM/FIFO                   Used:      0  Total:    112   (0.00%)
+    Low Static ICC             Used:      0  Total:      1   (0.00%)
+    FlashROM                   Used:      0  Total:      1   (0.00%)
+    User JTAG                  Used:      0  Total:      1   (0.00%)
+
+Wrote VHDL netlist to G:/ACTELL/EKB/EKB_v1/EKB/Libero/smartgen\ddr_lvds\ddr_lvds.vhd.
+
+ ** Log Ended:   Wed Jul 29 13:28:18 2020
+

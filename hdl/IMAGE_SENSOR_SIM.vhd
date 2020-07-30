@@ -102,6 +102,16 @@ signal locked_pll_q		: std_logic_vector(31 downto 0);
 -- модуль генерации видеосигнала от фотоприемника в паралелльном коде
 ----------------------------------------------------------------------
 component IS_SIM_Paralell is
+generic  (
+	PixPerLine_is			: integer;
+	HsyncShift_is			: integer;
+	ActivePixPerLine_is	: integer;
+	HsyncWidth_is			: integer;
+	LinePerFrame_is		: integer;
+	VsyncShift_is			: integer;
+	ActiveLine_is			: integer;
+	VsyncWidth_is			: integer
+);
 port (
 		--входные сигналы--	
 	CLK					: in std_logic;  												-- тактовый 
@@ -120,8 +130,6 @@ port (
 	);
 end component;
 
-signal qout_clk_IS			: std_logic_vector (bit_pix-1 downto 0);
-signal qout_V_IS				: std_logic_vector (bit_strok-1 downto 0);
 signal DATA_IS_pix_ch_1		: std_logic_vector (bit_data_imx-1 downto 0);
 signal DATA_IS_pix_ch_2		: std_logic_vector (bit_data_imx-1 downto 0);
 signal DATA_IS_pix_ch_3		: std_logic_vector (bit_data_imx-1 downto 0);
@@ -189,7 +197,28 @@ end process;
 ----------------------------------------------------------------------
 -- модуль генерации видеосигнала от фотоприемника в паралелльном коде
 ----------------------------------------------------------------------
-IS_SIM_Paralell_q: IS_SIM_Paralell                   
+IS_SIM_Paralell_q: IS_SIM_Paralell    
+generic map (
+	-- EKD_2200_1250p50.PixPerLine,
+	-- EKD_2200_1250p50.HsyncShift,
+	-- EKD_2200_1250p50.ActivePixPerLine,
+	-- EKD_2200_1250p50.HsyncWidth,
+	-- EKD_2200_1250p50.LinePerFrame,
+	-- EKD_2200_1250p50.VsyncShift,
+	-- EKD_2200_1250p50.ActiveLine,
+	-- EKD_2200_1250p50.VsyncWidth
+
+	EKD_ADV7343_1080p25.PixPerLine,
+	EKD_ADV7343_1080p25.HsyncShift,
+	EKD_ADV7343_1080p25.ActivePixPerLine,
+	EKD_ADV7343_1080p25.HsyncWidth,
+	EKD_ADV7343_1080p25.LinePerFrame,
+	EKD_ADV7343_1080p25.VsyncShift,
+	EKD_ADV7343_1080p25.ActiveLine,
+	EKD_ADV7343_1080p25.VsyncWidth
+
+
+	)
 port map (
 				------входные сигналы-----------
 	CLK					=>	CLK_IS_pix,			

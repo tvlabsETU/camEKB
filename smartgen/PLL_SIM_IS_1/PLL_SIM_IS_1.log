@@ -1,6 +1,6 @@
  ** Message System Log
  ** Database: 
- ** Date:   Sat May 02 00:48:14 2020
+ ** Date:   Mon Jul 20 12:22:16 2020
 
 
 ****************
@@ -14,22 +14,22 @@ Type                            : Static PLL
 PowerDown                       : Active Low
 Lock                            : Active High
 Input Freq(Mhz)                 : 74.250000
-CLKA Source                     : Hardwired I/O
+CLKA Source                     : Core Logic
 Feedback Delay Value Index      : 1
 Feedback Mux Select             : 1
 XDLY Mux Select                 : No
-Primary Freq(Mhz)               : 206.250000
+Primary Freq(Mhz)               : 216.000000
 Primary PhaseShift              : 0
 Primary Delay Value Index       : 1
 Primary Mux Select              : 4
-Secondary1 Freq(Mhz)            : 206.250000
+Secondary1 Freq(Mhz)            : 216.000000
 Use GLB                         : YES
 Use YB                          : NO
 GLB Delay Value Index           : 1
 YB Delay Value Index            : 1
 Secondary1 PhaseShift           : 180
 Secondary1 Mux Select           : 4
-Secondary2 Freq(Mhz)            : 206.250000
+Secondary2 Freq(Mhz)            : 216.000000
 Use GLC                         : YES
 Use YC                          : NO
 GLC Delay Value Index           : 1
@@ -39,8 +39,8 @@ Secondary2 Mux Select           : 4
 Lock Control                    : No
 
 Configuration Bits:
-FINDIV[6:0]     0010001
-FBDIV[6:0]      0110001
+FINDIV[6:0]     0010101
+FBDIV[6:0]      0111111
 OADIV[4:0]      00000
 OBDIV[4:0]      00000
 OCDIV[4:0]      00000
@@ -57,17 +57,17 @@ DLYYB[4:0]      00000
 DLYYC[4:0]      00000
 VCOSEL[2:0]     110
 
-Primary Clock Frequency 206.250
+Primary Clock Frequency 216.000
 Primary Clock Phase Shift 0.000
 Primary Clock Output Delay from CLKA 2.200
 
-Secondary1 Clock Frequency 206.250
+Secondary1 Clock Frequency 216.000
 Secondary1 Clock Phase Shift 180.000
-Secondary1 Clock Global Output Delay from CLKA 4.624
+Secondary1 Clock Global Output Delay from CLKA 4.515
 
-Secondary2 Clock Frequency 206.250
+Secondary2 Clock Frequency 216.000
 Secondary2 Clock Phase Shift 90.000
-Secondary2 Clock Global Output Delay from CLKA 3.412
+Secondary2 Clock Global Output Delay from CLKA 3.357
 
 
 **************
@@ -90,5 +90,5 @@ Netlist Resource Report
 
 Wrote VHDL netlist to G:/ACTELL/EKB/EKB/Libero/smartgen\PLL_SIM_IS_1\PLL_SIM_IS_1.vhd.
 
- ** Log Ended:   Sat May 02 00:48:15 2020
+ ** Log Ended:   Mon Jul 20 12:22:17 2020
 

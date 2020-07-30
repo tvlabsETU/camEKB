@@ -4,6 +4,22 @@ use ieee.std_logic_unsigned.all;
 
 package   My_component_pkg	is
 
+----------------------------------------------------------------------------------
+---ProAsic3E
+----------------------------------------------------------------------------------
+component INBUF is
+port (
+	PAD   : in std_logic;
+	Y 		: out std_logic	
+);
+end component;
+component CLKBUF is
+	port (
+		PAD   : in std_logic;
+		Y 		: out std_logic	
+	);
+	end component;
+
 component count_n_modul
 generic (n		: integer);
 port (
@@ -14,6 +30,39 @@ port (
 		qout		: 	out std_logic_vector (n-1 downto 0);
 		cout		:	out std_logic);
 end component;
+
+component ddr_lvds is
+port( PADP : in    std_logic_vector(3 downto 0);
+		PADN : in    std_logic_vector(3 downto 0);
+		CLR  : in    std_logic;
+		CLK  : in    std_logic;
+		QR   : out   std_logic_vector(3 downto 0);
+		QF   : out   std_logic_vector(3 downto 0)
+		);
+end component;
+
+component ddr_data_imx is
+port( PADP : in    std_logic_vector(3 downto 0);
+		PADN : in    std_logic_vector(3 downto 0);
+		Y    : out   std_logic_vector(3 downto 0)
+	);
+end component;
+
+
+
+component count_fast IS
+GENERIC (
+   n     : INTEGER:=8;
+   modul : INTEGER:=8
+);
+PORT (
+clk, reset: IN std_logic;
+qout : OUT std_logic_vector (n - 1 DOWNTO 0));
+END component;
+
+
+
+
 
 component parall_to_serial is
 generic 

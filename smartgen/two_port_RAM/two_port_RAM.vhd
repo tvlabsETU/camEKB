@@ -7,8 +7,8 @@ use proasic3l.all;
 
 entity two_port_RAM is
 
-    port( WD    : in    std_logic_vector(11 downto 0);
-          RD    : out   std_logic_vector(11 downto 0);
+    port( WD    : in    std_logic_vector(12 downto 0);
+          RD    : out   std_logic_vector(12 downto 0);
           WEN   : in    std_logic;
           REN   : in    std_logic;
           WADDR : in    std_logic_vector(8 downto 0);
@@ -139,9 +139,9 @@ begin
         ADDRB6 => RADDR(6), ADDRB5 => RADDR(5), ADDRB4 => 
         RADDR(4), ADDRB3 => RADDR(3), ADDRB2 => RADDR(2), ADDRB1
          => RADDR(1), ADDRB0 => RADDR(0), DINA8 => \GND\, DINA7
-         => \GND\, DINA6 => \GND\, DINA5 => WD(11), DINA4 => 
-        WD(10), DINA3 => WD(9), DINA2 => WD(8), DINA1 => WD(7), 
-        DINA0 => WD(6), DINB8 => \GND\, DINB7 => \GND\, DINB6 => 
+         => \GND\, DINA6 => \GND\, DINA5 => \GND\, DINA4 => 
+        WD(12), DINA3 => WD(11), DINA2 => WD(10), DINA1 => WD(9), 
+        DINA0 => WD(8), DINB8 => \GND\, DINB7 => \GND\, DINB6 => 
         \GND\, DINB5 => \GND\, DINB4 => \GND\, DINB3 => \GND\, 
         DINB2 => \GND\, DINB1 => \GND\, DINB0 => \GND\, WIDTHA0
          => \VCC\, WIDTHA1 => \VCC\, WIDTHB0 => \VCC\, WIDTHB1
@@ -151,9 +151,9 @@ begin
         RESET => RESETP, DOUTA8 => OPEN, DOUTA7 => OPEN, DOUTA6
          => OPEN, DOUTA5 => OPEN, DOUTA4 => OPEN, DOUTA3 => OPEN, 
         DOUTA2 => OPEN, DOUTA1 => OPEN, DOUTA0 => OPEN, DOUTB8
-         => OPEN, DOUTB7 => OPEN, DOUTB6 => OPEN, DOUTB5 => 
-        RD(11), DOUTB4 => RD(10), DOUTB3 => RD(9), DOUTB2 => 
-        RD(8), DOUTB1 => RD(7), DOUTB0 => RD(6));
+         => OPEN, DOUTB7 => OPEN, DOUTB6 => OPEN, DOUTB5 => OPEN, 
+        DOUTB4 => RD(12), DOUTB3 => RD(11), DOUTB2 => RD(10), 
+        DOUTB1 => RD(9), DOUTB0 => RD(8));
     
     WEBUBBLEB : INV
       port map(A => REN, Y => WEBP);
@@ -168,7 +168,7 @@ begin
         ADDRB6 => RADDR(6), ADDRB5 => RADDR(5), ADDRB4 => 
         RADDR(4), ADDRB3 => RADDR(3), ADDRB2 => RADDR(2), ADDRB1
          => RADDR(1), ADDRB0 => RADDR(0), DINA8 => \GND\, DINA7
-         => \GND\, DINA6 => \GND\, DINA5 => WD(5), DINA4 => WD(4), 
+         => WD(7), DINA6 => WD(6), DINA5 => WD(5), DINA4 => WD(4), 
         DINA3 => WD(3), DINA2 => WD(2), DINA1 => WD(1), DINA0 => 
         WD(0), DINB8 => \GND\, DINB7 => \GND\, DINB6 => \GND\, 
         DINB5 => \GND\, DINB4 => \GND\, DINB3 => \GND\, DINB2 => 
@@ -180,7 +180,7 @@ begin
         RESETP, DOUTA8 => OPEN, DOUTA7 => OPEN, DOUTA6 => OPEN, 
         DOUTA5 => OPEN, DOUTA4 => OPEN, DOUTA3 => OPEN, DOUTA2
          => OPEN, DOUTA1 => OPEN, DOUTA0 => OPEN, DOUTB8 => OPEN, 
-        DOUTB7 => OPEN, DOUTB6 => OPEN, DOUTB5 => RD(5), DOUTB4
+        DOUTB7 => RD(7), DOUTB6 => RD(6), DOUTB5 => RD(5), DOUTB4
          => RD(4), DOUTB3 => RD(3), DOUTB2 => RD(2), DOUTB1 => 
         RD(1), DOUTB0 => RD(0));
     
@@ -219,15 +219,15 @@ end DEF_ARCH;
 -- SMARTGEN_DIE:IT14X14M4LDP
 -- SMARTGEN_PACKAGE:fg484
 -- AGENIII_IS_SUBPROJECT_LIBERO:T
--- WWIDTH:12
+-- WWIDTH:13
 -- WDEPTH:512
--- RWIDTH:12
+-- RWIDTH:13
 -- RDEPTH:512
 -- CLKS:2
 -- RESET_PN:RESET
 -- RESET_POLARITY:1
 -- INIT_RAM:F
--- DEFAULT_WORD:0x000
+-- DEFAULT_WORD:0x0000
 -- CASCADE:0
 -- LP_POLARITY:2
 -- FF_POLARITY:2

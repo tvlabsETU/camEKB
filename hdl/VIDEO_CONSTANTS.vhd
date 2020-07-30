@@ -7,9 +7,15 @@ package   VIDEO_CONSTANTS	is
 constant bit_data_CSI		: integer :=8;		--разрядность данных CSI	
 constant bit_data_imx		: integer :=12;	--разрядность данных IMX	
 constant bit_data_SMPTE		: integer :=10;	--разрядность данных SMPTE	
+constant bit_data_ADV7343	: integer :=8;		--разрядность данных ADV7343	
+
 constant bit_frame			: integer :=8;		--бит на счетчик кадров 		
-constant bit_pix				: integer :=13;	--разрядность счетчика пикселей		
-constant bit_strok			: integer :=16;	--разрядность счетчика строк		
+constant bit_pix				: integer :=12;	--разрядность счетчика пикселей		
+constant bit_RAM_1_str		: integer :=9;		--разрядность шины адреса RAM на 1 строку при приеме данных от IMX
+constant bit_RAM_scaling	: integer :=10;		--разрядность шины адреса RAM на 1 строку при scaling
+
+
+constant bit_strok			: integer :=12;	--разрядность счетчика строк		
 ---------------------------------------------------------------------------------
 constant N_channel_imx		: integer :=4;		--	количесвтво каналов по LVDS 1 / 2 / 4
 constant mode_IMAGE_SENSOR	: std_logic_vector (7 downto 0) :=x"03";		
@@ -44,9 +50,6 @@ constant mode_generator_Inteface	: std_logic_vector (7 downto 0) :=x"00";
 -- 	none							F сигнал входной транзитов на выход
 --------------------------------------------------------------
 
-
-
-
 ---------------------------------------------------------------------------------
 -- синхро слова CSI в загаловке строки
 -- для разного разрешения и битности выходной шины нужно изменить dataID / word count / ECC
@@ -57,6 +60,47 @@ constant CSI_sync_code_3	: std_logic_vector (bit_data_CSI-1 downto 0) :=	x"1C" ;
 constant CSI_sync_code_4	: std_logic_vector (bit_data_CSI-1 downto 0) :=	x"07" ; -- x"071c" - 1456 10bit word
 constant CSI_sync_code_5	: std_logic_vector (bit_data_CSI-1 downto 0) :=	x"00" ; -- ECC
 ---------------------------------------------------------------------------------
+
+type ITU_REC_Type is record
+	koef_Y_r	,
+	koef_Y_g	,
+	koef_Y_b	,
+	koef_Cr_r,
+	koef_Cr_g,
+	koef_Cr_b,
+	koef_Cb_r,
+	koef_Cb_g,
+	koef_Cb_b	:integer;
+end record;
+constant REC_601 : ITU_REC_Type:= (	koef_Y_r	 => 1048,
+												koef_Y_g	 => 2057,	
+												koef_Y_b	 => 399,	
+												koef_Cr_r => 2456,	
+												koef_Cr_g => 2057,	
+												koef_Cr_b => 399,	
+												koef_Cb_r => 1048,
+												koef_Cb_g => 2057,
+												koef_Cb_b => 3104);	
+
+constant REC_709 : ITU_REC_Type:= (	koef_Y_r	 => 745,
+												koef_Y_g	 => 2506,	
+												koef_Y_b	 => 253,	
+												koef_Cr_r => 2759,	
+												koef_Cr_g => 2506,	
+												koef_Cr_b => 253,	
+												koef_Cb_r => 745,
+												koef_Cb_g => 2506,
+												koef_Cb_b => 3251);	
+
+
+
+
+
+
+
+
+
+
 
 
 type VideoStandartType is record
@@ -187,18 +231,18 @@ constant CEA_1920_1080p50 :	VideoStandartType:=	(	PixPerLine			=>	2640,
 							------------------------------------------
 							-------------CUSTOM RESOLUTION------------
 							------------------------------------------
-constant BION_960_960p30 :	VideoStandartType:=	(	PixPerLine			=>	1000,
-													ActivePixPerLine	=>	960,	
-													InActivePixPerLine	=>	40,	
-													HsyncWidth			=>	10,	
-													HsyncWidthGapLeft	=>	15,	
-													HsyncWidthGapRight	=>	15,	
-													HsyncShift			=>	5,
-													LinePerFrame		=>	1125,
-													ActiveLine			=>	960,
-													InActiveLine		=>	65,
-													VsyncWidth			=>	5,	
-													VsyncShift			=>	5);	
+-- constant BION_960_960p30 :	VideoStandartType:=	(	PixPerLine			=>	1000,
+-- 													ActivePixPerLine	=>	960,	
+-- 													InActivePixPerLine	=>	40,	
+-- 													HsyncWidth			=>	10,	
+-- 													HsyncWidthGapLeft	=>	15,	
+-- 													HsyncWidthGapRight	=>	15,	
+-- 													HsyncShift			=>	5,
+-- 													LinePerFrame		=>	1125,
+-- 													ActiveLine			=>	960,
+-- 													InActiveLine		=>	65,
+-- 													VsyncWidth			=>	5,	
+-- 													VsyncShift			=>	5);	
 
 
 -- constant TEST_960_960p30 :	VideoStandartType:=	(	PixPerLine			=>	220,
@@ -214,31 +258,45 @@ constant BION_960_960p30 :	VideoStandartType:=	(	PixPerLine			=>	1000,
 -- 													VsyncWidth			=>	1,	
 -- 													VsyncShift			=>	0);	
 
-constant EKD_ADV7343_PAL :	VideoStandartType:=	(	PixPerLine			=>	1888,
-													ActivePixPerLine	=>	1536,	
-													InActivePixPerLine	=>	352,	
-													HsyncWidth			=>	10,	
-													HsyncWidthGapLeft	=>	15,	
-													HsyncWidthGapRight	=>	15,	
-													HsyncShift			=>	5,
-													LinePerFrame		=>	625,
-													ActiveLine			=>	575,
-													InActiveLine		=>	50,
-													VsyncWidth			=>	5,	
-													VsyncShift			=>	5);	
+constant EKD_ADV7343_PAL :	VideoStandartType:=	(	PixPerLine				=>	1888,
+																	ActivePixPerLine		=>	1536,	
+																	InActivePixPerLine	=>	352,	
+																	HsyncWidth				=>	10,	
+																	HsyncWidthGapLeft		=>	15,	
+																	HsyncWidthGapRight	=>	15,	
+																	HsyncShift				=>	5,
+																	LinePerFrame			=>	625,
+																	ActiveLine				=>	575,
+																	InActiveLine			=>	50,
+																	VsyncWidth				=>	5,	
+																	VsyncShift				=>	5);	
 
-constant EKD_2200_1250p50 :	VideoStandartType:=	(	PixPerLine			=>	2200,
-													ActivePixPerLine	=>	1536,	
-													InActivePixPerLine	=>	664,	
-													HsyncWidth			=>	10,	
-													HsyncWidthGapLeft	=>	15,	
-													HsyncWidthGapRight	=>	15,	
-													HsyncShift			=>	5,
-													LinePerFrame		=>	1250,
-													ActiveLine			=>	1150,
-													InActiveLine		=>	100,
-													VsyncWidth			=>	5,	
-													VsyncShift			=>	5);	
+constant EKD_2200_1250p50 :	VideoStandartType:=	(	PixPerLine			=>	1152,
+																		ActivePixPerLine	=>	768,	
+																		InActivePixPerLine=>	664,	
+																		HsyncWidth			=>	1,	
+																		HsyncWidthGapLeft	=>	15,	
+																		HsyncWidthGapRight=>	15,	
+																		HsyncShift			=>	30,
+																		LinePerFrame		=>	1250,
+																		ActiveLine			=>	1150,
+																		InActiveLine		=>	100,
+																		VsyncWidth			=>	5,	
+																		VsyncShift			=>	5);
+																		
+constant IMX_2200_1250p50 :	VideoStandartType:=	(	PixPerLine			=>	2304,
+																		ActivePixPerLine	=>	1536,	
+																		InActivePixPerLine=>	664,	
+																		HsyncWidth			=>	3,	
+																		HsyncWidthGapLeft	=>	15,	
+																		HsyncWidthGapRight=>	15,	
+																		HsyncShift			=>	30,
+																		LinePerFrame		=>	1250,
+																		ActiveLine			=>	1150,
+																		InActiveLine		=>	100,
+																		VsyncWidth			=>	5,	
+																		VsyncShift			=>	5);
+
 
 -- constant EKD_ADV7343_PAL :	VideoStandartType:=		(	PixPerLine				=>	944,
 -- 																		ActivePixPerLine		=>	768,	
@@ -266,16 +324,16 @@ constant EKD_2200_1250p50 :	VideoStandartType:=	(	PixPerLine			=>	2200,
 -- 																		VsyncWidth				=>	1,	
 -- 																		VsyncShift				=>	1);	
 
-constant EKD_ADV7343_1080p25 :	VideoStandartType:=	(	PixPerLine				=>	2640,
-																			ActivePixPerLine		=>	1920,	
-																			InActivePixPerLine	=>	720,	
-																			HsyncWidth				=>	45,	
-																			HsyncWidthGapLeft		=>	88,	
-																			HsyncWidthGapRight	=>	632,	
-																			HsyncShift				=>	5,
-																			LinePerFrame			=>	1125,
-																			ActiveLine				=>	1080,
-																			InActiveLine			=>	45,
-																			VsyncWidth				=>	5,	
-																			VsyncShift				=>	5);	
+-- constant EKD_ADV7343_1080p25 :	VideoStandartType:=	(	PixPerLine				=>	2640,
+-- 																			ActivePixPerLine		=>	1920,	
+-- 																			InActivePixPerLine	=>	720,	
+-- 																			HsyncWidth				=>	45,	
+-- 																			HsyncWidthGapLeft		=>	88,	
+-- 																			HsyncWidthGapRight	=>	632,	
+-- 																			HsyncShift				=>	25,
+-- 																			LinePerFrame			=>	1125,
+-- 																			ActiveLine				=>	1080,
+-- 																			InActiveLine			=>	45,
+-- 																			VsyncWidth				=>	5,	
+-- 																			VsyncShift				=>	5);	
 end package ;

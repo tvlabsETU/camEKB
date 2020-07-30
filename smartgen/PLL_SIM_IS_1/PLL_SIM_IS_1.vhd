@@ -108,6 +108,12 @@ architecture DEF_ARCH of PLL_SIM_IS_1 is
         );
   end component;
 
+  component PLLINT
+    port( A : in    std_logic := 'U';
+          Y : out   std_logic
+        );
+  end component;
+
   component GND
     port(Y : out std_logic); 
   end component;
@@ -116,7 +122,7 @@ architecture DEF_ARCH of PLL_SIM_IS_1 is
     port(Y : out std_logic); 
   end component;
 
-    signal \VCC\, \GND\ : std_logic;
+    signal CLKAP, \VCC\, \GND\ : std_logic;
     signal GND_power_net1 : std_logic;
     signal VCC_power_net1 : std_logic;
 
@@ -126,9 +132,9 @@ begin
     \VCC\ <= VCC_power_net1;
 
     Core : PLL
-      generic map(VCOFREQUENCY => 206.250)
+      generic map(VCOFREQUENCY => 216.000)
 
-      port map(CLKA => CLKA, EXTFB => \GND\, POWERDOWN => 
+      port map(CLKA => CLKAP, EXTFB => \GND\, POWERDOWN => 
         POWERDOWN, GLA => GLA, LOCK => LOCK, GLB => GLB, YB => 
         OPEN, GLC => GLC, YC => OPEN, OADIV0 => \GND\, OADIV1 => 
         \GND\, OADIV2 => \GND\, OADIV3 => \GND\, OADIV4 => \GND\, 
@@ -146,14 +152,17 @@ begin
         \GND\, DLYYC1 => \GND\, DLYYC2 => \GND\, DLYYC3 => \GND\, 
         DLYYC4 => \GND\, DLYGLC0 => \GND\, DLYGLC1 => \GND\, 
         DLYGLC2 => \GND\, DLYGLC3 => \GND\, DLYGLC4 => \GND\, 
-        FINDIV0 => \VCC\, FINDIV1 => \GND\, FINDIV2 => \GND\, 
+        FINDIV0 => \VCC\, FINDIV1 => \GND\, FINDIV2 => \VCC\, 
         FINDIV3 => \GND\, FINDIV4 => \VCC\, FINDIV5 => \GND\, 
-        FINDIV6 => \GND\, FBDIV0 => \VCC\, FBDIV1 => \GND\, 
-        FBDIV2 => \GND\, FBDIV3 => \GND\, FBDIV4 => \VCC\, FBDIV5
+        FINDIV6 => \GND\, FBDIV0 => \VCC\, FBDIV1 => \VCC\, 
+        FBDIV2 => \VCC\, FBDIV3 => \VCC\, FBDIV4 => \VCC\, FBDIV5
          => \VCC\, FBDIV6 => \GND\, FBDLY0 => \GND\, FBDLY1 => 
         \GND\, FBDLY2 => \GND\, FBDLY3 => \GND\, FBDLY4 => \GND\, 
         FBSEL0 => \VCC\, FBSEL1 => \GND\, XDLYSEL => \GND\, 
         VCOSEL0 => \GND\, VCOSEL1 => \VCC\, VCOSEL2 => \VCC\);
+    
+    pllint1 : PLLINT
+      port map(A => CLKA, Y => CLKAP);
     
     GND_power_inst1 : GND
       port map( Y => GND_power_net1);
@@ -188,22 +197,22 @@ end DEF_ARCH;
 -- SMARTGEN_PACKAGE:fg484
 -- AGENIII_IS_SUBPROJECT_LIBERO:T
 -- FIN:74.250000
--- CLKASRC:0
+-- CLKASRC:2
 -- FBDLY:1
 -- FBMUX:1
 -- XDLYSEL:0
--- PRIMFREQ:206.250000
+-- PRIMFREQ:216.000000
 -- PPHASESHIFT:0
 -- DLYAVAL:1
 -- OAMUX:4
--- SEC1FREQ:206.250000
+-- SEC1FREQ:216.000000
 -- UGLB:1
 -- UYB:0
 -- GLBDLYVAL:1
 -- YBDLYVAL:1
 -- S1PHASESHIFT:180
 -- OBMUX:4
--- SEC2FREQ:206.250000
+-- SEC2FREQ:216.000000
 -- UGLC:1
 -- UYC:0
 -- GLCDLYVAL:1

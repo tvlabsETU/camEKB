@@ -131,16 +131,16 @@ begin
     \VCC\ <= VCC_power_net1;
 
     Core : PLL
-      generic map(VCOFREQUENCY => 74.250)
+      generic map(VCOFREQUENCY => 216.000)
 
       port map(CLKA => CLKAP, EXTFB => \GND\, POWERDOWN => 
         POWERDOWN, GLA => GLA, LOCK => LOCK, GLB => GLB, YB => 
-        OPEN, GLC => OPEN, YC => OPEN, OADIV0 => \GND\, OADIV1
-         => \GND\, OADIV2 => \GND\, OADIV3 => \GND\, OADIV4 => 
+        OPEN, GLC => OPEN, YC => OPEN, OADIV0 => \VCC\, OADIV1
+         => \VCC\, OADIV2 => \GND\, OADIV3 => \GND\, OADIV4 => 
         \GND\, OAMUX0 => \GND\, OAMUX1 => \GND\, OAMUX2 => \VCC\, 
         DLYGLA0 => \GND\, DLYGLA1 => \GND\, DLYGLA2 => \GND\, 
         DLYGLA3 => \GND\, DLYGLA4 => \GND\, OBDIV0 => \GND\, 
-        OBDIV1 => \GND\, OBDIV2 => \GND\, OBDIV3 => \GND\, OBDIV4
+        OBDIV1 => \VCC\, OBDIV2 => \GND\, OBDIV3 => \GND\, OBDIV4
          => \GND\, OBMUX0 => \GND\, OBMUX1 => \VCC\, OBMUX2 => 
         \GND\, DLYYB0 => \GND\, DLYYB1 => \GND\, DLYYB2 => \GND\, 
         DLYYB3 => \GND\, DLYYB4 => \GND\, DLYGLB0 => \GND\, 
@@ -152,13 +152,13 @@ begin
         DLYYC4 => \GND\, DLYGLC0 => \GND\, DLYGLC1 => \GND\, 
         DLYGLC2 => \GND\, DLYGLC3 => \GND\, DLYGLC4 => \GND\, 
         FINDIV0 => \VCC\, FINDIV1 => \GND\, FINDIV2 => \VCC\, 
-        FINDIV3 => \VCC\, FINDIV4 => \GND\, FINDIV5 => \GND\, 
-        FINDIV6 => \GND\, FBDIV0 => \VCC\, FBDIV1 => \GND\, 
-        FBDIV2 => \VCC\, FBDIV3 => \VCC\, FBDIV4 => \GND\, FBDIV5
-         => \GND\, FBDIV6 => \GND\, FBDLY0 => \GND\, FBDLY1 => 
+        FINDIV3 => \GND\, FINDIV4 => \VCC\, FINDIV5 => \GND\, 
+        FINDIV6 => \GND\, FBDIV0 => \VCC\, FBDIV1 => \VCC\, 
+        FBDIV2 => \VCC\, FBDIV3 => \VCC\, FBDIV4 => \VCC\, FBDIV5
+         => \VCC\, FBDIV6 => \GND\, FBDLY0 => \GND\, FBDLY1 => 
         \GND\, FBDLY2 => \GND\, FBDLY3 => \GND\, FBDLY4 => \GND\, 
         FBSEL0 => \VCC\, FBSEL1 => \GND\, XDLYSEL => \GND\, 
-        VCOSEL0 => \VCC\, VCOSEL1 => \GND\, VCOSEL2 => \VCC\);
+        VCOSEL0 => \VCC\, VCOSEL1 => \VCC\, VCOSEL2 => \VCC\);
     
     pllint1 : PLLINT
       port map(A => CLKA, Y => CLKAP);
@@ -190,7 +190,7 @@ end DEF_ARCH;
 -- GEN_BHV_VERILOG_VAL:F
 -- MGNTIMER:F
 -- MGNCMPL:T
--- DESDIR:G:/ACTELL/EKB/EKB/Libero/smartgen\PLL_0
+-- DESDIR:G:/ACTELL/EKB/EKB_v1/EKB/Libero/smartgen\PLL_0
 -- GEN_BEHV_MODULE:F
 -- SMARTGEN_DIE:IT14X14M4LDP
 -- SMARTGEN_PACKAGE:fg484
@@ -200,11 +200,11 @@ end DEF_ARCH;
 -- FBDLY:1
 -- FBMUX:1
 -- XDLYSEL:0
--- PRIMFREQ:74.250000
+-- PRIMFREQ:54.000000
 -- PPHASESHIFT:0
 -- DLYAVAL:1
 -- OAMUX:4
--- SEC1FREQ:74.250000
+-- SEC1FREQ:72.000000
 -- UGLB:1
 -- UYB:0
 -- GLBDLYVAL:1

@@ -27,6 +27,16 @@ architecture beh of IS_rx_clk_gen is
 
 signal div_clk_DCK      : std_logic_vector (2 downto 0):=(Others => '0');
 signal clk_rx_Serial		: std_logic:='0';
+
+Component pll_imx_dck is
+port( POWERDOWN : in    std_logic;
+      CLKA      : in    std_logic;
+      LOCK      : out   std_logic;
+      GLA       : out   std_logic
+      );
+
+end Component;
+
 begin
 --------------------------------------------------------------------
 -- блок генерации тактовых частот без использования PLL
@@ -36,13 +46,27 @@ begin
 clk_rx_Serial_ch		<= dck_is;
 clk_rx_Serial		   <= dck_is;
 
-div_clk_q0: count_n_modul                    
-generic map (3) 
+-- pll_imx_dck_q0: pll_imx_dck                    
+-- port map (
+--    POWERDOWN   =>	'1',			
+--    CLKA		   =>	dck_is ,
+--    -- LOCK        =>	main_enable,		
+--    GLA		   => clk_rx_Serial);
+-- clk_rx_Serial_ch		<= clk_rx_Serial;
+
+-- div_clk_q0: count_n_modul                    
+-- generic map (3) 
+-- port map (
+--    clk      =>	clk_rx_Serial,			
+--    reset		=>	main_reset ,
+--    en			=>	main_enable,		
+--    modul		=> std_logic_vector(to_unsigned(bit_data_imx /2, 3)),
+--    qout		=>	div_clk_DCK);
+div_clk_q0: count_fast                    
+generic map (3,5) 
 port map (
    clk      =>	clk_rx_Serial,			
    reset		=>	main_reset ,
-   en			=>	main_enable,		
-   modul		=> std_logic_vector(to_unsigned(bit_data_imx /2, 3)),
    qout		=>	div_clk_DCK);
 
 Process(clk_rx_Serial)
